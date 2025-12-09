@@ -1,0 +1,60 @@
+﻿
+<header>
+    <a href="@Url.Action("Index","Home")">
+        <img class="headerlogo" src="~/images/logo.png" alt="EventGate Logo" />
+    </a>
+
+    <div class="nav-right">
+
+        <div class="SearchArea1">
+            <div class="Search-area-main">
+                <input type="text" placeholder="Search For Events, Artists..." />
+            </div>
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+
+        <ul>
+            <li><i class="fa-solid fa-film"></i><a href="~/Event/Cinema">Cinema</a></li>
+            <li><i class="fa-solid fa-music"></i><a href="~/Event/Music">Music</a></li>
+            <li><i class="fa-solid fa-masks-theater"></i><a href="~/Event/Theater">Theater</a></li>
+
+            <li class="user-menu">
+                @if (Session["UserID"] != null)
+                {
+                    <a href="@Url.Action("Index", "Profile")">
+                        <i class="fa-solid fa-user"></i>
+                        <i id="prof" class="fa-solid fa-angle-down fa-xs"></i>
+                    </a>
+
+                }
+                else
+                {
+                    <a href="/Register/Signin">
+                        <i class="fa-solid fa-user"></i>
+                        <i id="prof" class="fa-solid fa-angle-down fa-xs"></i>
+                    </a>
+                }
+
+
+                <ul class="dropdown">
+
+                    @*  unsigned *@
+                    @if (Session["UserID"] == null)
+                    {
+                        <li><a href="/Register/Signin">Sign in</a></li>
+                    }
+                    else
+                    {
+                        @* signed *@
+                        <li><a href="@Url.Action("Index", "Profile")">Profile</a></li>
+
+                        <li><a href="/Register/Logout">Sign out</a></li>
+                    }
+
+                </ul>
+            </li>
+
+        </ul>
+
+    </div>
+</header>

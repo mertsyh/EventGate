@@ -1,0 +1,9 @@
+﻿@model List<EventDeneme.Models.EventCardViewModel>
+@{
+    Layout = "~/Views/Event/Eventpages.cshtml";
+    ViewBag.title= "Music";
+}
+
+@Html.Partial("_EventCards", Model)
+
+

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="d062111f183940b08f1fb54c3880d491" Name="Diagram1">
+        <EntityTypeShape EntityType="pr2Model.admins" Width="1.5" PointX="6" PointY="36.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.cart_items" Width="1.5" PointX="12.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.carts" Width="1.5" PointX="10.5" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.categories" Width="1.5" PointX="0.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.cities" Width="1.5" PointX="3.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.concert_details" Width="1.5" PointX="5.25" PointY="13.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.events" Width="1.5" PointX="3" PointY="18.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.moderation_events" Width="1.5" PointX="8.25" PointY="28.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.movie_details" Width="1.5" PointX="5.25" PointY="23.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.movie_genres" Width="1.5" PointX="5.25" PointY="26.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.music_genres" Width="1.5" PointX="5.25" PointY="29" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.order_items" Width="1.5" PointX="15.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.orders" Width="1.5" PointX="13.5" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.organizer_applications" Width="1.5" PointX="6" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.organizer_documents" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.organizer_users" Width="1.5" PointX="3" PointY="38.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.organizers" Width="1.5" PointX="0.75" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.payments" Width="1.5" PointX="15.75" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.performance_seats" Width="1.5" PointX="10.5" PointY="18.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.performances" Width="1.5" PointX="8.25" PointY="19" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.price_tiers" Width="1.5" PointX="10.5" PointY="22.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.refunds" Width="1.5" PointX="18" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.search_queries" Width="1.5" PointX="10.5" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.seat_holds" Width="1.5" PointX="12.75" PointY="18.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.seatmaps" Width="1.5" PointX="8.25" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.seats" Width="1.5" PointX="8.25" PointY="15.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.sessions" Width="1.5" PointX="8.25" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.sysdiagrams" Width="1.5" PointX="2.75" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.theatre_details" Width="1.5" PointX="5.25" PointY="31.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.theatre_genres" Width="1.5" PointX="5.25" PointY="34.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.tickets" Width="1.5" PointX="18" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.user_payment_methods" Width="1.5" PointX="8.25" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.users" Width="1.5" PointX="6" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="pr2Model.venues" Width="1.5" PointX="6" PointY="9" IsExpanded="true" />
+        <AssociationConnector Association="pr2Model.FK__moderatio__revie__32AB8735" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__organizer__revie__2B0A656D" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__cart_item__cart___47DBAE45" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__carts__session_i__4316F928" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__carts__user_id__4222D4EF" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__seat_hold__cart___00200768" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__events__category__6FE99F9F" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__venues__city_id__5FB337D6" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__concert_d__event__08B54D69" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__events__organize__70DDC3D8" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__moderatio__event__30C33EC3" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__movie_det__event__02FC7413" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__performan__event__74AE54BC" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__theatre_d__event__05D8E0BE" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__moderatio__submi__31B762FC" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__order_ite__order__4F7CD00D" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__tickets__order_i__5441852A" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__orders__session___4CA06362" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__orders__user_id__4BAC3F29" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__payments__order___571DF1D5" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__organizer__organ__2A164134" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__organizer__organ__2645B050" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__refunds__payment__59FA5E80" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__performan__perfo__7B5B524B" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__performan__seat___7C4F7684" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__seat_hold__perfo__7F2BE32F" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__performan__venue__75A278F5" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__price_tie__perfo__787EE5A0" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__search_qu__sessi__1CBC4616" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__seatmaps__venue___628FA481" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__seats__venue_id__66603565" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__sessions__user_i__3B75D760" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.FK__user_paym__user___3E52440B" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.event_movie_genres" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.event_music_genres" ManuallyRouted="false" />
+        <AssociationConnector Association="pr2Model.event_theatre_genres" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,93 @@
+﻿@model EventDeneme.Models.users
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Content/profile.css">
+<section class="profile-section">
+    <div class="profile-box">
+
+        <div class="toggle-buttons">
+            <button id="profileBtn" class="active">Profile</button>
+            <button id="passwordBtn">Change Password</button>
+            <a href="/my-tickets.html" class="btn-link-tab" style="padding: 10px 20px; text-decoration: none; color: black; font-weight: 600;">My Tickets</a>
+            <a href="/refunds.html" class="btn-link-tab" style="padding: 10px 20px; text-decoration: none; color: black; font-weight: 600;">Refund Requests</a>
+        </div>
+
+        <div id="profileContent">
+            <h1>Account Information</h1>
+
+            @using (Html.BeginForm("UpdateProfile", "Profile", FormMethod.Post))
+            {
+                <label>First Name</label>
+                <input type="text" name="Name" value="@Model.name" required>
+
+                <label>Last Name</label>
+                <input type="text" name="Surname" value="@Model.surname" required>
+
+                <label>Email</label>
+                <input type="email" value="@Model.email" disabled>
+
+                <label>Phone</label>
+                <input type="text" value="@Model.phone" disabled>
+
+                <div class="form-buttons">
+                    <button type="submit">Save Changes</button>
+                    <a href="/Register/Logout" class="btn-primary">Logout</a>
+                </div>
+
+            }
+            @if (TempData["ProfileSuccess"] != null)
+            {
+                <p style="margin-top:15px;">
+                    @TempData["ProfileSuccess"]
+                </p>
+            }
+
+        </div>
+        <div id="passwordContent" class="hidden">
+            @using (Html.BeginForm("ChangePassword", "Profile", FormMethod.Post))
+            {
+                <label>Old Password*</label>
+                <input type="password" name="OldPassword" required>
+
+                <label>New Password*</label>
+                <input type="password" name="NewPassword" required>
+
+                <label>New Password (repeat)</label>
+                <input type="password" name="ConfirmPassword" required>
+
+                <div class="form-buttons">
+                    <button type="submit">Update</button>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<script>
+    const profileBtn = document.getElementById('profileBtn');
+    const passwordBtn = document.getElementById('passwordBtn');
+
+    const profileContent = document.getElementById('profileContent');
+    const passwordContent = document.getElementById('passwordContent');
+
+    function hideAll() {
+        profileContent.classList.add("hidden");
+        passwordContent.classList.add("hidden");
+
+        profileBtn.classList.remove("active");
+        passwordBtn.classList.remove("active");
+    }
+
+    profileBtn.addEventListener('click', () => {
+        hideAll();
+        profileContent.classList.remove("hidden");
+        profileBtn.classList.add("active");
+    });
+
+    passwordBtn.addEventListener('click', () => {
+        hideAll();
+        passwordContent.classList.remove("hidden");
+        passwordBtn.classList.add("active");
+    });
+</script>

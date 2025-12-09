@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using EventDeneme.Models
+
+@model List<EventDeneme.Models.EventCardViewModel>
+
+<section class="hero">
+    <h1>Get Your Favorite Artist’s Ticket Now!</h1>
+    <p>Don’t miss upcoming concerts – the best shows are right here 🎵</p>
+
+    <div class="search-area">
+        <div class="search-box">
+            <i class="fa-solid fa-location-dot"></i>
+            <select name="CityId">
+                @foreach (var city in ViewBag.Cities)
+                {
+                    <option value="@city.id">@city.name</option>
+                }
+            </select>
+
+
+        </div>
+
+        <div class="search-box">
+            <i class="fa-solid fa-ticket"></i>
+            <select name="categoryId">
+                @foreach (var category in ViewBag.categories)
+                {
+                    <option value="@category.id">@category.display_name</option>
+                }
+            </select>
+        </div>
+
+        <div class="search-box">
+            <i class="fa-solid fa-map-pin"></i>
+            <select name="VenuesId">
+                @foreach (var Venues in ViewBag.venues)
+                {
+
+                    <option value="@Venues.id">@Venues.name</option>
+                }
+            </select>
+        </div>
+
+        <div class="search-box">
+            <i class="fa-solid fa-clock"></i>
+            <input type="date">
+        </div>
+
+        <button class="search-btn">Search</button>
+    </div>
+</section>
+
+
+
+<section id="maincontainer">
+    <div class="carousel" mask style="--items:@Model.Count">
+
+        @{
+            int i = 0;
+        }
+
+        @foreach (var e in Model)
+        {
+            <article style="--i:@i;">
+                <img src="@Url.Content(e.ImageUrl)" alt="@e.Title">
+
+                <div class="ticket-content">
+                    <h2>@e.Title</h2>
+                    <p>@e.Venue</p>
+
+                    <a href="@Url.Action("Details", "Event", new { id = e.EventId })">
+                        Buy Ticket • ₺@(e.Price ?? 0)+
+                    </a>
+                </div>
+            </article>
+
+            i++;
+        }
+
+    </div>
+</section>
+
+
+
+<section class="events-section">
+    <h2>Time is Running Out!</h2>
+    <p>Discover concerts and nearby events.</p>
+
+    <div class="events-container">
+
+        @foreach (var e in (List<EventCardViewModel>)ViewBag.LastWeekEvents)
+        {
+            <div class="event-card">
+                <img src="@Url.Content(e.ImageUrl)" alt="@e.Title">
+
+                <div class="event-info">
+
+                    @{
+                        var remaining = e.StartDate.Value - DateTime.Now;
+                        string timeLeft =
+                            $"{remaining.Days} Days";
+                    }
+
+                    <span class="time-tag">
+                        <i class="fa-regular fa-clock"></i> @timeLeft
+                    </span>
+
+                    <h3>@e.Title</h3>
+
+                    <p>• @e.Venue</p>
+                    <div class="price-row">
+                        <span class="price">₺@e.Price+</span>
+
+                        <a href="@Url.Action("Details", "Event", new { id = e.EventId })">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+
+
+
+    </div>
+    <div class="events-controls">
+        <button id="prevEvent">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button id="nextEvent">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+    </div>
+</section>
+
+
+<section class="steps-section">
+    <div class="steps-container">
+
+        <div class="steps-text">
+            <h2>🎫 Buy Your Ticket in 4 Easy Steps!</h2>
+            <p>Joining the fun with EventGate is just a few steps away.</p>
+            <button class="steps-btn">Buy Ticket <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <div class="steps-flow">
+
+            <div class="step-item">
+                <img src="@Url.Content("~/images/eventicon.png")">
+                <h3>Choose Event</h3>
+                <p>Select your favorite concert, theater, or movie.</p>
+            </div>
+
+            <div class="step-line"></div>
+
+            <div class="step-item">
+                <img src="@Url.Content("~/images/dateicon.png")">
+                <h3>Pick Date & Time</h3>
+                <p>Choose your suitable day, add it to your calendar, and plan ahead.</p>
+            </div>
+
+            <div class="step-line"></div>
+
+            <div class="step-item">
+                <img src="@Url.Content("~/images/paymenticon.png")">
+                <h3>Make Payment</h3>
+                <p>Complete your transaction securely within seconds.</p>
+            </div>
+
+            <div class="step-line"></div>
+
+            <div class="step-item">
+                <img src="@Url.Content("~/images/ticketicon.png")">
+                <h3>Download Ticket</h3>
+                <p>Download your PDF ticket and get ready for the event!</p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+
+<section class="campaigns">
+    <h2>🎁 Current Promotions</h2>
+    <div class="campaign-list">
+        <div class="campaign-item">🎟️ Buy 3 Tickets, Get 1 Free!</div>
+        <div class="campaign-item">💳 20% Student Discount</div>
+        <div class="campaign-item">🔥 15% Off VIP Seats</div>
+    </div>
+</section>

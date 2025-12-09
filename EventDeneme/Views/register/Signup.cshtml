@@ -1,0 +1,80 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EventGate | Sign Up</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/register.css")">
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="slider">
+            <a href="/">
+                <img class="headerlogo" src="@Url.Content("~/images/logo.png")" />
+            </a>
+
+            <div class="slide active" style="background-image: url('@Url.Content("~/images/sebnemferah.jpg")');"></div>
+            <div class="slide" style="background-image: url('@Url.Content("~/images/cinema.jpg")');"></div>
+            <div class="slide" style="background-image: url('@Url.Content("~/images/theater.jpg")');"></div>
+
+            <div class="text">
+                <h1>Step into the world of events.</h1>
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="form-box">
+                <h1>Sign Up</h1>
+
+                @using (Html.BeginForm("Signup", "Register", FormMethod.Post))
+                {
+                    <label>Name*</label>
+                    <input type="text" name="Name" placeholder="Enter your name" required>
+
+                    <label>Last Name*</label>
+                    <input type="text" name="Surname" placeholder="Enter your last name" required>
+
+                    <label>Phone Number*</label>
+                    <input type="tel" name="Phone" id="phone" placeholder="+90 5xx xxx xx xx" required>
+
+                    <label>Email*</label>
+                    <input type="email" name="Email" placeholder="Enter your email" required>
+
+                    <label>Password*</label>
+                    <input type="password" name="Password" placeholder="Create a password" required>
+
+                    <button type="submit" class="btn-primary">Create account</button>
+                }
+
+                @if (ViewBag.Error != null)
+                {
+                    <p style="color:red">@ViewBag.Error</p>
+                }
+
+                <div class="footer-text">
+                    Already have an account?
+                    <a href="/Register/Signin">Sign in</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let index = 0;
+
+        setInterval(() => {
+            slides[index].classList.remove('active');
+            index = (index + 1) % slides.length;
+            slides[index].classList.add('active');
+        }, 4000);
+    </script>
+
+</body>
+</html>

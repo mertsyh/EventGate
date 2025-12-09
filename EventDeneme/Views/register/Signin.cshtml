@@ -1,0 +1,77 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EventGate | Login</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/register.css")">
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="slider">
+            <a href="/">
+                <img class="headerlogo" src="@Url.Content("~/images/logo.png")" />
+            </a>
+
+            <div class="slide active" style="background-image: url('@Url.Content("~/images/sebnemferah.jpg")');"></div>
+            <div class="slide" style="background-image: url('@Url.Content("~/images/cinema.jpg")');"></div>
+            <div class="slide" style="background-image: url('@Url.Content("~/images/theater.jpg")');"></div>
+
+            <div class="text">
+                <h1>Step into the world of events.</h1>
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="form-box">
+                <h1>Sign in</h1>
+
+                @using (Html.BeginForm("Signin", "Register", FormMethod.Post))
+                {
+                    <label>Email*</label>
+                    <input type="email" name="Email" placeholder="Enter your email" required>
+
+                    <label>Password*</label>
+                    <input type="password" name="Password" placeholder="Enter your password" required>
+
+                    <button type="submit" class="btn-primary">Login</button>
+                }
+
+                @if (ViewBag.Error != null)
+                {
+                    <p style="color:red">@ViewBag.Error</p>
+                }
+
+                <div class="footer-text">
+                    Don't you have an account?
+                    <a href="/Register/Signup">Sign Up</a>
+                </div>
+                @if (TempData["Success"] != null)
+                {
+                    <p style="color:green">@TempData["Success"]</p>
+                }
+
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let index = 0;
+
+        setInterval(() => {
+            slides[index].classList.remove('active');
+            index = (index + 1) % slides.length;
+            slides[index].classList.add('active');
+        }, 4000);
+    </script>
+
+</body>
+</html>

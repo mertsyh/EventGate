@@ -1,0 +1,2614 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="pr2Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="admins">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="username" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="password_hash" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="role" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="created_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="cart_items">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="cart_id" Type="bigint" Nullable="false" />
+          <Property Name="performance_id" Type="bigint" Nullable="false" />
+          <Property Name="price_tier_id" Type="bigint" Nullable="false" />
+          <Property Name="seat_id" Type="bigint" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+          <Property Name="unit_price" Type="decimal" Precision="12" Scale="2" Nullable="false" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="carts">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="bigint" />
+          <Property Name="session_id" Type="bigint" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="created_at" Type="datetime" />
+          <Property Name="updated_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="categories">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="category_key" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="display_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cities">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="concert_details">
+          <Key>
+            <PropertyRef Name="event_id" />
+          </Key>
+          <Property Name="event_id" Type="bigint" Nullable="false" />
+          <Property Name="duration_min" Type="int" />
+          <Property Name="headliner" Type="nvarchar" MaxLength="255" />
+          <Property Name="opener" Type="nvarchar" MaxLength="255" />
+          <Property Name="music_genre_main_id" Type="bigint" />
+        </EntityType>
+        <EntityType Name="event_movie_genres">
+          <Key>
+            <PropertyRef Name="event_id" />
+            <PropertyRef Name="movie_genre_id" />
+          </Key>
+          <Property Name="event_id" Type="bigint" Nullable="false" />
+          <Property Name="movie_genre_id" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="event_music_genres">
+          <Key>
+            <PropertyRef Name="event_id" />
+            <PropertyRef Name="music_genre_id" />
+          </Key>
+          <Property Name="event_id" Type="bigint" Nullable="false" />
+          <Property Name="music_genre_id" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="event_theatre_genres">
+          <Key>
+            <PropertyRef Name="event_id" />
+            <PropertyRef Name="theatre_genre_id" />
+          </Key>
+          <Property Name="event_id" Type="bigint" Nullable="false" />
+          <Property Name="theatre_genre_id" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="events">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="category_id" Type="int" Nullable="false" />
+          <Property Name="organizer_id" Type="bigint" Nullable="false" />
+          <Property Name="title" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" />
+          <Property Name="language" Type="nvarchar" MaxLength="50" />
+          <Property Name="age_limit" Type="nvarchar" MaxLength="50" />
+          <Property Name="poster_url" Type="nvarchar(max)" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="created_at" Type="datetime" />
+          <Property Name="updated_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="moderation_events">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="event_id" Type="bigint" Nullable="false" />
+          <Property Name="submitted_by" Type="bigint" Nullable="false" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="reviewed_by" Type="bigint" />
+          <Property Name="reviewed_at" Type="datetime" />
+          <Property Name="notes" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="movie_details">
+          <Key>
+            <PropertyRef Name="event_id" />
+          </Key>
+          <Property Name="event_id" Type="bigint" Nullable="false" />
+          <Property Name="duration_min" Type="int" />
+          <Property Name="imdb_id" Type="nvarchar" MaxLength="50" />
+          <Property Name="parental_rating" Type="nvarchar" MaxLength="50" />
+          <Property Name="distributor" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="movie_genres">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="music_genres">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="order_items">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="order_id" Type="bigint" Nullable="false" />
+          <Property Name="performance_id" Type="bigint" Nullable="false" />
+          <Property Name="price_tier_id" Type="bigint" Nullable="false" />
+          <Property Name="seat_id" Type="bigint" />
+          <Property Name="unit_price" Type="decimal" Precision="12" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="orders">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="bigint" />
+          <Property Name="session_id" Type="bigint" />
+          <Property Name="email" Type="nvarchar" MaxLength="255" />
+          <Property Name="phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="total_amount" Type="decimal" Precision="12" Scale="2" Nullable="false" />
+          <Property Name="currency" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="payment_intent_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="created_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="organizer_applications">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="organizer_id" Type="bigint" />
+          <Property Name="org_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="contact_email" Type="nvarchar" MaxLength="255" />
+          <Property Name="submitted_at" Type="datetime" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="reviewed_by_admin_id" Type="bigint" />
+          <Property Name="review_notes" Type="nvarchar(max)" />
+          <Property Name="decided_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="organizer_documents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="application_id" Type="bigint" Nullable="false" />
+          <Property Name="file_url" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="doc_type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="uploaded_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="organizer_users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="organizer_id" Type="bigint" Nullable="false" />
+          <Property Name="username" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="255" />
+          <Property Name="password_hash" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="role" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="organizers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="legal_name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="brand_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="tax_id" Type="nvarchar" MaxLength="100" />
+          <Property Name="contact_email" Type="nvarchar" MaxLength="255" />
+          <Property Name="contact_phone" Type="nvarchar" MaxLength="100" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="created_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="payments">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="order_id" Type="bigint" Nullable="false" />
+          <Property Name="provider" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="provider_payment_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="amount" Type="decimal" Precision="12" Scale="2" Nullable="false" />
+          <Property Name="currency" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="captured_at" Type="datetime" />
+          <Property Name="failure_reason" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="performance_seats">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="performance_id" Type="bigint" Nullable="false" />
+          <Property Name="seat_id" Type="bigint" Nullable="false" />
+          <Property Name="price_tier_id" Type="bigint" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="performances">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="event_id" Type="bigint" Nullable="false" />
+          <Property Name="venue_id" Type="bigint" Nullable="false" />
+          <Property Name="start_datetime" Type="datetime" Nullable="false" />
+          <Property Name="end_datetime" Type="datetime" />
+          <Property Name="sales_start" Type="datetime" />
+          <Property Name="sales_end" Type="datetime" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="price_tiers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="performance_id" Type="bigint" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="allocation_type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="capacity" Type="int" />
+          <Property Name="price" Type="decimal" Precision="12" Scale="2" Nullable="false" />
+          <Property Name="currency" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="seatmap_section" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="refunds">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="payment_id" Type="bigint" Nullable="false" />
+          <Property Name="amount" Type="decimal" Precision="12" Scale="2" Nullable="false" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="provider_refund_id" Type="nvarchar" MaxLength="255" />
+          <Property Name="processed_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="search_queries">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="session_id" Type="bigint" Nullable="false" />
+          <Property Name="user_id" Type="bigint" />
+          <Property Name="city_id" Type="bigint" />
+          <Property Name="category_id" Type="int" />
+          <Property Name="venue_id" Type="bigint" />
+          <Property Name="date_from" Type="date" />
+          <Property Name="date_to" Type="date" />
+          <Property Name="text_query" Type="nvarchar(max)" />
+          <Property Name="created_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="seat_holds">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="performance_seat_id" Type="bigint" Nullable="false" />
+          <Property Name="cart_id" Type="bigint" Nullable="false" />
+          <Property Name="expires_at" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="seatmaps">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="venue_id" Type="bigint" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" />
+          <Property Name="layout_json" Type="nvarchar(max)" />
+          <Property Name="created_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="seats">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="venue_id" Type="bigint" Nullable="false" />
+          <Property Name="seatmap_section" Type="nvarchar" MaxLength="255" />
+          <Property Name="row_label" Type="nvarchar" MaxLength="50" />
+          <Property Name="seat_number" Type="nvarchar" MaxLength="50" />
+          <Property Name="is_wheelchair" Type="bit" />
+        </EntityType>
+        <EntityType Name="sessions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="session_token" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="user_id" Type="bigint" />
+          <Property Name="started_at" Type="datetime" />
+          <Property Name="expires_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="theatre_details">
+          <Key>
+            <PropertyRef Name="event_id" />
+          </Key>
+          <Property Name="event_id" Type="bigint" Nullable="false" />
+          <Property Name="duration_min" Type="int" />
+          <Property Name="playwright" Type="nvarchar" MaxLength="255" />
+          <Property Name="director" Type="nvarchar" MaxLength="255" />
+          <Property Name="intermission_count" Type="int" />
+        </EntityType>
+        <EntityType Name="theatre_genres">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tickets">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="order_item_id" Type="bigint" Nullable="false" />
+          <Property Name="ticket_code" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="qr_code_url" Type="nvarchar(max)" />
+          <Property Name="holder_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="delivered_to_email" Type="nvarchar" MaxLength="255" />
+          <Property Name="issued_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="user_payment_methods">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="bigint" Nullable="false" />
+          <Property Name="provider" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="token" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="brand" Type="nvarchar" MaxLength="50" />
+          <Property Name="last4" Type="nvarchar" MaxLength="4" />
+          <Property Name="exp_month" Type="int" />
+          <Property Name="exp_year" Type="int" />
+          <Property Name="created_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" />
+          <Property Name="surname" Type="nvarchar" MaxLength="255" />
+          <Property Name="email" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="password_hash" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="created_at" Type="datetime" />
+          <Property Name="updated_at" Type="datetime" />
+        </EntityType>
+        <EntityType Name="venues">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="city_id" Type="bigint" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="address" Type="nvarchar(max)" />
+          <Property Name="latitude" Type="decimal" Precision="10" Scale="6" />
+          <Property Name="longitude" Type="decimal" Precision="10" Scale="6" />
+          <Property Name="has_seating" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__cart_item__cart___47DBAE45">
+          <End Role="carts" Type="Self.carts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="cart_items" Type="Self.cart_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="carts">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cart_items">
+              <PropertyRef Name="cart_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__carts__session_i__4316F928">
+          <End Role="sessions" Type="Self.sessions" Multiplicity="0..1" />
+          <End Role="carts" Type="Self.carts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sessions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="carts">
+              <PropertyRef Name="session_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__carts__user_id__4222D4EF">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="carts" Type="Self.carts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="carts">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__concert_d__event__08B54D69">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="concert_details" Type="Self.concert_details" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="concert_details">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__event_mov__event__114A936A">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="event_movie_genres" Type="Self.event_movie_genres" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_movie_genres">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__event_mov__movie__123EB7A3">
+          <End Role="movie_genres" Type="Self.movie_genres" Multiplicity="1" />
+          <End Role="event_movie_genres" Type="Self.event_movie_genres" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="movie_genres">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_movie_genres">
+              <PropertyRef Name="movie_genre_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__event_mus__event__18EBB532">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="event_music_genres" Type="Self.event_music_genres" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_music_genres">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__event_mus__music__19DFD96B">
+          <End Role="music_genres" Type="Self.music_genres" Multiplicity="1" />
+          <End Role="event_music_genres" Type="Self.event_music_genres" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="music_genres">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_music_genres">
+              <PropertyRef Name="music_genre_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__event_the__event__151B244E">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="event_theatre_genres" Type="Self.event_theatre_genres" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_theatre_genres">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__event_the__theat__160F4887">
+          <End Role="theatre_genres" Type="Self.theatre_genres" Multiplicity="1" />
+          <End Role="event_theatre_genres" Type="Self.event_theatre_genres" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="theatre_genres">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="event_theatre_genres">
+              <PropertyRef Name="theatre_genre_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__events__category__6FE99F9F">
+          <End Role="categories" Type="Self.categories" Multiplicity="1" />
+          <End Role="events" Type="Self.events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categories">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="events">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__events__organize__70DDC3D8">
+          <End Role="organizers" Type="Self.organizers" Multiplicity="1" />
+          <End Role="events" Type="Self.events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="organizers">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="events">
+              <PropertyRef Name="organizer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__moderatio__event__30C33EC3">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="moderation_events" Type="Self.moderation_events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="moderation_events">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__moderatio__revie__32AB8735">
+          <End Role="admins" Type="Self.admins" Multiplicity="0..1" />
+          <End Role="moderation_events" Type="Self.moderation_events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="admins">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="moderation_events">
+              <PropertyRef Name="reviewed_by" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__moderatio__submi__31B762FC">
+          <End Role="organizer_users" Type="Self.organizer_users" Multiplicity="1" />
+          <End Role="moderation_events" Type="Self.moderation_events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="organizer_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="moderation_events">
+              <PropertyRef Name="submitted_by" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__movie_det__event__02FC7413">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="movie_details" Type="Self.movie_details" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="movie_details">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__order_ite__order__4F7CD00D">
+          <End Role="orders" Type="Self.orders" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="order_items" Type="Self.order_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="orders">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="order_items">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__orders__session___4CA06362">
+          <End Role="sessions" Type="Self.sessions" Multiplicity="0..1" />
+          <End Role="orders" Type="Self.orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sessions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="orders">
+              <PropertyRef Name="session_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__orders__user_id__4BAC3F29">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="orders" Type="Self.orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="orders">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__organizer__organ__2645B050">
+          <End Role="organizers" Type="Self.organizers" Multiplicity="1" />
+          <End Role="organizer_users" Type="Self.organizer_users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="organizers">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="organizer_users">
+              <PropertyRef Name="organizer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__organizer__organ__2A164134">
+          <End Role="organizers" Type="Self.organizers" Multiplicity="0..1" />
+          <End Role="organizer_applications" Type="Self.organizer_applications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="organizers">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="organizer_applications">
+              <PropertyRef Name="organizer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__organizer__revie__2B0A656D">
+          <End Role="admins" Type="Self.admins" Multiplicity="0..1" />
+          <End Role="organizer_applications" Type="Self.organizer_applications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="admins">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="organizer_applications">
+              <PropertyRef Name="reviewed_by_admin_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__payments__order___571DF1D5">
+          <End Role="orders" Type="Self.orders" Multiplicity="1" />
+          <End Role="payments" Type="Self.payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="orders">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="payments">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__performan__event__74AE54BC">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="performances" Type="Self.performances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="performances">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__performan__perfo__7B5B524B">
+          <End Role="performances" Type="Self.performances" Multiplicity="1" />
+          <End Role="performance_seats" Type="Self.performance_seats" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="performances">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="performance_seats">
+              <PropertyRef Name="performance_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__performan__seat___7C4F7684">
+          <End Role="seats" Type="Self.seats" Multiplicity="1" />
+          <End Role="performance_seats" Type="Self.performance_seats" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="seats">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="performance_seats">
+              <PropertyRef Name="seat_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__performan__venue__75A278F5">
+          <End Role="venues" Type="Self.venues" Multiplicity="1" />
+          <End Role="performances" Type="Self.performances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="venues">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="performances">
+              <PropertyRef Name="venue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__price_tie__perfo__787EE5A0">
+          <End Role="performances" Type="Self.performances" Multiplicity="1" />
+          <End Role="price_tiers" Type="Self.price_tiers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="performances">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="price_tiers">
+              <PropertyRef Name="performance_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__refunds__payment__59FA5E80">
+          <End Role="payments" Type="Self.payments" Multiplicity="1" />
+          <End Role="refunds" Type="Self.refunds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="payments">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="refunds">
+              <PropertyRef Name="payment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__search_qu__sessi__1CBC4616">
+          <End Role="sessions" Type="Self.sessions" Multiplicity="1" />
+          <End Role="search_queries" Type="Self.search_queries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sessions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="search_queries">
+              <PropertyRef Name="session_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__seat_hold__cart___00200768">
+          <End Role="carts" Type="Self.carts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="seat_holds" Type="Self.seat_holds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="carts">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="seat_holds">
+              <PropertyRef Name="cart_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__seat_hold__perfo__7F2BE32F">
+          <End Role="performance_seats" Type="Self.performance_seats" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="seat_holds" Type="Self.seat_holds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="performance_seats">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="seat_holds">
+              <PropertyRef Name="performance_seat_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__seatmaps__venue___628FA481">
+          <End Role="venues" Type="Self.venues" Multiplicity="1" />
+          <End Role="seatmaps" Type="Self.seatmaps" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="venues">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="seatmaps">
+              <PropertyRef Name="venue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__seats__venue_id__66603565">
+          <End Role="venues" Type="Self.venues" Multiplicity="1" />
+          <End Role="seats" Type="Self.seats" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="venues">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="seats">
+              <PropertyRef Name="venue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__sessions__user_i__3B75D760">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="sessions" Type="Self.sessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="sessions">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__theatre_d__event__05D8E0BE">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="theatre_details" Type="Self.theatre_details" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="theatre_details">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tickets__order_i__5441852A">
+          <End Role="order_items" Type="Self.order_items" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tickets" Type="Self.tickets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="order_items">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tickets">
+              <PropertyRef Name="order_item_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__user_paym__user___3E52440B">
+          <End Role="users" Type="Self.users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="user_payment_methods" Type="Self.user_payment_methods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user_payment_methods">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__venues__city_id__5FB337D6">
+          <End Role="cities" Type="Self.cities" Multiplicity="1" />
+          <End Role="venues" Type="Self.venues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cities">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="venues">
+              <PropertyRef Name="city_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="pr2ModelStoreContainer">
+          <EntitySet Name="admins" EntityType="Self.admins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cart_items" EntityType="Self.cart_items" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="carts" EntityType="Self.carts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="categories" EntityType="Self.categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cities" EntityType="Self.cities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="concert_details" EntityType="Self.concert_details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="event_movie_genres" EntityType="Self.event_movie_genres" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="event_music_genres" EntityType="Self.event_music_genres" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="event_theatre_genres" EntityType="Self.event_theatre_genres" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="events" EntityType="Self.events" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="moderation_events" EntityType="Self.moderation_events" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="movie_details" EntityType="Self.movie_details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="movie_genres" EntityType="Self.movie_genres" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="music_genres" EntityType="Self.music_genres" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="order_items" EntityType="Self.order_items" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="orders" EntityType="Self.orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="organizer_applications" EntityType="Self.organizer_applications" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="organizer_documents" EntityType="Self.organizer_documents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="organizer_users" EntityType="Self.organizer_users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="organizers" EntityType="Self.organizers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="payments" EntityType="Self.payments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="performance_seats" EntityType="Self.performance_seats" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="performances" EntityType="Self.performances" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="price_tiers" EntityType="Self.price_tiers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="refunds" EntityType="Self.refunds" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="search_queries" EntityType="Self.search_queries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="seat_holds" EntityType="Self.seat_holds" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="seatmaps" EntityType="Self.seatmaps" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="seats" EntityType="Self.seats" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sessions" EntityType="Self.sessions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="theatre_details" EntityType="Self.theatre_details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="theatre_genres" EntityType="Self.theatre_genres" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tickets" EntityType="Self.tickets" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="user_payment_methods" EntityType="Self.user_payment_methods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="users" EntityType="Self.users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="venues" EntityType="Self.venues" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__cart_item__cart___47DBAE45" Association="Self.FK__cart_item__cart___47DBAE45">
+            <End Role="carts" EntitySet="carts" />
+            <End Role="cart_items" EntitySet="cart_items" />
+          </AssociationSet>
+          <AssociationSet Name="FK__carts__session_i__4316F928" Association="Self.FK__carts__session_i__4316F928">
+            <End Role="sessions" EntitySet="sessions" />
+            <End Role="carts" EntitySet="carts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__carts__user_id__4222D4EF" Association="Self.FK__carts__user_id__4222D4EF">
+            <End Role="users" EntitySet="users" />
+            <End Role="carts" EntitySet="carts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__concert_d__event__08B54D69" Association="Self.FK__concert_d__event__08B54D69">
+            <End Role="events" EntitySet="events" />
+            <End Role="concert_details" EntitySet="concert_details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__event_mov__event__114A936A" Association="Self.FK__event_mov__event__114A936A">
+            <End Role="events" EntitySet="events" />
+            <End Role="event_movie_genres" EntitySet="event_movie_genres" />
+          </AssociationSet>
+          <AssociationSet Name="FK__event_mov__movie__123EB7A3" Association="Self.FK__event_mov__movie__123EB7A3">
+            <End Role="movie_genres" EntitySet="movie_genres" />
+            <End Role="event_movie_genres" EntitySet="event_movie_genres" />
+          </AssociationSet>
+          <AssociationSet Name="FK__event_mus__event__18EBB532" Association="Self.FK__event_mus__event__18EBB532">
+            <End Role="events" EntitySet="events" />
+            <End Role="event_music_genres" EntitySet="event_music_genres" />
+          </AssociationSet>
+          <AssociationSet Name="FK__event_mus__music__19DFD96B" Association="Self.FK__event_mus__music__19DFD96B">
+            <End Role="music_genres" EntitySet="music_genres" />
+            <End Role="event_music_genres" EntitySet="event_music_genres" />
+          </AssociationSet>
+          <AssociationSet Name="FK__event_the__event__151B244E" Association="Self.FK__event_the__event__151B244E">
+            <End Role="events" EntitySet="events" />
+            <End Role="event_theatre_genres" EntitySet="event_theatre_genres" />
+          </AssociationSet>
+          <AssociationSet Name="FK__event_the__theat__160F4887" Association="Self.FK__event_the__theat__160F4887">
+            <End Role="theatre_genres" EntitySet="theatre_genres" />
+            <End Role="event_theatre_genres" EntitySet="event_theatre_genres" />
+          </AssociationSet>
+          <AssociationSet Name="FK__events__category__6FE99F9F" Association="Self.FK__events__category__6FE99F9F">
+            <End Role="categories" EntitySet="categories" />
+            <End Role="events" EntitySet="events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__events__organize__70DDC3D8" Association="Self.FK__events__organize__70DDC3D8">
+            <End Role="organizers" EntitySet="organizers" />
+            <End Role="events" EntitySet="events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__moderatio__event__30C33EC3" Association="Self.FK__moderatio__event__30C33EC3">
+            <End Role="events" EntitySet="events" />
+            <End Role="moderation_events" EntitySet="moderation_events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__moderatio__revie__32AB8735" Association="Self.FK__moderatio__revie__32AB8735">
+            <End Role="admins" EntitySet="admins" />
+            <End Role="moderation_events" EntitySet="moderation_events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__moderatio__submi__31B762FC" Association="Self.FK__moderatio__submi__31B762FC">
+            <End Role="organizer_users" EntitySet="organizer_users" />
+            <End Role="moderation_events" EntitySet="moderation_events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__movie_det__event__02FC7413" Association="Self.FK__movie_det__event__02FC7413">
+            <End Role="events" EntitySet="events" />
+            <End Role="movie_details" EntitySet="movie_details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__order_ite__order__4F7CD00D" Association="Self.FK__order_ite__order__4F7CD00D">
+            <End Role="orders" EntitySet="orders" />
+            <End Role="order_items" EntitySet="order_items" />
+          </AssociationSet>
+          <AssociationSet Name="FK__orders__session___4CA06362" Association="Self.FK__orders__session___4CA06362">
+            <End Role="sessions" EntitySet="sessions" />
+            <End Role="orders" EntitySet="orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__orders__user_id__4BAC3F29" Association="Self.FK__orders__user_id__4BAC3F29">
+            <End Role="users" EntitySet="users" />
+            <End Role="orders" EntitySet="orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__organizer__organ__2645B050" Association="Self.FK__organizer__organ__2645B050">
+            <End Role="organizers" EntitySet="organizers" />
+            <End Role="organizer_users" EntitySet="organizer_users" />
+          </AssociationSet>
+          <AssociationSet Name="FK__organizer__organ__2A164134" Association="Self.FK__organizer__organ__2A164134">
+            <End Role="organizers" EntitySet="organizers" />
+            <End Role="organizer_applications" EntitySet="organizer_applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__organizer__revie__2B0A656D" Association="Self.FK__organizer__revie__2B0A656D">
+            <End Role="admins" EntitySet="admins" />
+            <End Role="organizer_applications" EntitySet="organizer_applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__payments__order___571DF1D5" Association="Self.FK__payments__order___571DF1D5">
+            <End Role="orders" EntitySet="orders" />
+            <End Role="payments" EntitySet="payments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__performan__event__74AE54BC" Association="Self.FK__performan__event__74AE54BC">
+            <End Role="events" EntitySet="events" />
+            <End Role="performances" EntitySet="performances" />
+          </AssociationSet>
+          <AssociationSet Name="FK__performan__perfo__7B5B524B" Association="Self.FK__performan__perfo__7B5B524B">
+            <End Role="performances" EntitySet="performances" />
+            <End Role="performance_seats" EntitySet="performance_seats" />
+          </AssociationSet>
+          <AssociationSet Name="FK__performan__seat___7C4F7684" Association="Self.FK__performan__seat___7C4F7684">
+            <End Role="seats" EntitySet="seats" />
+            <End Role="performance_seats" EntitySet="performance_seats" />
+          </AssociationSet>
+          <AssociationSet Name="FK__performan__venue__75A278F5" Association="Self.FK__performan__venue__75A278F5">
+            <End Role="venues" EntitySet="venues" />
+            <End Role="performances" EntitySet="performances" />
+          </AssociationSet>
+          <AssociationSet Name="FK__price_tie__perfo__787EE5A0" Association="Self.FK__price_tie__perfo__787EE5A0">
+            <End Role="performances" EntitySet="performances" />
+            <End Role="price_tiers" EntitySet="price_tiers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__refunds__payment__59FA5E80" Association="Self.FK__refunds__payment__59FA5E80">
+            <End Role="payments" EntitySet="payments" />
+            <End Role="refunds" EntitySet="refunds" />
+          </AssociationSet>
+          <AssociationSet Name="FK__search_qu__sessi__1CBC4616" Association="Self.FK__search_qu__sessi__1CBC4616">
+            <End Role="sessions" EntitySet="sessions" />
+            <End Role="search_queries" EntitySet="search_queries" />
+          </AssociationSet>
+          <AssociationSet Name="FK__seat_hold__cart___00200768" Association="Self.FK__seat_hold__cart___00200768">
+            <End Role="carts" EntitySet="carts" />
+            <End Role="seat_holds" EntitySet="seat_holds" />
+          </AssociationSet>
+          <AssociationSet Name="FK__seat_hold__perfo__7F2BE32F" Association="Self.FK__seat_hold__perfo__7F2BE32F">
+            <End Role="performance_seats" EntitySet="performance_seats" />
+            <End Role="seat_holds" EntitySet="seat_holds" />
+          </AssociationSet>
+          <AssociationSet Name="FK__seatmaps__venue___628FA481" Association="Self.FK__seatmaps__venue___628FA481">
+            <End Role="venues" EntitySet="venues" />
+            <End Role="seatmaps" EntitySet="seatmaps" />
+          </AssociationSet>
+          <AssociationSet Name="FK__seats__venue_id__66603565" Association="Self.FK__seats__venue_id__66603565">
+            <End Role="venues" EntitySet="venues" />
+            <End Role="seats" EntitySet="seats" />
+          </AssociationSet>
+          <AssociationSet Name="FK__sessions__user_i__3B75D760" Association="Self.FK__sessions__user_i__3B75D760">
+            <End Role="users" EntitySet="users" />
+            <End Role="sessions" EntitySet="sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__theatre_d__event__05D8E0BE" Association="Self.FK__theatre_d__event__05D8E0BE">
+            <End Role="events" EntitySet="events" />
+            <End Role="theatre_details" EntitySet="theatre_details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tickets__order_i__5441852A" Association="Self.FK__tickets__order_i__5441852A">
+            <End Role="order_items" EntitySet="order_items" />
+            <End Role="tickets" EntitySet="tickets" />
+          </AssociationSet>
+          <AssociationSet Name="FK__user_paym__user___3E52440B" Association="Self.FK__user_paym__user___3E52440B">
+            <End Role="users" EntitySet="users" />
+            <End Role="user_payment_methods" EntitySet="user_payment_methods" />
+          </AssociationSet>
+          <AssociationSet Name="FK__venues__city_id__5FB337D6" Association="Self.FK__venues__city_id__5FB337D6">
+            <End Role="cities" EntitySet="cities" />
+            <End Role="venues" EntitySet="venues" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="pr2Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="admins">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="username" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password_hash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="moderation_events" Relationship="Self.FK__moderatio__revie__32AB8735" FromRole="admins" ToRole="moderation_events" />
+          <NavigationProperty Name="organizer_applications" Relationship="Self.FK__organizer__revie__2B0A656D" FromRole="admins" ToRole="organizer_applications" />
+        </EntityType>
+        <EntityType Name="cart_items">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cart_id" Type="Int64" Nullable="false" />
+          <Property Name="performance_id" Type="Int64" Nullable="false" />
+          <Property Name="price_tier_id" Type="Int64" Nullable="false" />
+          <Property Name="seat_id" Type="Int64" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <Property Name="unit_price" Type="Decimal" Precision="12" Scale="2" Nullable="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="carts" Relationship="Self.FK__cart_item__cart___47DBAE45" FromRole="cart_items" ToRole="carts" />
+        </EntityType>
+        <EntityType Name="carts">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="Int64" />
+          <Property Name="session_id" Type="Int64" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <Property Name="updated_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="cart_items" Relationship="Self.FK__cart_item__cart___47DBAE45" FromRole="carts" ToRole="cart_items" />
+          <NavigationProperty Name="sessions" Relationship="Self.FK__carts__session_i__4316F928" FromRole="carts" ToRole="sessions" />
+          <NavigationProperty Name="users" Relationship="Self.FK__carts__user_id__4222D4EF" FromRole="carts" ToRole="users" />
+          <NavigationProperty Name="seat_holds" Relationship="Self.FK__seat_hold__cart___00200768" FromRole="carts" ToRole="seat_holds" />
+        </EntityType>
+        <EntityType Name="categories">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="category_key" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="display_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="events" Relationship="Self.FK__events__category__6FE99F9F" FromRole="categories" ToRole="events" />
+        </EntityType>
+        <EntityType Name="cities">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="venues" Relationship="Self.FK__venues__city_id__5FB337D6" FromRole="cities" ToRole="venues" />
+        </EntityType>
+        <EntityType Name="concert_details">
+          <Key>
+            <PropertyRef Name="event_id" />
+          </Key>
+          <Property Name="event_id" Type="Int64" Nullable="false" />
+          <Property Name="duration_min" Type="Int32" />
+          <Property Name="headliner" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="opener" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="music_genre_main_id" Type="Int64" />
+          <NavigationProperty Name="events" Relationship="Self.FK__concert_d__event__08B54D69" FromRole="concert_details" ToRole="events" />
+        </EntityType>
+        <EntityType Name="events">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="category_id" Type="Int32" Nullable="false" />
+          <Property Name="organizer_id" Type="Int64" Nullable="false" />
+          <Property Name="title" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="language" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="age_limit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="poster_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <Property Name="updated_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="categories" Relationship="Self.FK__events__category__6FE99F9F" FromRole="events" ToRole="categories" />
+          <NavigationProperty Name="concert_details" Relationship="Self.FK__concert_d__event__08B54D69" FromRole="events" ToRole="concert_details" />
+          <NavigationProperty Name="organizers" Relationship="Self.FK__events__organize__70DDC3D8" FromRole="events" ToRole="organizers" />
+          <NavigationProperty Name="moderation_events" Relationship="Self.FK__moderatio__event__30C33EC3" FromRole="events" ToRole="moderation_events" />
+          <NavigationProperty Name="movie_details" Relationship="Self.FK__movie_det__event__02FC7413" FromRole="events" ToRole="movie_details" />
+          <NavigationProperty Name="performances" Relationship="Self.FK__performan__event__74AE54BC" FromRole="events" ToRole="performances" />
+          <NavigationProperty Name="theatre_details" Relationship="Self.FK__theatre_d__event__05D8E0BE" FromRole="events" ToRole="theatre_details" />
+          <NavigationProperty Name="movie_genres" Relationship="Self.event_movie_genres" FromRole="events" ToRole="movie_genres" />
+          <NavigationProperty Name="music_genres" Relationship="Self.event_music_genres" FromRole="events" ToRole="music_genres" />
+          <NavigationProperty Name="theatre_genres" Relationship="Self.event_theatre_genres" FromRole="events" ToRole="theatre_genres" />
+        </EntityType>
+        <EntityType Name="moderation_events">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="event_id" Type="Int64" Nullable="false" />
+          <Property Name="submitted_by" Type="Int64" Nullable="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="reviewed_by" Type="Int64" />
+          <Property Name="reviewed_at" Type="DateTime" Precision="3" />
+          <Property Name="notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="admins" Relationship="Self.FK__moderatio__revie__32AB8735" FromRole="moderation_events" ToRole="admins" />
+          <NavigationProperty Name="events" Relationship="Self.FK__moderatio__event__30C33EC3" FromRole="moderation_events" ToRole="events" />
+          <NavigationProperty Name="organizer_users" Relationship="Self.FK__moderatio__submi__31B762FC" FromRole="moderation_events" ToRole="organizer_users" />
+        </EntityType>
+        <EntityType Name="movie_details">
+          <Key>
+            <PropertyRef Name="event_id" />
+          </Key>
+          <Property Name="event_id" Type="Int64" Nullable="false" />
+          <Property Name="duration_min" Type="Int32" />
+          <Property Name="imdb_id" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="parental_rating" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="distributor" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="events" Relationship="Self.FK__movie_det__event__02FC7413" FromRole="movie_details" ToRole="events" />
+        </EntityType>
+        <EntityType Name="movie_genres">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="events" Relationship="Self.event_movie_genres" FromRole="movie_genres" ToRole="events" />
+        </EntityType>
+        <EntityType Name="music_genres">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="events" Relationship="Self.event_music_genres" FromRole="music_genres" ToRole="events" />
+        </EntityType>
+        <EntityType Name="order_items">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="order_id" Type="Int64" Nullable="false" />
+          <Property Name="performance_id" Type="Int64" Nullable="false" />
+          <Property Name="price_tier_id" Type="Int64" Nullable="false" />
+          <Property Name="seat_id" Type="Int64" />
+          <Property Name="unit_price" Type="Decimal" Precision="12" Scale="2" Nullable="false" />
+          <NavigationProperty Name="orders" Relationship="Self.FK__order_ite__order__4F7CD00D" FromRole="order_items" ToRole="orders" />
+          <NavigationProperty Name="tickets" Relationship="Self.FK__tickets__order_i__5441852A" FromRole="order_items" ToRole="tickets" />
+        </EntityType>
+        <EntityType Name="orders">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="Int64" />
+          <Property Name="session_id" Type="Int64" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="total_amount" Type="Decimal" Precision="12" Scale="2" Nullable="false" />
+          <Property Name="currency" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="payment_intent_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="order_items" Relationship="Self.FK__order_ite__order__4F7CD00D" FromRole="orders" ToRole="order_items" />
+          <NavigationProperty Name="sessions" Relationship="Self.FK__orders__session___4CA06362" FromRole="orders" ToRole="sessions" />
+          <NavigationProperty Name="users" Relationship="Self.FK__orders__user_id__4BAC3F29" FromRole="orders" ToRole="users" />
+          <NavigationProperty Name="payments" Relationship="Self.FK__payments__order___571DF1D5" FromRole="orders" ToRole="payments" />
+        </EntityType>
+        <EntityType Name="organizer_applications">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="organizer_id" Type="Int64" />
+          <Property Name="org_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="contact_email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="submitted_at" Type="DateTime" Precision="3" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="reviewed_by_admin_id" Type="Int64" />
+          <Property Name="review_notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="decided_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="admins" Relationship="Self.FK__organizer__revie__2B0A656D" FromRole="organizer_applications" ToRole="admins" />
+          <NavigationProperty Name="organizers" Relationship="Self.FK__organizer__organ__2A164134" FromRole="organizer_applications" ToRole="organizers" />
+        </EntityType>
+        <EntityType Name="organizer_documents">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="application_id" Type="Int64" Nullable="false" />
+          <Property Name="file_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="doc_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="uploaded_at" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="organizer_users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="organizer_id" Type="Int64" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="password_hash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="moderation_events" Relationship="Self.FK__moderatio__submi__31B762FC" FromRole="organizer_users" ToRole="moderation_events" />
+          <NavigationProperty Name="organizers" Relationship="Self.FK__organizer__organ__2645B050" FromRole="organizer_users" ToRole="organizers" />
+        </EntityType>
+        <EntityType Name="organizers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="legal_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="brand_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="tax_id" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="contact_email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="contact_phone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="events" Relationship="Self.FK__events__organize__70DDC3D8" FromRole="organizers" ToRole="events" />
+          <NavigationProperty Name="organizer_applications" Relationship="Self.FK__organizer__organ__2A164134" FromRole="organizers" ToRole="organizer_applications" />
+          <NavigationProperty Name="organizer_users" Relationship="Self.FK__organizer__organ__2645B050" FromRole="organizers" ToRole="organizer_users" />
+        </EntityType>
+        <EntityType Name="payments">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="order_id" Type="Int64" Nullable="false" />
+          <Property Name="provider" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="provider_payment_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="amount" Type="Decimal" Precision="12" Scale="2" Nullable="false" />
+          <Property Name="currency" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="captured_at" Type="DateTime" Precision="3" />
+          <Property Name="failure_reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="orders" Relationship="Self.FK__payments__order___571DF1D5" FromRole="payments" ToRole="orders" />
+          <NavigationProperty Name="refunds" Relationship="Self.FK__refunds__payment__59FA5E80" FromRole="payments" ToRole="refunds" />
+        </EntityType>
+        <EntityType Name="performance_seats">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="performance_id" Type="Int64" Nullable="false" />
+          <Property Name="seat_id" Type="Int64" Nullable="false" />
+          <Property Name="price_tier_id" Type="Int64" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="performances" Relationship="Self.FK__performan__perfo__7B5B524B" FromRole="performance_seats" ToRole="performances" />
+          <NavigationProperty Name="seats" Relationship="Self.FK__performan__seat___7C4F7684" FromRole="performance_seats" ToRole="seats" />
+          <NavigationProperty Name="seat_holds" Relationship="Self.FK__seat_hold__perfo__7F2BE32F" FromRole="performance_seats" ToRole="seat_holds" />
+        </EntityType>
+        <EntityType Name="performances">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="event_id" Type="Int64" Nullable="false" />
+          <Property Name="venue_id" Type="Int64" Nullable="false" />
+          <Property Name="start_datetime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="end_datetime" Type="DateTime" Precision="3" />
+          <Property Name="sales_start" Type="DateTime" Precision="3" />
+          <Property Name="sales_end" Type="DateTime" Precision="3" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="events" Relationship="Self.FK__performan__event__74AE54BC" FromRole="performances" ToRole="events" />
+          <NavigationProperty Name="performance_seats" Relationship="Self.FK__performan__perfo__7B5B524B" FromRole="performances" ToRole="performance_seats" />
+          <NavigationProperty Name="venues" Relationship="Self.FK__performan__venue__75A278F5" FromRole="performances" ToRole="venues" />
+          <NavigationProperty Name="price_tiers" Relationship="Self.FK__price_tie__perfo__787EE5A0" FromRole="performances" ToRole="price_tiers" />
+        </EntityType>
+        <EntityType Name="price_tiers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="performance_id" Type="Int64" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="allocation_type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="capacity" Type="Int32" />
+          <Property Name="price" Type="Decimal" Precision="12" Scale="2" Nullable="false" />
+          <Property Name="currency" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="seatmap_section" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="performances" Relationship="Self.FK__price_tie__perfo__787EE5A0" FromRole="price_tiers" ToRole="performances" />
+        </EntityType>
+        <EntityType Name="refunds">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="payment_id" Type="Int64" Nullable="false" />
+          <Property Name="amount" Type="Decimal" Precision="12" Scale="2" Nullable="false" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="provider_refund_id" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="processed_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="payments" Relationship="Self.FK__refunds__payment__59FA5E80" FromRole="refunds" ToRole="payments" />
+        </EntityType>
+        <EntityType Name="search_queries">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="session_id" Type="Int64" Nullable="false" />
+          <Property Name="user_id" Type="Int64" />
+          <Property Name="city_id" Type="Int64" />
+          <Property Name="category_id" Type="Int32" />
+          <Property Name="venue_id" Type="Int64" />
+          <Property Name="date_from" Type="DateTime" Precision="0" />
+          <Property Name="date_to" Type="DateTime" Precision="0" />
+          <Property Name="text_query" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="sessions" Relationship="Self.FK__search_qu__sessi__1CBC4616" FromRole="search_queries" ToRole="sessions" />
+        </EntityType>
+        <EntityType Name="seat_holds">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="performance_seat_id" Type="Int64" Nullable="false" />
+          <Property Name="cart_id" Type="Int64" Nullable="false" />
+          <Property Name="expires_at" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="carts" Relationship="Self.FK__seat_hold__cart___00200768" FromRole="seat_holds" ToRole="carts" />
+          <NavigationProperty Name="performance_seats" Relationship="Self.FK__seat_hold__perfo__7F2BE32F" FromRole="seat_holds" ToRole="performance_seats" />
+        </EntityType>
+        <EntityType Name="seatmaps">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="venue_id" Type="Int64" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="layout_json" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="venues" Relationship="Self.FK__seatmaps__venue___628FA481" FromRole="seatmaps" ToRole="venues" />
+        </EntityType>
+        <EntityType Name="seats">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="venue_id" Type="Int64" Nullable="false" />
+          <Property Name="seatmap_section" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="row_label" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="seat_number" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="is_wheelchair" Type="Boolean" />
+          <NavigationProperty Name="performance_seats" Relationship="Self.FK__performan__seat___7C4F7684" FromRole="seats" ToRole="performance_seats" />
+          <NavigationProperty Name="venues" Relationship="Self.FK__seats__venue_id__66603565" FromRole="seats" ToRole="venues" />
+        </EntityType>
+        <EntityType Name="sessions">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="session_token" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="user_id" Type="Int64" />
+          <Property Name="started_at" Type="DateTime" Precision="3" />
+          <Property Name="expires_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="carts" Relationship="Self.FK__carts__session_i__4316F928" FromRole="sessions" ToRole="carts" />
+          <NavigationProperty Name="orders" Relationship="Self.FK__orders__session___4CA06362" FromRole="sessions" ToRole="orders" />
+          <NavigationProperty Name="search_queries" Relationship="Self.FK__search_qu__sessi__1CBC4616" FromRole="sessions" ToRole="search_queries" />
+          <NavigationProperty Name="users" Relationship="Self.FK__sessions__user_i__3B75D760" FromRole="sessions" ToRole="users" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="theatre_details">
+          <Key>
+            <PropertyRef Name="event_id" />
+          </Key>
+          <Property Name="event_id" Type="Int64" Nullable="false" />
+          <Property Name="duration_min" Type="Int32" />
+          <Property Name="playwright" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="director" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="intermission_count" Type="Int32" />
+          <NavigationProperty Name="events" Relationship="Self.FK__theatre_d__event__05D8E0BE" FromRole="theatre_details" ToRole="events" />
+        </EntityType>
+        <EntityType Name="theatre_genres">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="events" Relationship="Self.event_theatre_genres" FromRole="theatre_genres" ToRole="events" />
+        </EntityType>
+        <EntityType Name="tickets">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="order_item_id" Type="Int64" Nullable="false" />
+          <Property Name="ticket_code" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="qr_code_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="holder_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="delivered_to_email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="issued_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="order_items" Relationship="Self.FK__tickets__order_i__5441852A" FromRole="tickets" ToRole="order_items" />
+        </EntityType>
+        <EntityType Name="user_payment_methods">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="Int64" Nullable="false" />
+          <Property Name="provider" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="token" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="brand" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="last4" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="exp_month" Type="Int32" />
+          <Property Name="exp_year" Type="Int32" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="users" Relationship="Self.FK__user_paym__user___3E52440B" FromRole="user_payment_methods" ToRole="users" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="surname" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="password_hash" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <Property Name="updated_at" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="carts" Relationship="Self.FK__carts__user_id__4222D4EF" FromRole="users" ToRole="carts" />
+          <NavigationProperty Name="orders" Relationship="Self.FK__orders__user_id__4BAC3F29" FromRole="users" ToRole="orders" />
+          <NavigationProperty Name="sessions" Relationship="Self.FK__sessions__user_i__3B75D760" FromRole="users" ToRole="sessions" />
+          <NavigationProperty Name="user_payment_methods" Relationship="Self.FK__user_paym__user___3E52440B" FromRole="users" ToRole="user_payment_methods" />
+        </EntityType>
+        <EntityType Name="venues">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="city_id" Type="Int64" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="latitude" Type="Decimal" Precision="10" Scale="6" />
+          <Property Name="longitude" Type="Decimal" Precision="10" Scale="6" />
+          <Property Name="has_seating" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="cities" Relationship="Self.FK__venues__city_id__5FB337D6" FromRole="venues" ToRole="cities" />
+          <NavigationProperty Name="performances" Relationship="Self.FK__performan__venue__75A278F5" FromRole="venues" ToRole="performances" />
+          <NavigationProperty Name="seatmaps" Relationship="Self.FK__seatmaps__venue___628FA481" FromRole="venues" ToRole="seatmaps" />
+          <NavigationProperty Name="seats" Relationship="Self.FK__seats__venue_id__66603565" FromRole="venues" ToRole="seats" />
+        </EntityType>
+        <Association Name="FK__moderatio__revie__32AB8735">
+          <End Role="admins" Type="Self.admins" Multiplicity="0..1" />
+          <End Role="moderation_events" Type="Self.moderation_events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="admins">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="moderation_events">
+              <PropertyRef Name="reviewed_by" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__organizer__revie__2B0A656D">
+          <End Role="admins" Type="Self.admins" Multiplicity="0..1" />
+          <End Role="organizer_applications" Type="Self.organizer_applications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="admins">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="organizer_applications">
+              <PropertyRef Name="reviewed_by_admin_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__cart_item__cart___47DBAE45">
+          <End Role="carts" Type="Self.carts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="cart_items" Type="Self.cart_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="carts">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cart_items">
+              <PropertyRef Name="cart_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__carts__session_i__4316F928">
+          <End Role="sessions" Type="Self.sessions" Multiplicity="0..1" />
+          <End Role="carts" Type="Self.carts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sessions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="carts">
+              <PropertyRef Name="session_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__carts__user_id__4222D4EF">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="carts" Type="Self.carts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="carts">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__seat_hold__cart___00200768">
+          <End Role="carts" Type="Self.carts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="seat_holds" Type="Self.seat_holds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="carts">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="seat_holds">
+              <PropertyRef Name="cart_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__events__category__6FE99F9F">
+          <End Role="categories" Type="Self.categories" Multiplicity="1" />
+          <End Role="events" Type="Self.events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="categories">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="events">
+              <PropertyRef Name="category_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__venues__city_id__5FB337D6">
+          <End Role="cities" Type="Self.cities" Multiplicity="1" />
+          <End Role="venues" Type="Self.venues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cities">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="venues">
+              <PropertyRef Name="city_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__concert_d__event__08B54D69">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="concert_details" Type="Self.concert_details" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="concert_details">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__events__organize__70DDC3D8">
+          <End Role="organizers" Type="Self.organizers" Multiplicity="1" />
+          <End Role="events" Type="Self.events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="organizers">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="events">
+              <PropertyRef Name="organizer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__moderatio__event__30C33EC3">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="moderation_events" Type="Self.moderation_events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="moderation_events">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__movie_det__event__02FC7413">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="movie_details" Type="Self.movie_details" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="movie_details">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__performan__event__74AE54BC">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="performances" Type="Self.performances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="performances">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__theatre_d__event__05D8E0BE">
+          <End Role="events" Type="Self.events" Multiplicity="1" />
+          <End Role="theatre_details" Type="Self.theatre_details" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="events">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="theatre_details">
+              <PropertyRef Name="event_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__moderatio__submi__31B762FC">
+          <End Role="organizer_users" Type="Self.organizer_users" Multiplicity="1" />
+          <End Role="moderation_events" Type="Self.moderation_events" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="organizer_users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="moderation_events">
+              <PropertyRef Name="submitted_by" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__order_ite__order__4F7CD00D">
+          <End Role="orders" Type="Self.orders" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="order_items" Type="Self.order_items" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="orders">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="order_items">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tickets__order_i__5441852A">
+          <End Role="order_items" Type="Self.order_items" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tickets" Type="Self.tickets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="order_items">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tickets">
+              <PropertyRef Name="order_item_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__orders__session___4CA06362">
+          <End Role="sessions" Type="Self.sessions" Multiplicity="0..1" />
+          <End Role="orders" Type="Self.orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sessions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="orders">
+              <PropertyRef Name="session_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__orders__user_id__4BAC3F29">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="orders" Type="Self.orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="orders">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__payments__order___571DF1D5">
+          <End Role="orders" Type="Self.orders" Multiplicity="1" />
+          <End Role="payments" Type="Self.payments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="orders">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="payments">
+              <PropertyRef Name="order_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__organizer__organ__2A164134">
+          <End Role="organizers" Type="Self.organizers" Multiplicity="0..1" />
+          <End Role="organizer_applications" Type="Self.organizer_applications" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="organizers">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="organizer_applications">
+              <PropertyRef Name="organizer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__organizer__organ__2645B050">
+          <End Role="organizers" Type="Self.organizers" Multiplicity="1" />
+          <End Role="organizer_users" Type="Self.organizer_users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="organizers">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="organizer_users">
+              <PropertyRef Name="organizer_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__refunds__payment__59FA5E80">
+          <End Role="payments" Type="Self.payments" Multiplicity="1" />
+          <End Role="refunds" Type="Self.refunds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="payments">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="refunds">
+              <PropertyRef Name="payment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__performan__perfo__7B5B524B">
+          <End Role="performances" Type="Self.performances" Multiplicity="1" />
+          <End Role="performance_seats" Type="Self.performance_seats" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="performances">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="performance_seats">
+              <PropertyRef Name="performance_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__performan__seat___7C4F7684">
+          <End Role="seats" Type="Self.seats" Multiplicity="1" />
+          <End Role="performance_seats" Type="Self.performance_seats" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="seats">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="performance_seats">
+              <PropertyRef Name="seat_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__seat_hold__perfo__7F2BE32F">
+          <End Role="performance_seats" Type="Self.performance_seats" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="seat_holds" Type="Self.seat_holds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="performance_seats">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="seat_holds">
+              <PropertyRef Name="performance_seat_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__performan__venue__75A278F5">
+          <End Role="venues" Type="Self.venues" Multiplicity="1" />
+          <End Role="performances" Type="Self.performances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="venues">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="performances">
+              <PropertyRef Name="venue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__price_tie__perfo__787EE5A0">
+          <End Role="performances" Type="Self.performances" Multiplicity="1" />
+          <End Role="price_tiers" Type="Self.price_tiers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="performances">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="price_tiers">
+              <PropertyRef Name="performance_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__search_qu__sessi__1CBC4616">
+          <End Role="sessions" Type="Self.sessions" Multiplicity="1" />
+          <End Role="search_queries" Type="Self.search_queries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sessions">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="search_queries">
+              <PropertyRef Name="session_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__seatmaps__venue___628FA481">
+          <End Role="venues" Type="Self.venues" Multiplicity="1" />
+          <End Role="seatmaps" Type="Self.seatmaps" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="venues">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="seatmaps">
+              <PropertyRef Name="venue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__seats__venue_id__66603565">
+          <End Role="venues" Type="Self.venues" Multiplicity="1" />
+          <End Role="seats" Type="Self.seats" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="venues">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="seats">
+              <PropertyRef Name="venue_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__sessions__user_i__3B75D760">
+          <End Role="users" Type="Self.users" Multiplicity="0..1" />
+          <End Role="sessions" Type="Self.sessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="sessions">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__user_paym__user___3E52440B">
+          <End Role="users" Type="Self.users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="user_payment_methods" Type="Self.user_payment_methods" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="user_payment_methods">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="event_movie_genres">
+          <End Role="events" Type="Self.events" Multiplicity="*" />
+          <End Role="movie_genres" Type="Self.movie_genres" Multiplicity="*" />
+        </Association>
+        <Association Name="event_music_genres">
+          <End Role="events" Type="Self.events" Multiplicity="*" />
+          <End Role="music_genres" Type="Self.music_genres" Multiplicity="*" />
+        </Association>
+        <Association Name="event_theatre_genres">
+          <End Role="events" Type="Self.events" Multiplicity="*" />
+          <End Role="theatre_genres" Type="Self.theatre_genres" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="pr2Entities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="admins" EntityType="Self.admins" />
+          <EntitySet Name="cart_items" EntityType="Self.cart_items" />
+          <EntitySet Name="carts" EntityType="Self.carts" />
+          <EntitySet Name="categories" EntityType="Self.categories" />
+          <EntitySet Name="cities" EntityType="Self.cities" />
+          <EntitySet Name="concert_details" EntityType="Self.concert_details" />
+          <EntitySet Name="events" EntityType="Self.events" />
+          <EntitySet Name="moderation_events" EntityType="Self.moderation_events" />
+          <EntitySet Name="movie_details" EntityType="Self.movie_details" />
+          <EntitySet Name="movie_genres" EntityType="Self.movie_genres" />
+          <EntitySet Name="music_genres" EntityType="Self.music_genres" />
+          <EntitySet Name="order_items" EntityType="Self.order_items" />
+          <EntitySet Name="orders" EntityType="Self.orders" />
+          <EntitySet Name="organizer_applications" EntityType="Self.organizer_applications" />
+          <EntitySet Name="organizer_documents" EntityType="Self.organizer_documents" />
+          <EntitySet Name="organizer_users" EntityType="Self.organizer_users" />
+          <EntitySet Name="organizers" EntityType="Self.organizers" />
+          <EntitySet Name="payments" EntityType="Self.payments" />
+          <EntitySet Name="performance_seats" EntityType="Self.performance_seats" />
+          <EntitySet Name="performances" EntityType="Self.performances" />
+          <EntitySet Name="price_tiers" EntityType="Self.price_tiers" />
+          <EntitySet Name="refunds" EntityType="Self.refunds" />
+          <EntitySet Name="search_queries" EntityType="Self.search_queries" />
+          <EntitySet Name="seat_holds" EntityType="Self.seat_holds" />
+          <EntitySet Name="seatmaps" EntityType="Self.seatmaps" />
+          <EntitySet Name="seats" EntityType="Self.seats" />
+          <EntitySet Name="sessions" EntityType="Self.sessions" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="theatre_details" EntityType="Self.theatre_details" />
+          <EntitySet Name="theatre_genres" EntityType="Self.theatre_genres" />
+          <EntitySet Name="tickets" EntityType="Self.tickets" />
+          <EntitySet Name="user_payment_methods" EntityType="Self.user_payment_methods" />
+          <EntitySet Name="users" EntityType="Self.users" />
+          <EntitySet Name="venues" EntityType="Self.venues" />
+          <AssociationSet Name="FK__moderatio__revie__32AB8735" Association="Self.FK__moderatio__revie__32AB8735">
+            <End Role="admins" EntitySet="admins" />
+            <End Role="moderation_events" EntitySet="moderation_events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__organizer__revie__2B0A656D" Association="Self.FK__organizer__revie__2B0A656D">
+            <End Role="admins" EntitySet="admins" />
+            <End Role="organizer_applications" EntitySet="organizer_applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__cart_item__cart___47DBAE45" Association="Self.FK__cart_item__cart___47DBAE45">
+            <End Role="carts" EntitySet="carts" />
+            <End Role="cart_items" EntitySet="cart_items" />
+          </AssociationSet>
+          <AssociationSet Name="FK__carts__session_i__4316F928" Association="Self.FK__carts__session_i__4316F928">
+            <End Role="sessions" EntitySet="sessions" />
+            <End Role="carts" EntitySet="carts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__carts__user_id__4222D4EF" Association="Self.FK__carts__user_id__4222D4EF">
+            <End Role="users" EntitySet="users" />
+            <End Role="carts" EntitySet="carts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__seat_hold__cart___00200768" Association="Self.FK__seat_hold__cart___00200768">
+            <End Role="carts" EntitySet="carts" />
+            <End Role="seat_holds" EntitySet="seat_holds" />
+          </AssociationSet>
+          <AssociationSet Name="FK__events__category__6FE99F9F" Association="Self.FK__events__category__6FE99F9F">
+            <End Role="categories" EntitySet="categories" />
+            <End Role="events" EntitySet="events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__venues__city_id__5FB337D6" Association="Self.FK__venues__city_id__5FB337D6">
+            <End Role="cities" EntitySet="cities" />
+            <End Role="venues" EntitySet="venues" />
+          </AssociationSet>
+          <AssociationSet Name="FK__concert_d__event__08B54D69" Association="Self.FK__concert_d__event__08B54D69">
+            <End Role="events" EntitySet="events" />
+            <End Role="concert_details" EntitySet="concert_details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__events__organize__70DDC3D8" Association="Self.FK__events__organize__70DDC3D8">
+            <End Role="organizers" EntitySet="organizers" />
+            <End Role="events" EntitySet="events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__moderatio__event__30C33EC3" Association="Self.FK__moderatio__event__30C33EC3">
+            <End Role="events" EntitySet="events" />
+            <End Role="moderation_events" EntitySet="moderation_events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__movie_det__event__02FC7413" Association="Self.FK__movie_det__event__02FC7413">
+            <End Role="events" EntitySet="events" />
+            <End Role="movie_details" EntitySet="movie_details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__performan__event__74AE54BC" Association="Self.FK__performan__event__74AE54BC">
+            <End Role="events" EntitySet="events" />
+            <End Role="performances" EntitySet="performances" />
+          </AssociationSet>
+          <AssociationSet Name="FK__theatre_d__event__05D8E0BE" Association="Self.FK__theatre_d__event__05D8E0BE">
+            <End Role="events" EntitySet="events" />
+            <End Role="theatre_details" EntitySet="theatre_details" />
+          </AssociationSet>
+          <AssociationSet Name="FK__moderatio__submi__31B762FC" Association="Self.FK__moderatio__submi__31B762FC">
+            <End Role="organizer_users" EntitySet="organizer_users" />
+            <End Role="moderation_events" EntitySet="moderation_events" />
+          </AssociationSet>
+          <AssociationSet Name="FK__order_ite__order__4F7CD00D" Association="Self.FK__order_ite__order__4F7CD00D">
+            <End Role="orders" EntitySet="orders" />
+            <End Role="order_items" EntitySet="order_items" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tickets__order_i__5441852A" Association="Self.FK__tickets__order_i__5441852A">
+            <End Role="order_items" EntitySet="order_items" />
+            <End Role="tickets" EntitySet="tickets" />
+          </AssociationSet>
+          <AssociationSet Name="FK__orders__session___4CA06362" Association="Self.FK__orders__session___4CA06362">
+            <End Role="sessions" EntitySet="sessions" />
+            <End Role="orders" EntitySet="orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__orders__user_id__4BAC3F29" Association="Self.FK__orders__user_id__4BAC3F29">
+            <End Role="users" EntitySet="users" />
+            <End Role="orders" EntitySet="orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__payments__order___571DF1D5" Association="Self.FK__payments__order___571DF1D5">
+            <End Role="orders" EntitySet="orders" />
+            <End Role="payments" EntitySet="payments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__organizer__organ__2A164134" Association="Self.FK__organizer__organ__2A164134">
+            <End Role="organizers" EntitySet="organizers" />
+            <End Role="organizer_applications" EntitySet="organizer_applications" />
+          </AssociationSet>
+          <AssociationSet Name="FK__organizer__organ__2645B050" Association="Self.FK__organizer__organ__2645B050">
+            <End Role="organizers" EntitySet="organizers" />
+            <End Role="organizer_users" EntitySet="organizer_users" />
+          </AssociationSet>
+          <AssociationSet Name="FK__refunds__payment__59FA5E80" Association="Self.FK__refunds__payment__59FA5E80">
+            <End Role="payments" EntitySet="payments" />
+            <End Role="refunds" EntitySet="refunds" />
+          </AssociationSet>
+          <AssociationSet Name="FK__performan__perfo__7B5B524B" Association="Self.FK__performan__perfo__7B5B524B">
+            <End Role="performances" EntitySet="performances" />
+            <End Role="performance_seats" EntitySet="performance_seats" />
+          </AssociationSet>
+          <AssociationSet Name="FK__performan__seat___7C4F7684" Association="Self.FK__performan__seat___7C4F7684">
+            <End Role="seats" EntitySet="seats" />
+            <End Role="performance_seats" EntitySet="performance_seats" />
+          </AssociationSet>
+          <AssociationSet Name="FK__seat_hold__perfo__7F2BE32F" Association="Self.FK__seat_hold__perfo__7F2BE32F">
+            <End Role="performance_seats" EntitySet="performance_seats" />
+            <End Role="seat_holds" EntitySet="seat_holds" />
+          </AssociationSet>
+          <AssociationSet Name="FK__performan__venue__75A278F5" Association="Self.FK__performan__venue__75A278F5">
+            <End Role="venues" EntitySet="venues" />
+            <End Role="performances" EntitySet="performances" />
+          </AssociationSet>
+          <AssociationSet Name="FK__price_tie__perfo__787EE5A0" Association="Self.FK__price_tie__perfo__787EE5A0">
+            <End Role="performances" EntitySet="performances" />
+            <End Role="price_tiers" EntitySet="price_tiers" />
+          </AssociationSet>
+          <AssociationSet Name="FK__search_qu__sessi__1CBC4616" Association="Self.FK__search_qu__sessi__1CBC4616">
+            <End Role="sessions" EntitySet="sessions" />
+            <End Role="search_queries" EntitySet="search_queries" />
+          </AssociationSet>
+          <AssociationSet Name="FK__seatmaps__venue___628FA481" Association="Self.FK__seatmaps__venue___628FA481">
+            <End Role="venues" EntitySet="venues" />
+            <End Role="seatmaps" EntitySet="seatmaps" />
+          </AssociationSet>
+          <AssociationSet Name="FK__seats__venue_id__66603565" Association="Self.FK__seats__venue_id__66603565">
+            <End Role="venues" EntitySet="venues" />
+            <End Role="seats" EntitySet="seats" />
+          </AssociationSet>
+          <AssociationSet Name="FK__sessions__user_i__3B75D760" Association="Self.FK__sessions__user_i__3B75D760">
+            <End Role="users" EntitySet="users" />
+            <End Role="sessions" EntitySet="sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__user_paym__user___3E52440B" Association="Self.FK__user_paym__user___3E52440B">
+            <End Role="users" EntitySet="users" />
+            <End Role="user_payment_methods" EntitySet="user_payment_methods" />
+          </AssociationSet>
+          <AssociationSet Name="event_movie_genres" Association="Self.event_movie_genres">
+            <End Role="events" EntitySet="events" />
+            <End Role="movie_genres" EntitySet="movie_genres" />
+          </AssociationSet>
+          <AssociationSet Name="event_music_genres" Association="Self.event_music_genres">
+            <End Role="events" EntitySet="events" />
+            <End Role="music_genres" EntitySet="music_genres" />
+          </AssociationSet>
+          <AssociationSet Name="event_theatre_genres" Association="Self.event_theatre_genres">
+            <End Role="events" EntitySet="events" />
+            <End Role="theatre_genres" EntitySet="theatre_genres" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="pr2ModelStoreContainer" CdmEntityContainer="pr2Entities1">
+          <EntitySetMapping Name="admins">
+            <EntityTypeMapping TypeName="pr2Model.admins">
+              <MappingFragment StoreEntitySet="admins">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password_hash" ColumnName="password_hash" />
+                <ScalarProperty Name="role" ColumnName="role" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cart_items">
+            <EntityTypeMapping TypeName="pr2Model.cart_items">
+              <MappingFragment StoreEntitySet="cart_items">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="cart_id" ColumnName="cart_id" />
+                <ScalarProperty Name="performance_id" ColumnName="performance_id" />
+                <ScalarProperty Name="price_tier_id" ColumnName="price_tier_id" />
+                <ScalarProperty Name="seat_id" ColumnName="seat_id" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="unit_price" ColumnName="unit_price" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="carts">
+            <EntityTypeMapping TypeName="pr2Model.carts">
+              <MappingFragment StoreEntitySet="carts">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="session_id" ColumnName="session_id" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="updated_at" ColumnName="updated_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="categories">
+            <EntityTypeMapping TypeName="pr2Model.categories">
+              <MappingFragment StoreEntitySet="categories">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="category_key" ColumnName="category_key" />
+                <ScalarProperty Name="display_name" ColumnName="display_name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cities">
+            <EntityTypeMapping TypeName="pr2Model.cities">
+              <MappingFragment StoreEntitySet="cities">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="concert_details">
+            <EntityTypeMapping TypeName="pr2Model.concert_details">
+              <MappingFragment StoreEntitySet="concert_details">
+                <ScalarProperty Name="event_id" ColumnName="event_id" />
+                <ScalarProperty Name="duration_min" ColumnName="duration_min" />
+                <ScalarProperty Name="headliner" ColumnName="headliner" />
+                <ScalarProperty Name="opener" ColumnName="opener" />
+                <ScalarProperty Name="music_genre_main_id" ColumnName="music_genre_main_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="events">
+            <EntityTypeMapping TypeName="pr2Model.events">
+              <MappingFragment StoreEntitySet="events">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+                <ScalarProperty Name="organizer_id" ColumnName="organizer_id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="language" ColumnName="language" />
+                <ScalarProperty Name="age_limit" ColumnName="age_limit" />
+                <ScalarProperty Name="poster_url" ColumnName="poster_url" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="updated_at" ColumnName="updated_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="moderation_events">
+            <EntityTypeMapping TypeName="pr2Model.moderation_events">
+              <MappingFragment StoreEntitySet="moderation_events">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="event_id" ColumnName="event_id" />
+                <ScalarProperty Name="submitted_by" ColumnName="submitted_by" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="reviewed_by" ColumnName="reviewed_by" />
+                <ScalarProperty Name="reviewed_at" ColumnName="reviewed_at" />
+                <ScalarProperty Name="notes" ColumnName="notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="movie_details">
+            <EntityTypeMapping TypeName="pr2Model.movie_details">
+              <MappingFragment StoreEntitySet="movie_details">
+                <ScalarProperty Name="event_id" ColumnName="event_id" />
+                <ScalarProperty Name="duration_min" ColumnName="duration_min" />
+                <ScalarProperty Name="imdb_id" ColumnName="imdb_id" />
+                <ScalarProperty Name="parental_rating" ColumnName="parental_rating" />
+                <ScalarProperty Name="distributor" ColumnName="distributor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="movie_genres">
+            <EntityTypeMapping TypeName="pr2Model.movie_genres">
+              <MappingFragment StoreEntitySet="movie_genres">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="music_genres">
+            <EntityTypeMapping TypeName="pr2Model.music_genres">
+              <MappingFragment StoreEntitySet="music_genres">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="order_items">
+            <EntityTypeMapping TypeName="pr2Model.order_items">
+              <MappingFragment StoreEntitySet="order_items">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+                <ScalarProperty Name="performance_id" ColumnName="performance_id" />
+                <ScalarProperty Name="price_tier_id" ColumnName="price_tier_id" />
+                <ScalarProperty Name="seat_id" ColumnName="seat_id" />
+                <ScalarProperty Name="unit_price" ColumnName="unit_price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="orders">
+            <EntityTypeMapping TypeName="pr2Model.orders">
+              <MappingFragment StoreEntitySet="orders">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="session_id" ColumnName="session_id" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="total_amount" ColumnName="total_amount" />
+                <ScalarProperty Name="currency" ColumnName="currency" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="payment_intent_id" ColumnName="payment_intent_id" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="organizer_applications">
+            <EntityTypeMapping TypeName="pr2Model.organizer_applications">
+              <MappingFragment StoreEntitySet="organizer_applications">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="organizer_id" ColumnName="organizer_id" />
+                <ScalarProperty Name="org_name" ColumnName="org_name" />
+                <ScalarProperty Name="contact_email" ColumnName="contact_email" />
+                <ScalarProperty Name="submitted_at" ColumnName="submitted_at" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="reviewed_by_admin_id" ColumnName="reviewed_by_admin_id" />
+                <ScalarProperty Name="review_notes" ColumnName="review_notes" />
+                <ScalarProperty Name="decided_at" ColumnName="decided_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="organizer_documents">
+            <EntityTypeMapping TypeName="pr2Model.organizer_documents">
+              <MappingFragment StoreEntitySet="organizer_documents">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="application_id" ColumnName="application_id" />
+                <ScalarProperty Name="file_url" ColumnName="file_url" />
+                <ScalarProperty Name="doc_type" ColumnName="doc_type" />
+                <ScalarProperty Name="uploaded_at" ColumnName="uploaded_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="organizer_users">
+            <EntityTypeMapping TypeName="pr2Model.organizer_users">
+              <MappingFragment StoreEntitySet="organizer_users">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="organizer_id" ColumnName="organizer_id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password_hash" ColumnName="password_hash" />
+                <ScalarProperty Name="role" ColumnName="role" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="organizers">
+            <EntityTypeMapping TypeName="pr2Model.organizers">
+              <MappingFragment StoreEntitySet="organizers">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="legal_name" ColumnName="legal_name" />
+                <ScalarProperty Name="brand_name" ColumnName="brand_name" />
+                <ScalarProperty Name="tax_id" ColumnName="tax_id" />
+                <ScalarProperty Name="contact_email" ColumnName="contact_email" />
+                <ScalarProperty Name="contact_phone" ColumnName="contact_phone" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="payments">
+            <EntityTypeMapping TypeName="pr2Model.payments">
+              <MappingFragment StoreEntitySet="payments">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+                <ScalarProperty Name="provider" ColumnName="provider" />
+                <ScalarProperty Name="provider_payment_id" ColumnName="provider_payment_id" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="currency" ColumnName="currency" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="captured_at" ColumnName="captured_at" />
+                <ScalarProperty Name="failure_reason" ColumnName="failure_reason" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="performance_seats">
+            <EntityTypeMapping TypeName="pr2Model.performance_seats">
+              <MappingFragment StoreEntitySet="performance_seats">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="performance_id" ColumnName="performance_id" />
+                <ScalarProperty Name="seat_id" ColumnName="seat_id" />
+                <ScalarProperty Name="price_tier_id" ColumnName="price_tier_id" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="performances">
+            <EntityTypeMapping TypeName="pr2Model.performances">
+              <MappingFragment StoreEntitySet="performances">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="event_id" ColumnName="event_id" />
+                <ScalarProperty Name="venue_id" ColumnName="venue_id" />
+                <ScalarProperty Name="start_datetime" ColumnName="start_datetime" />
+                <ScalarProperty Name="end_datetime" ColumnName="end_datetime" />
+                <ScalarProperty Name="sales_start" ColumnName="sales_start" />
+                <ScalarProperty Name="sales_end" ColumnName="sales_end" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="price_tiers">
+            <EntityTypeMapping TypeName="pr2Model.price_tiers">
+              <MappingFragment StoreEntitySet="price_tiers">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="performance_id" ColumnName="performance_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="allocation_type" ColumnName="allocation_type" />
+                <ScalarProperty Name="capacity" ColumnName="capacity" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="currency" ColumnName="currency" />
+                <ScalarProperty Name="seatmap_section" ColumnName="seatmap_section" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="refunds">
+            <EntityTypeMapping TypeName="pr2Model.refunds">
+              <MappingFragment StoreEntitySet="refunds">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="payment_id" ColumnName="payment_id" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="provider_refund_id" ColumnName="provider_refund_id" />
+                <ScalarProperty Name="processed_at" ColumnName="processed_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="search_queries">
+            <EntityTypeMapping TypeName="pr2Model.search_queries">
+              <MappingFragment StoreEntitySet="search_queries">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="session_id" ColumnName="session_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="city_id" ColumnName="city_id" />
+                <ScalarProperty Name="category_id" ColumnName="category_id" />
+                <ScalarProperty Name="venue_id" ColumnName="venue_id" />
+                <ScalarProperty Name="date_from" ColumnName="date_from" />
+                <ScalarProperty Name="date_to" ColumnName="date_to" />
+                <ScalarProperty Name="text_query" ColumnName="text_query" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="seat_holds">
+            <EntityTypeMapping TypeName="pr2Model.seat_holds">
+              <MappingFragment StoreEntitySet="seat_holds">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="performance_seat_id" ColumnName="performance_seat_id" />
+                <ScalarProperty Name="cart_id" ColumnName="cart_id" />
+                <ScalarProperty Name="expires_at" ColumnName="expires_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="seatmaps">
+            <EntityTypeMapping TypeName="pr2Model.seatmaps">
+              <MappingFragment StoreEntitySet="seatmaps">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="venue_id" ColumnName="venue_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="layout_json" ColumnName="layout_json" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="seats">
+            <EntityTypeMapping TypeName="pr2Model.seats">
+              <MappingFragment StoreEntitySet="seats">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="venue_id" ColumnName="venue_id" />
+                <ScalarProperty Name="seatmap_section" ColumnName="seatmap_section" />
+                <ScalarProperty Name="row_label" ColumnName="row_label" />
+                <ScalarProperty Name="seat_number" ColumnName="seat_number" />
+                <ScalarProperty Name="is_wheelchair" ColumnName="is_wheelchair" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sessions">
+            <EntityTypeMapping TypeName="pr2Model.sessions">
+              <MappingFragment StoreEntitySet="sessions">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="session_token" ColumnName="session_token" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="started_at" ColumnName="started_at" />
+                <ScalarProperty Name="expires_at" ColumnName="expires_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="pr2Model.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="theatre_details">
+            <EntityTypeMapping TypeName="pr2Model.theatre_details">
+              <MappingFragment StoreEntitySet="theatre_details">
+                <ScalarProperty Name="event_id" ColumnName="event_id" />
+                <ScalarProperty Name="duration_min" ColumnName="duration_min" />
+                <ScalarProperty Name="playwright" ColumnName="playwright" />
+                <ScalarProperty Name="director" ColumnName="director" />
+                <ScalarProperty Name="intermission_count" ColumnName="intermission_count" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="theatre_genres">
+            <EntityTypeMapping TypeName="pr2Model.theatre_genres">
+              <MappingFragment StoreEntitySet="theatre_genres">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tickets">
+            <EntityTypeMapping TypeName="pr2Model.tickets">
+              <MappingFragment StoreEntitySet="tickets">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="order_item_id" ColumnName="order_item_id" />
+                <ScalarProperty Name="ticket_code" ColumnName="ticket_code" />
+                <ScalarProperty Name="qr_code_url" ColumnName="qr_code_url" />
+                <ScalarProperty Name="holder_name" ColumnName="holder_name" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="delivered_to_email" ColumnName="delivered_to_email" />
+                <ScalarProperty Name="issued_at" ColumnName="issued_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="user_payment_methods">
+            <EntityTypeMapping TypeName="pr2Model.user_payment_methods">
+              <MappingFragment StoreEntitySet="user_payment_methods">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="provider" ColumnName="provider" />
+                <ScalarProperty Name="token" ColumnName="token" />
+                <ScalarProperty Name="brand" ColumnName="brand" />
+                <ScalarProperty Name="last4" ColumnName="last4" />
+                <ScalarProperty Name="exp_month" ColumnName="exp_month" />
+                <ScalarProperty Name="exp_year" ColumnName="exp_year" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="pr2Model.users">
+              <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="surname" ColumnName="surname" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="password_hash" ColumnName="password_hash" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="updated_at" ColumnName="updated_at" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="venues">
+            <EntityTypeMapping TypeName="pr2Model.venues">
+              <MappingFragment StoreEntitySet="venues">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="city_id" ColumnName="city_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="latitude" ColumnName="latitude" />
+                <ScalarProperty Name="longitude" ColumnName="longitude" />
+                <ScalarProperty Name="has_seating" ColumnName="has_seating" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="event_movie_genres" TypeName="pr2Model.event_movie_genres" StoreEntitySet="event_movie_genres">
+            <EndProperty Name="events">
+              <ScalarProperty Name="id" ColumnName="event_id" />
+            </EndProperty>
+            <EndProperty Name="movie_genres">
+              <ScalarProperty Name="id" ColumnName="movie_genre_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="event_music_genres" TypeName="pr2Model.event_music_genres" StoreEntitySet="event_music_genres">
+            <EndProperty Name="events">
+              <ScalarProperty Name="id" ColumnName="event_id" />
+            </EndProperty>
+            <EndProperty Name="music_genres">
+              <ScalarProperty Name="id" ColumnName="music_genre_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="event_theatre_genres" TypeName="pr2Model.event_theatre_genres" StoreEntitySet="event_theatre_genres">
+            <EndProperty Name="events">
+              <ScalarProperty Name="id" ColumnName="event_id" />
+            </EndProperty>
+            <EndProperty Name="theatre_genres">
+              <ScalarProperty Name="id" ColumnName="theatre_genre_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

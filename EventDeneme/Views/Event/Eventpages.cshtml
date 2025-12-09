@@ -1,0 +1,118 @@
+﻿
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/Event.css">
+@RenderSection("Filters", required: false)
+<section class="eventscontainer">
+
+    <div class="leftmenu">
+        <h3>Filter</h3>
+
+        <div class="search-box">
+            <i class="fa-solid fa-location-dot"></i>
+            <select id="CityId">
+                <option value="">City</option>
+                @foreach (var city in ViewBag.cities)
+                {
+                    <option value="@city.id">@city.name</option>
+                }
+            </select>
+        </div>
+
+        <br />
+
+        <div class="search-box">
+            <i class="fa-solid fa-map-pin"></i>
+            <select id="VenueId">
+                <option value="">Venue</option>
+                @foreach (var venues in ViewBag.venues)
+                {
+                    <option value="@venues.id">@venues.name</option>
+                }
+            </select>
+        </div>
+
+        <hr />
+        <br />
+
+        <label class="filter-option">
+            <input type="radio" name="date" value="today"> Today
+        </label>
+
+        <label class="filter-option">
+            <input type="radio" name="date" value="week"> This Week
+        </label>
+
+        <label id="filter3" class="filter-option">
+            <input type="radio" name="date" value="month"> This Month
+        </label>
+        <label class="filter-option clear-filter">
+            <i style="font-size:14px;" class="fa fa-trash"></i> <input type="radio" name="date" value="clear"> Clear Filter
+        </label>
+    </div>
+
+    <div  class="rightcontent">
+
+        @RenderBody()
+
+    </div>
+
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(function () {
+        var categoryId = '@ViewBag.CategoryId';
+
+        function applyFilters() {
+
+            var cityId = $('#CityId').val() || '';
+            var venueId = $('#VenueId').val() || '';
+            var dateFilter = $('input[name="date"]:checked').val() || '';
+            var categoryId = '@ViewBag.CategoryId'; 
+            if (dateFilter === "clear") {
+
+                // dropdownları sıfırla
+                $('#CityId').val('');
+                $('#VenueId').val('');
+
+                $('input[name="date"]').prop('checked', false);
+
+             
+                dateFilter = '';
+                cityId = '';
+                venueId = '';
+            }
+
+            $.ajax({
+                url: '@Url.Action("Filter", "Event")',
+                type: 'GET',
+                data: {
+                    cityId: cityId,
+                    venueId: venueId,
+                    dateFilter: dateFilter,
+                    categoryId: categoryId
+                },
+                success: function (html) {
+                
+                    $('.rightcontent').html(html);
+                },
+                error: function (xhr) {
+                    console.error("Filter error:", xhr.responseText);
+                    alert("An error occurred while filtering.");
+                }
+            });
+
+        } // applyFilters biter
+
+
+        // filtre tetikleyicileri
+        $('#CityId, #VenueId').on('change', applyFilters);
+        $('input[name="date"]').on('change', applyFilters);
+
+    });
+</script>
+
