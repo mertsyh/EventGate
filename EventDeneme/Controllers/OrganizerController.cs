@@ -72,7 +72,10 @@ namespace EventDeneme.Controllers
         {
              if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
              long orgId = Convert.ToInt64(Session["OrganizerID"]);
-             var docs = db.organizer_documents.Where(d => d.organizer_id == orgId).ToList();
+             var docs = (from d in db.organizer_documents
+                         join a in db.organizer_applications on d.application_id equals a.id
+                         where a.organizer_id == orgId
+                         select d).ToList();
              return View(docs);
         }
     }
