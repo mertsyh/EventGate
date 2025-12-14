@@ -1,0 +1,67 @@
+@model EventDeneme.Models.CheckoutViewModel
+@{
+    ViewBag.Title = "Checkout - " + Model.EventTitle;
+}
+
+<div class="container" style="padding: 40px 20px; max-width: 800px; margin: 0 auto;">
+    <h2>Payment Information</h2>
+    <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h4>Order Summary</h4>
+        <p><strong>Event:</strong> @Model.EventTitle</p>
+        <p><strong>Seat Count:</strong> @Model.SeatCount</p>
+        <p><strong>Total Amount:</strong> @Model.TotalAmount.ToString("C2")</p>
+    </div>
+
+    @using (Html.BeginForm("ProcessPayment", "Ticket", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.PerformanceId)
+        @Html.HiddenFor(m => m.SelectedSeatIds)
+        @Html.HiddenFor(m => m.TotalAmount)
+
+        <div class="form-section">
+            <h3>Contact Information</h3>
+            <div class="form-group" style="margin-bottom: 15px;">
+                @Html.LabelFor(m => m.FullName)
+                @Html.TextBoxFor(m => m.FullName, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" })
+                @Html.ValidationMessageFor(m => m.FullName, "", new { @class = "text-danger", style = "color: red;" })
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger", style = "color: red;" })
+            </div>
+             <div class="form-group" style="margin-bottom: 15px;">
+                @Html.LabelFor(m => m.Phone)
+                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" })
+                @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger", style = "color: red;" })
+            </div>
+        </div>
+
+        <div class="form-section" style="margin-top: 30px;">
+            <h3>Card Information</h3>
+            <div class="form-group" style="margin-bottom: 15px;">
+                @Html.LabelFor(m => m.CardNumber)
+                @Html.TextBoxFor(m => m.CardNumber, new { @class = "form-control", placeholder = "0000 0000 0000 0000", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" })
+                @Html.ValidationMessageFor(m => m.CardNumber, "", new { @class = "text-danger", style = "color: red;" })
+            </div>
+            <div style="display: flex; gap: 20px;">
+                <div class="form-group" style="flex: 1;">
+                    @Html.LabelFor(m => m.ExpiryDate)
+                    @Html.TextBoxFor(m => m.ExpiryDate, new { @class = "form-control", placeholder = "MM/YY", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" })
+                    @Html.ValidationMessageFor(m => m.ExpiryDate, "", new { @class = "text-danger", style = "color: red;" })
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    @Html.LabelFor(m => m.CVV)
+                    @Html.TextBoxFor(m => m.CVV, new { @class = "form-control", placeholder = "123", style = "width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" })
+                    @Html.ValidationMessageFor(m => m.CVV, "", new { @class = "text-danger", style = "color: red;" })
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" style="background-color: #e7004c; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 30px; width: 100%; font-size: 1.1em;">
+            Complete Payment (@Model.TotalAmount.ToString("C2"))
+        </button>
+    }
+</div>
+

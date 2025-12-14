@@ -1,0 +1,40 @@
+@model List<EventDeneme.Models.refunds>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Refund Requests";
+}
+
+<h2>Refund Requests</h2>
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.id</td>
+                    <td>@item.reason</td>
+                    <td>@item.status</td>
+                    <td>
+                        <a href="#">Approve</a> | 
+                        <a href="#">Reject</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No refund requests pending.</p>
+}
+

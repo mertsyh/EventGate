@@ -1,0 +1,32 @@
+@model List<EventDeneme.Models.tickets>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Manage Tickets";
+}
+
+<h2>Sold Tickets</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ticket Code</th>
+            <th>Holder</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Issued At</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ticket_code</td>
+                <td>@item.holder_name</td>
+                <td>@item.delivered_to_email</td>
+                <td>@item.status</td>
+                <td>@item.issued_at</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

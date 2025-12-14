@@ -1,0 +1,98 @@
+@model EventDeneme.Models.SeatSelectionViewModel
+@{
+    ViewBag.Title = "Buy Ticket - " + Model.EventTitle;
+}
+
+<div class="container" style="padding: 40px 20px;">
+    <h1>@Model.EventTitle</h1>
+    <p><i class="fas fa-map-marker-alt"></i> @Model.VenueName</p>
+    <p><i class="far fa-calendar-alt"></i> @Model.StartDate.ToString("dd MMMM yyyy HH:mm")</p>
+
+    <hr />
+
+    <h3>Seat Selection</h3>
+
+    @using (Html.BeginForm("Checkout", "Ticket", FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.PerformanceId)
+        <input type="hidden" id="selectedSeats" name="selectedSeats" value="" />
+
+        <div class="seat-map" style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+            @if (Model.AvailableSeats != null && Model.AvailableSeats.Any())
+            {
+                var groupedSeats = Model.AvailableSeats.GroupBy(s => s.Section);
+                foreach (var group in groupedSeats)
+                {
+                    <div class="seat-section" style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; width: 100%;">
+                        <h4>Section: @group.Key</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            @foreach (var seat in group)
+                            {
+                                <div class="seat-item" style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; cursor: pointer; text-align: center; min-width: 60px;" 
+                                     onclick="toggleSeat(this, '@seat.PerformanceSeatId', @seat.Price)">
+                                    <div>@seat.Row - @seat.Number</div>
+                                    <div style="font-size: 0.8em; color: #666;">@seat.Price.ToString("C2")</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No available seats found or seat selection is not active for this event.</p>
+            }
+        </div>
+
+        <div class="purchase-summary" style="margin-top: 30px; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
+            <h4>Selected Items</h4>
+            <div id="selected-list">No seats selected yet.</div>
+            <h3 style="margin-top: 10px;">Total: <span id="total-price">0.00</span> ₺</h3>
+            <button type="submit" id="btn-checkout" class="btn btn-primary" style="background-color: #e7004c; color: white; border: none; padding: 10px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 10px;" disabled>Proceed to Checkout</button>
+        </div>
+    }
+</div>
+
+<script>
+    var selectedSeatIds = [];
+    var currentTotal = 0;
+
+    function toggleSeat(element, seatId, price) {
+        seatId = parseInt(seatId);
+        var index = selectedSeatIds.indexOf(seatId);
+
+        if (index === -1) {
+            // Select
+            selectedSeatIds.push(seatId);
+            element.style.backgroundColor = '#e7004c';
+            element.style.color = 'white';
+            element.style.borderColor = '#e7004c';
+            currentTotal += parseFloat(price);
+        } else {
+            // Deselect
+            selectedSeatIds.splice(index, 1);
+            element.style.backgroundColor = '';
+            element.style.color = '';
+            element.style.borderColor = '#ccc';
+            currentTotal -= parseFloat(price);
+        }
+
+        updateSummary();
+    }
+
+    function updateSummary() {
+        document.getElementById('selectedSeats').value = selectedSeatIds.join(',');
+        // TL formatting: replace . with , if needed or use simple toFixed
+        document.getElementById('total-price').innerText = currentTotal.toFixed(2);
+        
+        var listDiv = document.getElementById('selected-list');
+        if (selectedSeatIds.length > 0) {
+            listDiv.innerText = selectedSeatIds.length + " seat(s) selected.";
+            document.getElementById('btn-checkout').disabled = false;
+        } else {
+            listDiv.innerText = "No seats selected yet.";
+            document.getElementById('btn-checkout').disabled = true;
+        }
+    }
+</script>
+

@@ -1,0 +1,27 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="~/Content/style.css">
+</head>
+<body style="display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0;">
+    <div style="background:white; padding:40px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1); width:350px;">
+        <h2 style="text-align:center; color:#d22;">Admin Login</h2>
+        @using (Html.BeginForm("Login", "Admin", FormMethod.Post))
+        {
+            <input type="text" name="username" placeholder="Username" style="width:100%; margin-bottom:10px; padding:10px;" required />
+            <input type="password" name="password" placeholder="Password" style="width:100%; margin-bottom:10px; padding:10px;" required />
+            if (ViewBag.Error != null)
+            {
+                <p style="color:red;">@ViewBag.Error</p>
+            }
+            <button type="submit" style="width:100%; padding:10px; background:#d22; color:white; border:none; border-radius:5px; cursor:pointer;">Login</button>
+        }
+    </div>
+</body>
+</html>
+

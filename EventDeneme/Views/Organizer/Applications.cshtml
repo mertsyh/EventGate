@@ -1,0 +1,25 @@
+@model List<EventDeneme.Models.organizer_applications>
+@{
+    ViewBag.Title = "Organizer Applications";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="padding: 40px 20px;">
+    <h2>Organizer Applications</h2>
+    <a href="@Url.Action("Dashboard", "Organizer")" class="btn btn-secondary" style="margin-bottom: 20px;">Back to Dashboard</a>
+
+    @if (Model.Any())
+    {
+        <ul>
+            @foreach (var app in Model)
+            {
+                <li>Application ID: @app.id - Status: @app.status - Date: @app.application_date</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No applications found.</p>
+    }
+</div>
+

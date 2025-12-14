@@ -1,9 +1,14 @@
 ﻿@model List<EventDeneme.Models.EventCardViewModel>
-@{
+@{ 
     Layout = "~/Views/Event/Eventpages.cshtml";
-    ViewBag.title= "Music";
+    ViewBag.Title = "Music";
 }
 
-@Html.Partial("_EventCards", Model)
-
-
+@if (Model != null && Model.Any())
+{
+    @Html.Partial("_EventCards", Model)
+}
+else
+{
+    <p style="padding: 20px;">No concerts found.</p>
+}

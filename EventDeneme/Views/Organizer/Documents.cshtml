@@ -1,0 +1,25 @@
+@model List<EventDeneme.Models.organizer_documents>
+@{
+    ViewBag.Title = "Organizer Documents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="padding: 40px 20px;">
+    <h2>Organizer Documents</h2>
+    <a href="@Url.Action("Dashboard", "Organizer")" class="btn btn-secondary" style="margin-bottom: 20px;">Back to Dashboard</a>
+
+    @if (Model.Any())
+    {
+        <ul>
+            @foreach (var doc in Model)
+            {
+                <li>@doc.document_type - <a href="@doc.document_url">Download</a> - Status: @doc.verification_status</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No documents found.</p>
+    }
+</div>
+

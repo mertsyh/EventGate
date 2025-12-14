@@ -1,0 +1,36 @@
+@model List<EventDeneme.Models.organizers>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Manage Organizers";
+}
+
+<h2>Organizers</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Legal Name</th>
+            <th>Brand Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.id</td>
+                <td>@item.legal_name</td>
+                <td>@item.brand_name</td>
+                <td>@item.contact_email</td>
+                <td>@item.status</td>
+                <td>
+                    <a href="#">View Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

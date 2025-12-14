@@ -146,6 +146,7 @@
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
+    <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\registercontroller.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -259,6 +260,7 @@
       <DependentUpon>pr2.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TicketDetailsViewModel.cs" />
+    <Compile Include="Models\TicketViewModels.cs" />
     <Compile Include="Models\tickets.cs">
       <DependentUpon>pr2.tt</DependentUpon>
     </Compile>
@@ -300,6 +302,10 @@
     <Content Include="Views\Event\Filter.cshtml" />
     <Content Include="Views\Event\_EventCards.cshtml" />
     <Content Include="Views\Event\Details.cshtml" />
+    <Content Include="Views\Ticket\Buy.cshtml" />
+    <Content Include="Views\Ticket\Checkout.cshtml" />
+    <Content Include="Views\Ticket\Failed.cshtml" />
+    <Content Include="Views\Ticket\Success.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Privacy_policy.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />

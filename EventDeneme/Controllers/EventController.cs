@@ -11,12 +11,27 @@ namespace EventDeneme.Controllers
     {
         pr2Entities1 db = new pr2Entities1();
 
-        // -------------------- HOME --------------------
+        // -------------------- HOME / ALL EVENTS --------------------
         public ActionResult Index()
         {
             ViewBag.cities = db.cities.ToList();
             ViewBag.venues = db.venues.ToList();
-            return View();
+
+            var events = db.events
+                .ToList()
+                .Select(e => new EventCardViewModel
+                {
+                    EventId = e.id,
+                    Title = e.title,
+                    StartDate = e.performances.OrderBy(p => p.start_datetime).FirstOrDefault()?.start_datetime,
+                    Venue = e.performances.FirstOrDefault()?.venues.name,
+                    City = e.performances.FirstOrDefault()?.venues.cities.name,
+                    Price = e.performances.SelectMany(p => p.price_tiers).OrderBy(t => t.price).FirstOrDefault()?.price,
+                    ImageUrl = e.poster_url
+                })
+                .ToList();
+
+            return View(events);
         }
 
         // -------------------- CINEMA --------------------

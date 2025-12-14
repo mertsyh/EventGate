@@ -52,7 +52,27 @@ namespace EventDeneme.Controllers
             return View();
         }
 
-    
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ForgotPassword(string Email)
+        {
+            // Demo logic: Check if user exists
+            var user = db.users.FirstOrDefault(x => x.email == Email);
+            if (user == null)
+            {
+                ViewBag.Error = "User not found.";
+                return View();
+            }
+
+            // In real app: Send email with reset token
+            ViewBag.Message = "Password reset link has been sent to your email.";
+            return View();
+        }
+
         [HttpPost]
         public ActionResult Signup(string Name, string Surname, string Email, string Phone, string Password)
         {

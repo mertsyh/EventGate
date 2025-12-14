@@ -1,0 +1,35 @@
+@model List<EventDeneme.Models.users>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Manage Users";
+}
+
+<h2>Manage Users</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.id</td>
+                <td>@item.name @item.surname</td>
+                <td>@item.email</td>
+                <td>@item.phone</td>
+                <td>
+                    <a href="#">Edit</a> | 
+                    <a href="#">Ban</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

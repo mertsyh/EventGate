@@ -74,5 +74,10 @@ namespace ProjeAdi.Controllers
             return View();
         }
 
+        public ActionResult Terms()
+        {
+            return View();
+        }
+
     }
 }

@@ -20,7 +20,7 @@
 
         @if (!isPast)
         {
-            <a href="#" class="buy-btn">Buy Ticket</a>
+            <a href="@Url.Action("Buy", "Ticket", new { id = Model.EventId })" class="buy-btn">Buy Ticket</a>
         }
         else
         {

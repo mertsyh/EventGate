@@ -9,8 +9,8 @@
         <div class="toggle-buttons">
             <button id="profileBtn" class="active">Profile</button>
             <button id="passwordBtn">Change Password</button>
-            <a href="/my-tickets.html" class="btn-link-tab" style="padding: 10px 20px; text-decoration: none; color: black; font-weight: 600;">My Tickets</a>
-            <a href="/refunds.html" class="btn-link-tab" style="padding: 10px 20px; text-decoration: none; color: black; font-weight: 600;">Refund Requests</a>
+            <a href="@Url.Action("MyTickets", "Profile")" class="btn-link-tab" style="padding: 10px 20px; text-decoration: none; color: black; font-weight: 600;">My Tickets</a>
+            <a href="@Url.Action("Refunds", "Profile")" class="btn-link-tab" style="padding: 10px 20px; text-decoration: none; color: black; font-weight: 600;">Refund Requests</a>
         </div>
 
         <div id="profileContent">
