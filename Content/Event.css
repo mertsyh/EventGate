@@ -114,66 +114,65 @@
     }
 @media screen and (max-width: 900px) {
 
-    /* --- ANA KONTEYNER --- */
     .eventscontainer {
-        flex-direction: column; /* Yan yana değil alt alta diz */
+        flex-direction: column; /* Stack vertically instead of side-by-side */
         width: 90%;
-        margin-top: 80px; /* Üst boşluğu azalttık */
+        margin-top: 80px; /* Reduce top margin */
         padding: 5px;
         min-height: auto;
     }
     .search-box {
         transform:scale(0.8);
     }
-    /* --- ÜST MENÜ (Eski Sol Menü) --- */
+    /* --- TOP MENU (previously left menu) --- */
     .leftmenu {
-        position: relative; /* Sabitliği kaldır */
+        position: relative; /* Remove fixed positioning */
         width: 90%;
         left: 0;
         top: 0;
-        margin: 0 auto 15px auto; /* Ortala */
-        /* İçerik Düzeni */
+        margin: 0 auto 15px auto; /* Center */
+        /* Layout */
         flex-direction: row;
-        flex-wrap: wrap; /* Sığmazsa alt satıra geçsin */
-        justify-content: center; /* Tam ortala */
+        flex-wrap: wrap; /* Wrap to next line if needed */
+        justify-content: center; /* Center completely */
         align-items: center;
         padding: 8px;
-        min-height: auto; /* Yükseklik kilidini aç */
+        min-height: auto; /* Remove fixed height */
         height: auto;
     }
 
-    /* Menü Butonlarını Küçültme (Scale Etkisi) */
+    /* Reduce menu button sizes (scale effect) */
     .filter-option {
-        width: auto; /* Sabit genişliği iptal et, içeriğe göre daralsın */
-        font-size: 12px; /* Yazıları küçült */
-        padding: 5px 10px; /* Butonları incelt */
-        margin: 5px; /* Araları sıkılaştır */
-        flex-grow: 1; /* Ekrana yayılmasını sağla */
+        width: auto; /* Let width depend on content */
+        font-size: 12px; /* Smaller text */
+        padding: 5px 10px; /* Thinner buttons */
+        margin: 5px; /* Tighter spacing */
+        flex-grow: 1; /* Spread across screen */
         text-align: center;
       
     }
 
-    /* --- SAĞ İÇERİK ALANI --- */
+    /* --- RIGHT CONTENT AREA --- */
     .rightcontent {
         width: 100%;
         left: 0;
         display: flex;
-        flex-direction: column; /* Kartları alt alta diz */
+        flex-direction: column; /* Stack cards vertically */
         gap: 5px;
      
     }
 
-    /* --- YATAY KART TASARIMI (Solda Resim, Sağda Yazı) --- */
+    /* --- HORIZONTAL CARD LAYOUT (image left, text right) --- */
     .event-card {
-        display: flex; /* Kartı satır moduna al */
+        display: flex; /* Row layout */
         flex-direction: row;
-        height: 120px; /* Sabit, kompakt bir yükseklik ver */
+        height: 120px; /* Fixed compact height */
         width: 100%;
     }
 
         .event-card img {
-            width: 35%; /* Resim genişliği */
-            height: 100%; /* Kartın boyu kadar olsun */
+            width: 35%; /* Image width */
+            height: 100%; /* Full card height */
             object-fit: cover;
         }
    
@@ -181,20 +180,20 @@
 
 
     .event-body {
-        width: 65%; /* Yazı alanı genişliği */
+        width: 65%; /* Text area width */
         padding: 8px 12px;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Dikey ortala */
+        justify-content: center; /* Vertical center */
     }
 
-    /* Kart İçi Yazı Ölçeklendirme */
+    /* Card text scaling */
     .event-title {
         font-size: 14px;
         margin-bottom: 2px;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis; /* Çok uzun başlıkları ... ile kes */
+        text-overflow: ellipsis; /* Truncate long titles with ... */
     }
 
     .event-location {

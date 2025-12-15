@@ -45,7 +45,7 @@ namespace EventDeneme.Controllers
 
             var movies = db.events
                 .Where(e => e.category_id == category)
-                .ToList()   // ÖNCE DB'DEN AL → SONRA MAPLE
+                .ToList()   // First get from DB, then map
                 .Select(e => new EventCardViewModel
                 {
                     EventId = e.id,
@@ -118,7 +118,7 @@ namespace EventDeneme.Controllers
         // -------------------- AJAX FILTER --------------------
         public ActionResult Filter(int? cityId, int? venueId, string dateFilter, int? categoryId)
         {
-            // Veri Çek — EF Hatası Olmasın Diye Tamamını Belleğe Alıyoruz
+            // Load data into memory to avoid EF translation issues
             var eventsQuery = db.events
                 .Where(e => !categoryId.HasValue || e.category_id == categoryId)
                 .ToList();
@@ -135,7 +135,7 @@ namespace EventDeneme.Controllers
                     .Where(e => e.performances.Any(p => p.venue_id == venueId))
                     .ToList();
 
-            // Date filter (Artık RAM'de hesaplandığı için EF hata vermez)
+            // Date filter (now works in memory, not in EF)
             DateTime now = DateTime.Now;
 
             if (dateFilter == "today")

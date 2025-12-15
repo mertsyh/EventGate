@@ -12,7 +12,8 @@
             <th>ID</th>
             <th>Name</th>
             <th>Address</th>
-            <th>Capacity</th>
+            <th>City</th>
+            <th>Has Seating</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -23,7 +24,8 @@
                 <td>@item.id</td>
                 <td>@item.name</td>
                 <td>@item.address</td>
-                <td>@item.capacity</td>
+                <td>@(item.cities != null ? item.cities.name : "N/A")</td>
+                <td>@(item.has_seating ? "Yes" : "No")</td>
                 <td>
                     <a href="#">Edit</a> | 
                     <a href="#">Delete</a>

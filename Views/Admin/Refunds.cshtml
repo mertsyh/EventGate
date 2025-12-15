@@ -12,8 +12,9 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Reason</th>
+                <th>Amount</th>
                 <th>Status</th>
+                <th>Processed At</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -22,8 +23,9 @@
             {
                 <tr>
                     <td>@item.id</td>
-                    <td>@item.reason</td>
+                    <td>@item.amount.ToString("C2")</td>
                     <td>@item.status</td>
+                    <td>@(item.processed_at.HasValue ? item.processed_at.Value.ToString("dd MMM yyyy HH:mm") : "Pending")</td>
                     <td>
                         <a href="#">Approve</a> | 
                         <a href="#">Reject</a>

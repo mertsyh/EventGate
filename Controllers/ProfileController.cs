@@ -20,13 +20,13 @@ namespace EventDeneme.Controllers
 
         public ActionResult Index()
         {
-            // ✅ Login kontrolü
+            // Login check
             if (Session["UserID"] == null)
             {
                 return RedirectToAction("Login", "Register");
             }
 
-            // ✅ HATA BURADAYDI → Artık %100 güvenli
+            // Fixed previous issue - now safe
             int userId = Convert.ToInt32(Session["UserID"]);
 
             var user = db.users.FirstOrDefault(x => x.id == userId);
@@ -41,10 +41,10 @@ namespace EventDeneme.Controllers
                 return RedirectToAction("Login", "Register");
             }
 
-            // ✅ Yeni şifreler uyuşuyor mu?
+            // Check if new passwords match
             if (NewPassword != ConfirmPassword)
             {
-                ViewBag.Error = "Yeni şifreler uyuşmuyor!";
+                ViewBag.Error = "New passwords do not match!";
                 return RedirectToAction("Index");
             }
 
@@ -57,26 +57,26 @@ namespace EventDeneme.Controllers
                 return RedirectToAction("Login", "Register");
             }
 
-            // ✅ Eski şifre hash kontrolü
+            // Old password hash validation
             string oldHashed = HashPassword(OldPassword);
 
             if (user.password_hash != oldHashed)
             {
-                ViewBag.Error = "Eski şifre yanlış!";
+                ViewBag.Error = "Old password is incorrect!";
                 return RedirectToAction("Index");
             }
 
-            // ✅ Yeni şifreyi hashleyip DB’ye yaz
+            // Hash new password and save to DB
             user.password_hash = HashPassword(NewPassword);
             user.updated_at = DateTime.Now;
 
             db.SaveChanges();
 
-            // ✅ Güvenlik için otomatik logout
+            // Automatic logout for security
             Session.Clear();
             Session.Abandon();
 
-            TempData["Success"] = "Şifre başarıyla değiştirildi. Lütfen tekrar giriş yapın.";
+            TempData["Success"] = "Password changed successfully. Please log in again.";
 
             return RedirectToAction("Login", "Register");
         }
@@ -97,14 +97,14 @@ namespace EventDeneme.Controllers
                 return RedirectToAction("Login", "Register");
             }
 
-            // ✅ Güncelleme
+            // Update
             user.name = Name;
             user.surname = Surname;
             user.updated_at = DateTime.Now;
 
             db.SaveChanges();
 
-            TempData["ProfileSuccess"] = "Profil bilgileri başarıyla güncellendi.";
+            TempData["ProfileSuccess"] = "Profile information has been updated successfully.";
 
             return RedirectToAction("Index");
         }

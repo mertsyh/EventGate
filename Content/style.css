@@ -228,7 +228,7 @@ header i {
     backdrop-filter: blur(13.4px);
     -webkit-backdrop-filter: blur(13.4px);
     border: 1px solid rgba(255, 255, 255, 0.73);
-    flex-wrap: nowrap; /* ← Satır atlamayı engeller */
+    flex-wrap: nowrap; /* Prevent line wrapping */
     overflow-x: auto;
 }
 

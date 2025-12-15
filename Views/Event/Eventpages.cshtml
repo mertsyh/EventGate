@@ -68,14 +68,13 @@
         var categoryId = '@ViewBag.CategoryId';
 
         function applyFilters() {
-
             var cityId = $('#CityId').val() || '';
             var venueId = $('#VenueId').val() || '';
             var dateFilter = $('input[name="date"]:checked').val() || '';
             var categoryId = '@ViewBag.CategoryId'; 
             if (dateFilter === "clear") {
 
-                // dropdownları sıfırla
+                // reset dropdowns
                 $('#CityId').val('');
                 $('#VenueId').val('');
 

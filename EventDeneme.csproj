@@ -143,11 +143,15 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ArtistController.cs" />
+    <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrganizerController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\registercontroller.cs" />
+    <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -318,6 +322,7 @@
     <Content Include="Views\Admin\Events.cshtml" />
     <Content Include="Views\Admin\Login.cshtml" />
     <Content Include="Views\Admin\Organizers.cshtml" />
+    <Content Include="Views\Admin\OrganizerDetails.cshtml" />
     <Content Include="Views\Admin\Refunds.cshtml" />
     <Content Include="Views\Admin\Tickets.cshtml" />
     <Content Include="Views\Admin\Users.cshtml" />
@@ -329,8 +334,15 @@
     <Content Include="Views\Organizer\Dashboard.cshtml" />
     <Content Include="Views\Organizer\Documents.cshtml" />
     <Content Include="Views\Organizer\Login.cshtml" />
+    <Content Include="Views\Organizer\Register.cshtml" />
     <Content Include="Views\Venue\Details.cshtml" />
     <Content Include="Views\Venue\Index.cshtml" />
+    <Content Include="Views\Event\Index.cshtml" />
+    <Content Include="Views\Home\Terms.cshtml" />
+    <Content Include="Views\Profile\MyTickets.cshtml" />
+    <Content Include="Views\Profile\Refunds.cshtml" />
+    <Content Include="Views\register\ForgotPassword.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -342,6 +354,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="bin\" />
     <Folder Include="Views\TicketDetailsViewModel\" />
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,7 @@ namespace EventDeneme.Controllers
             var eventItem = db.events.FirstOrDefault(e => e.id == id);
             if (eventItem == null) return HttpNotFound();
 
-            // Performans seçimi (şimdilik ilk performans)
+            // Performance selection (for now first performance)
             var performance = eventItem.performances.OrderBy(p => p.start_datetime).FirstOrDefault();
             if (performance == null)
             {
@@ -25,17 +25,17 @@ namespace EventDeneme.Controllers
                 return View("Error");
             }
 
-            // AUTO-SEED: Eğer veritabanında hiç koltuk yoksa, demo için oluştur.
-            // Bu kısım production'da kaldırılmalıdır.
+            // AUTO-SEED: If there are no seats in DB, create demo seats.
+            // This part should be removed in production.
             if (!db.performance_seats.Any(ps => ps.performance_id == performance.id))
             {
                 SeedSeats(performance.id, performance.venue_id);
             }
 
-            // Fiyat katmanlarını çek
+            // Load price tiers
             var priceTiers = db.price_tiers.Where(pt => pt.performance_id == performance.id).ToList();
 
-            // Koltukları çek
+            // Load seats
             var perfSeats = db.performance_seats
                 .Where(ps => ps.performance_id == performance.id && ps.status == "available")
                 .ToList();
@@ -44,7 +44,7 @@ namespace EventDeneme.Controllers
 
             foreach (var ps in perfSeats)
             {
-                // Fiyatı bul
+                // Find price
                 decimal price = 0;
                 var tier = priceTiers.FirstOrDefault(pt => pt.id == ps.price_tier_id);
                 if (tier != null)
@@ -69,11 +69,11 @@ namespace EventDeneme.Controllers
                 });
             }
 
-            // Eğer hiç koltuk yoksa veya hepsi satılmışsa
+            // If there are no seats or all are sold
             if (!seatViewModels.Any())
             {
-                // Demo amaçlı, eğer DB boşsa sahte koltuklar oluşturabiliriz veya boş liste dönebiliriz.
-                // Şimdilik boş liste dönecek.
+                // For demo purposes, we could create fake seats or return empty.
+                // For now, it returns empty.
             }
 
             var model = new SeatSelectionViewModel
@@ -90,13 +90,13 @@ namespace EventDeneme.Controllers
         }
 
         // POST: Ticket/Checkout
-        // Kullanıcı koltukları seçip "Devam Et" dediğinde buraya gelir
+        // Comes here when user selects seats and continues
         [HttpPost]
         public ActionResult Checkout(long performanceId, string selectedSeats)
         {
             if (string.IsNullOrEmpty(selectedSeats))
             {
-                // Geri yönlendir (EventId'yi bulmamız lazım, performance üzerinden)
+                // Redirect back (we need EventId from performance)
                 var perf = db.performances.Find(performanceId);
                 return RedirectToAction("Buy", new { id = perf.event_id });
             }
@@ -144,11 +144,11 @@ namespace EventDeneme.Controllers
 
             try
             {
-                // 1. Ödeme İşlemi (Simülasyon)
+                // 1. Payment process (simulation)
                 bool paymentSuccess = true; 
                 if (!paymentSuccess) return RedirectToAction("Failed");
 
-                // 2. Sipariş Oluştur
+                // 2. Create order
                 long? userId = null;
                 if (Session["UserID"] != null)
                 {
@@ -166,26 +166,26 @@ namespace EventDeneme.Controllers
                     created_at = DateTime.Now
                 };
                 db.orders.Add(order);
-                db.SaveChanges(); // ID almak için kaydet
+                db.SaveChanges(); // Save to get ID
 
-                // 3. Koltukları Güncelle ve Order Items Ekle
+                // 3. Update seats and create order items
                 var seatIds = model.SelectedSeatIds.Split(',').Select(long.Parse).ToList();
                 var seatsToUpdate = db.performance_seats.Where(ps => seatIds.Contains(ps.id)).ToList();
                 var priceTiers = db.price_tiers.Where(pt => pt.performance_id == model.PerformanceId).ToList();
 
                 foreach (var seat in seatsToUpdate)
                 {
-                    // Koltuk zaten satılmış mı kontrolü yapılmalı aslında (Concurrency)
+                    // Ideally check if seat already sold (concurrency)
                     if (seat.status != "available")
                     {
-                        // Hata: Koltuk başkası tarafından alındı
+                        // Error: seat taken by someone else
                         return RedirectToAction("Failed"); 
                     }
 
                     seat.status = "sold";
                     
                     // Order Item ekle
-                    // Fiyatı ve Tier ID'yi bul
+                    // Find price and tier ID
                     decimal unitPrice = 0;
                     long priceTierId = 0;
 
@@ -216,7 +216,7 @@ namespace EventDeneme.Controllers
                     db.order_items.Add(item);
                     db.SaveChanges(); // Item ID needed for Ticket
 
-                    // 4. Ticket Oluştur (Rapor gereksinimi)
+                    // 4. Create ticket (for reporting)
                     var ticket = new tickets
                     {
                         order_item_id = item.id,
