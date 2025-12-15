@@ -133,6 +133,123 @@ namespace EventDeneme.Controllers
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View(db.organizers.ToList());
         }
+
+        // ========== DELETE ACTIONS ==========
+
+        [HttpPost]
+        public ActionResult DeleteEvent(int id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var evt = db.events.Find(id);
+            if (evt != null)
+            {
+                db.events.Remove(evt);
+                db.SaveChanges();
+                TempData["Success"] = "Event deleted successfully.";
+            }
+            return RedirectToAction("Events");
+        }
+
+        [HttpPost]
+        public ActionResult DeleteVenue(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var venue = db.venues.Find(id);
+            if (venue != null)
+            {
+                db.venues.Remove(venue);
+                db.SaveChanges();
+                TempData["Success"] = "Venue deleted successfully.";
+            }
+            return RedirectToAction("Venues");
+        }
+
+        // ========== ORGANIZER ACTIONS ==========
+
+        public ActionResult OrganizerDetails(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var organizer = db.organizers.Find(id);
+            if (organizer == null) return HttpNotFound();
+            return View(organizer);
+        }
+
+        [HttpPost]
+        public ActionResult ApproveOrganizer(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var organizer = db.organizers.Find(id);
+            if (organizer != null)
+            {
+                organizer.status = "approved";
+                var orgUsers = db.organizer_users.Where(u => u.organizer_id == id).ToList();
+                foreach (var user in orgUsers)
+                {
+                    user.status = "active";
+                }
+                db.SaveChanges();
+                TempData["Success"] = "Organizer approved successfully.";
+            }
+            return RedirectToAction("Organizers");
+        }
+
+        [HttpPost]
+        public ActionResult RejectOrganizer(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var organizer = db.organizers.Find(id);
+            if (organizer != null)
+            {
+                organizer.status = "rejected";
+                db.SaveChanges();
+                TempData["Success"] = "Organizer rejected.";
+            }
+            return RedirectToAction("Organizers");
+        }
+
+        // ========== REFUND ACTIONS ==========
+
+        [HttpPost]
+        public ActionResult ApproveRefund(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var refund = db.refunds.Find(id);
+            if (refund != null)
+            {
+                refund.status = "approved";
+                refund.processed_at = DateTime.Now;
+                db.SaveChanges();
+                TempData["Success"] = "Refund approved successfully.";
+            }
+            return RedirectToAction("Refunds");
+        }
+
+        [HttpPost]
+        public ActionResult RejectRefund(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var refund = db.refunds.Find(id);
+            if (refund != null)
+            {
+                refund.status = "rejected";
+                refund.processed_at = DateTime.Now;
+                db.SaveChanges();
+                TempData["Success"] = "Refund rejected.";
+            }
+            return RedirectToAction("Refunds");
+        }
+
+        // ========== USER ACTIONS ==========
+
+        [HttpPost]
+        public ActionResult BanUser(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            // Note: users table might not have a status field, so this is a placeholder
+            // You may need to add a status field or use a different approach
+            TempData["Success"] = "User ban functionality - to be implemented with user status field.";
+            return RedirectToAction("Users");
+        }
     }
 }
 

@@ -6,6 +6,13 @@
 
 <h2>Organizers</h2>
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        @TempData["Success"]
+    </div>
+}
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -27,7 +34,21 @@
                 <td>@item.contact_email</td>
                 <td>@item.status</td>
                 <td>
-                    <a href="#">View Details</a>
+                    <a href="@Url.Action("OrganizerDetails", "Admin", new { id = item.id })">View Details</a>
+                    @if (item.status == "pending")
+                    {
+                        <span> | </span>
+                        @using (Html.BeginForm("ApproveOrganizer", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" style="background:none; border:none; color:green; cursor:pointer; text-decoration:underline; padding:0; margin-right:5px;">Approve</button>
+                        }
+                        @using (Html.BeginForm("RejectOrganizer", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to reject this organizer?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" style="background:none; border:none; color:#d22; cursor:pointer; text-decoration:underline; padding:0;">Reject</button>
+                        }
+                    }
                 </td>
             </tr>
         }

@@ -6,6 +6,13 @@
 
 <h2>Manage Users</h2>
 
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        @TempData["Success"]
+    </div>
+}
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -25,8 +32,11 @@
                 <td>@item.email</td>
                 <td>@item.phone</td>
                 <td>
-                    <a href="#">Edit</a> | 
-                    <a href="#">Ban</a>
+                    @using (Html.BeginForm("BanUser", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to ban this user?');" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" style="background:none; border:none; color:#d22; cursor:pointer; text-decoration:underline; padding:0;">Ban</button>
+                    }
                 </td>
             </tr>
         }
