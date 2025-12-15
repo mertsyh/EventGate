@@ -72,6 +72,26 @@ namespace EventDeneme.Controllers
             return View();
         }
 
+        // Run this once to create a default admin, then remove or comment it out.
+        public ActionResult CreateDefaultAdmin()
+        {
+            string password = "admin123";
+            string hashedPassword = HashPassword(password); // use existing HashPassword method
+
+            var admin = new admins
+            {
+                username = "admin",
+                password_hash = hashedPassword,
+                role = "SuperAdmin",
+                created_at = DateTime.Now
+            };
+
+            db.admins.Add(admin);
+            db.SaveChanges();
+
+            return Content("Default admin created. Username: admin, Password: admin123");
+        }
+
         // 3. Events Management (admin-events.html)
         public ActionResult Events()
         {
