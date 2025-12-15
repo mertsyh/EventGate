@@ -8,53 +8,66 @@
 
         <div class="SearchArea1">
             <div class="Search-area-main">
-                <input type="text" placeholder="Search For Events, Artists..." />
+                <input type="text" id="txtSearch" placeholder="Search For Events, Artists..." />
             </div>
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-magnifying-glass" id="btnSearch"></i>
         </div>
 
-        <ul>
-            <li><i class="fa-solid fa-film"></i><a href="~/Event/Cinema">Cinema</a></li>
-            <li><i class="fa-solid fa-music"></i><a href="~/Event/Music">Music</a></li>
-            <li><i class="fa-solid fa-masks-theater"></i><a href="~/Event/Theater">Theater</a></li>
+    </div>
 
-            <li class="user-menu">
-                @if (Session["UserID"] != null)
+
+    <ul>
+        <li><i class="fa-solid fa-film"></i><a href="~/Event/Cinema">Cinema</a></li>
+        <li><i class="fa-solid fa-music"></i><a href="~/Event/Music">Music</a></li>
+        <li><i class="fa-solid fa-masks-theater"></i><a href="~/Event/Theater">Theater</a></li>
+
+        <li class="user-menu">
+            @if (Session["UserID"] != null)
+            {
+                <a href="@Url.Action("Index", "Profile")">
+                    <i class="fa-solid fa-user"></i>
+                    <i id="prof" class="fa-solid fa-angle-down fa-xs"></i>
+                </a>
+
+
+            }
+            else
+            {
+                <a href="/Register/Signin">
+                    <i class="fa-solid fa-user"></i>
+                    <i id="prof" class="fa-solid fa-angle-down fa-xs"></i>
+                </a>
+            }
+
+
+            <ul class="dropdown">
+
+                @*  unsigned *@
+                @if (Session["UserID"] == null)
                 {
-                    <a href="@Url.Action("Index", "Profile")">
-                        <i class="fa-solid fa-user"></i>
-                        <i id="prof" class="fa-solid fa-angle-down fa-xs"></i>
-                    </a>
-
+                    <li><a href="/Register/Signin">Sign in</a></li>
                 }
                 else
                 {
-                    <a href="/Register/Signin">
-                        <i class="fa-solid fa-user"></i>
-                        <i id="prof" class="fa-solid fa-angle-down fa-xs"></i>
-                    </a>
+                    @* signed *@
+                    <li><a href="@Url.Action("Index", "Profile")">Profile</a></li>
+                    <li><a href="@Url.Action("MyTickets", "Profile")">My Tickets</a></li>
+
+                    <li><a href="/Register/Logout">Sign out</a></li>
                 }
 
+            </ul>
+        </li>
 
-                <ul class="dropdown">
-
-                    @*  unsigned *@
-                    @if (Session["UserID"] == null)
-                    {
-                        <li><a href="/Register/Signin">Sign in</a></li>
-                    }
-                    else
-                    {
-                        @* signed *@
-                        <li><a href="@Url.Action("Index", "Profile")">Profile</a></li>
-
-                        <li><a href="/Register/Logout">Sign out</a></li>
-                    }
-
-                </ul>
-            </li>
-
-        </ul>
+    </ul>
 
     </div>
 </header>
+<script>
+    document.getElementById("btnSearch").addEventListener("click", function () {
+        const q = document.getElementById("txtSearch").value;
+        if (q.trim() !== "") {
+            window.location.href = "/Event/Search?q=" + encodeURIComponent(q);
+        }
+    });
+</script>

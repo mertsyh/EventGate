@@ -20,19 +20,31 @@ namespace EventDeneme.Controllers
 
         public ActionResult Index()
         {
-            // ✅ Login kontrolü
+
             if (Session["UserID"] == null)
             {
                 return RedirectToAction("Login", "Register");
             }
 
-            // ✅ HATA BURADAYDI → Artık %100 güvenli
+         
             int userId = Convert.ToInt32(Session["UserID"]);
 
             var user = db.users.FirstOrDefault(x => x.id == userId);
 
             return View(user);
         }
+        public ActionResult MyTickets()
+        {
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login", "Register");
+
+            int userId = Convert.ToInt32(Session["UserID"]);
+            var user = db.users.FirstOrDefault(x => x.id == userId);
+            ViewBag.DefaultTab = "MyTickets";
+            return View("Index", user);
+        }
+
+
         [HttpPost]
         public ActionResult ChangePassword(string OldPassword, string NewPassword, string ConfirmPassword)
         {
@@ -41,10 +53,10 @@ namespace EventDeneme.Controllers
                 return RedirectToAction("Login", "Register");
             }
 
-            // ✅ Yeni şifreler uyuşuyor mu?
+       
             if (NewPassword != ConfirmPassword)
             {
-                ViewBag.Error = "Yeni şifreler uyuşmuyor!";
+                ViewBag.Error = "The new passwords don't match.!";
                 return RedirectToAction("Index");
             }
 
@@ -57,26 +69,26 @@ namespace EventDeneme.Controllers
                 return RedirectToAction("Login", "Register");
             }
 
-            // ✅ Eski şifre hash kontrolü
+       
             string oldHashed = HashPassword(OldPassword);
 
             if (user.password_hash != oldHashed)
             {
-                ViewBag.Error = "Eski şifre yanlış!";
+                ViewBag.Error = "Old password is wrong!";
                 return RedirectToAction("Index");
             }
 
-            // ✅ Yeni şifreyi hashleyip DB’ye yaz
+ 
             user.password_hash = HashPassword(NewPassword);
             user.updated_at = DateTime.Now;
 
             db.SaveChanges();
 
-            // ✅ Güvenlik için otomatik logout
+      
             Session.Clear();
             Session.Abandon();
 
-            TempData["Success"] = "Şifre başarıyla değiştirildi. Lütfen tekrar giriş yapın.";
+            TempData["Success"] = "Password successfully changed, please log in again.";
 
             return RedirectToAction("Login", "Register");
         }
@@ -97,14 +109,13 @@ namespace EventDeneme.Controllers
                 return RedirectToAction("Login", "Register");
             }
 
-            // ✅ Güncelleme
             user.name = Name;
             user.surname = Surname;
             user.updated_at = DateTime.Now;
 
             db.SaveChanges();
 
-            TempData["ProfileSuccess"] = "Profil bilgileri başarıyla güncellendi.";
+            TempData["ProfileSuccess"] = "Profil informations updated succesfully!";
 
             return RedirectToAction("Index");
         }

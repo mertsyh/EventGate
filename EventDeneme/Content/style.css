@@ -187,6 +187,7 @@ header i {
     cursor: pointer;
     font-size: 22px;
     transition: 1s ease;
+    margin-right:10px;
 }
 
 .SearchArea1.active i {
@@ -829,7 +830,7 @@ footer {
 
     .SearchArea1 i {
         transform: none !important;
-        margin-left: 20px;
+        
         margin-top: 30px;
     }
 

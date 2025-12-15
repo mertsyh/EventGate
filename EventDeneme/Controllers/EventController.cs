@@ -172,5 +172,30 @@ namespace EventDeneme.Controllers
             ViewBag.venues = db.venues.ToList();
             return View();
         }
+        public ActionResult Search(string q)
+        {
+            ViewBag.cities = db.cities.ToList();
+            ViewBag.venues = db.venues.ToList();
+            ViewBag.Query = q;
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult SearchEvents(string name)
+        {
+            var events = db.events
+                .Where(e => e.title.Contains(name))
+                .Select(e => new
+                {
+                    e.id,
+                    e.title,
+                    e.poster_url,
+                    e.description
+                })
+                .ToList();
+
+            return Json(events, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

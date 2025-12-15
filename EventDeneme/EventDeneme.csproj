@@ -303,6 +303,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Privacy_policy.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\Event\Search.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
