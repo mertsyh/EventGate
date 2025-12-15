@@ -96,7 +96,55 @@ namespace EventDeneme.Controllers
         public ActionResult Events()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
-            return View(db.events.ToList());
+            var approved = db.events
+                .Where(e => e.status == "approved" || e.status == null || e.status == "")
+                .ToList();
+            return View(approved);
+        }
+
+        // GET: Admin/CreateEvent (direct admin-created event)
+        public ActionResult CreateEvent()
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            ViewBag.Categories = db.categories.ToList();
+            ViewBag.Organizers = db.organizers.ToList();
+            return View();
+        }
+
+        // POST: Admin/CreateEvent
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateEvent(int categoryId, long organizerId, string Title, string Description, string Language, string AgeLimit, string PosterUrl)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+
+            if (string.IsNullOrWhiteSpace(Title))
+            {
+                ViewBag.Error = "Title is required.";
+                ViewBag.Categories = db.categories.ToList();
+                ViewBag.Organizers = db.organizers.ToList();
+                return View();
+            }
+
+            var evt = new events
+            {
+                category_id = categoryId,
+                organizer_id = organizerId,
+                title = Title,
+                description = Description,
+                language = Language,
+                age_limit = AgeLimit,
+                poster_url = PosterUrl,
+                status = "approved",
+                created_at = DateTime.Now,
+                updated_at = DateTime.Now
+            };
+
+            db.events.Add(evt);
+            db.SaveChanges();
+
+            TempData["Success"] = "Event created successfully.";
+            return RedirectToAction("Events");
         }
 
         // GET: Admin/EditEvent/5
@@ -130,6 +178,43 @@ namespace EventDeneme.Controllers
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View(db.venues.ToList());
+        }
+
+        // GET: Admin/CreateVenue
+        public ActionResult CreateVenue()
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            ViewBag.Cities = db.cities.ToList();
+            return View();
+        }
+
+        // POST: Admin/CreateVenue
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateVenue(long cityId, string Name, string Address, bool hasSeating = false)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+
+            if (string.IsNullOrWhiteSpace(Name))
+            {
+                ViewBag.Error = "Name is required.";
+                ViewBag.Cities = db.cities.ToList();
+                return View();
+            }
+
+            var venue = new venues
+            {
+                city_id = cityId,
+                name = Name,
+                address = Address,
+                has_seating = hasSeating
+            };
+
+            db.venues.Add(venue);
+            db.SaveChanges();
+
+            TempData["Success"] = "Venue created successfully.";
+            return RedirectToAction("Venues");
         }
 
         // GET: Admin/EditVenue/5
@@ -213,6 +298,63 @@ namespace EventDeneme.Controllers
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View(db.organizers.ToList());
+        }
+
+        // 9. Event Requests (pending events from organizers)
+        public ActionResult EventRequests()
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var pending = db.moderation_events
+                .Where(m => m.status == "pending")
+                .OrderByDescending(m => m.id)
+                .ToList();
+            return View(pending);
+        }
+
+        [HttpPost]
+        public ActionResult ApproveEventRequest(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var mod = db.moderation_events.Find(id);
+            if (mod != null)
+            {
+                mod.status = "approved";
+                mod.reviewed_by = Convert.ToInt64(Session["AdminID"]);
+                mod.reviewed_at = DateTime.Now;
+
+                var evt = db.events.Find(mod.event_id);
+                if (evt != null)
+                {
+                    evt.status = "approved";
+                    evt.updated_at = DateTime.Now;
+                }
+                db.SaveChanges();
+                TempData["Success"] = "Event request approved.";
+            }
+            return RedirectToAction("EventRequests");
+        }
+
+        [HttpPost]
+        public ActionResult RejectEventRequest(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var mod = db.moderation_events.Find(id);
+            if (mod != null)
+            {
+                mod.status = "rejected";
+                mod.reviewed_by = Convert.ToInt64(Session["AdminID"]);
+                mod.reviewed_at = DateTime.Now;
+
+                var evt = db.events.Find(mod.event_id);
+                if (evt != null)
+                {
+                    evt.status = "rejected";
+                    evt.updated_at = DateTime.Now;
+                }
+                db.SaveChanges();
+                TempData["Success"] = "Event request rejected.";
+            }
+            return RedirectToAction("EventRequests");
         }
 
         // GET: Admin/CreateOrganizer

@@ -53,7 +53,10 @@ namespace EventDeneme.Controllers
             if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
             
             long orgId = Convert.ToInt64(Session["OrganizerID"]);
-            var events = db.events.Where(e => e.organizer_id == orgId).ToList();
+            var events = db.events
+                .Where(e => e.organizer_id == orgId)
+                .OrderByDescending(e => e.created_at)
+                .ToList();
             
             return View(events);
         }
@@ -77,6 +80,53 @@ namespace EventDeneme.Controllers
                          where a.organizer_id == orgId
                          select d).ToList();
              return View(docs);
+        }
+
+        // GET: Organizer/CreateEvent – submit event request for admin approval
+        public ActionResult CreateEvent()
+        {
+            if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
+            ViewBag.Categories = db.categories.ToList();
+            return View();
+        }
+
+        // POST: Organizer/CreateEvent
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateEvent(int categoryId, string Title, string Description, string Language, string AgeLimit, string PosterUrl)
+        {
+            if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
+
+            long orgId = Convert.ToInt64(Session["OrganizerID"]);
+            long submittedBy = Convert.ToInt64(Session["OrganizerUserID"]);
+
+            var evt = new events
+            {
+                category_id = categoryId,
+                organizer_id = orgId,
+                title = Title,
+                description = Description,
+                language = Language,
+                age_limit = AgeLimit,
+                poster_url = PosterUrl,
+                status = "pending",
+                created_at = DateTime.Now,
+                updated_at = DateTime.Now
+            };
+            db.events.Add(evt);
+            db.SaveChanges();
+
+            var moderation = new moderation_events
+            {
+                event_id = evt.id,
+                submitted_by = submittedBy,
+                status = "pending"
+            };
+            db.moderation_events.Add(moderation);
+            db.SaveChanges();
+
+            TempData["Success"] = "Your event request has been submitted for admin review.";
+            return RedirectToAction("Dashboard");
         }
     }
 }

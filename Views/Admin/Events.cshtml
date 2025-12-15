@@ -6,6 +6,10 @@
 
 <h2>Manage Events</h2>
 
+<p>
+    <a href="@Url.Action("CreateEvent", "Admin")" class="btn btn-primary">Add Event</a>
+</p>
+
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">

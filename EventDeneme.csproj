@@ -331,6 +331,9 @@
     <Content Include="Views\Admin\EditVenue.cshtml" />
     <Content Include="Views\Admin\EditUser.cshtml" />
     <Content Include="Views\Admin\CreateOrganizer.cshtml" />
+    <Content Include="Views\Admin\EventRequests.cshtml" />
+    <Content Include="Views\Admin\CreateEvent.cshtml" />
+    <Content Include="Views\Admin\CreateVenue.cshtml" />
     <Content Include="Views\Artist\Details.cshtml" />
     <Content Include="Views\Artist\Index.cshtml" />
     <Content Include="Views\Category\Index.cshtml" />
@@ -338,6 +341,7 @@
     <Content Include="Views\Organizer\Dashboard.cshtml" />
     <Content Include="Views\Organizer\Documents.cshtml" />
     <Content Include="Views\Organizer\Login.cshtml" />
+    <Content Include="Views\Organizer\CreateEvent.cshtml" />
     <Content Include="Views\Venue\Details.cshtml" />
     <Content Include="Views\Venue\Index.cshtml" />
     <Content Include="Views\Event\Index.cshtml" />

@@ -169,6 +169,11 @@
                         <span class="material-symbols-outlined @(ViewBag.Title == "Manage Events" ? "text-primary" : "text-[#886364] dark:text-gray-400 group-hover:text-primary")">event</span>
                         <p class="text-sm font-medium @(ViewBag.Title == "Manage Events" ? "text-primary" : "text-[#181111] dark:text-gray-200")">Events</p>
                     </a>
+                    <a href="@Url.Action("EventRequests", "Admin")"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group @(ViewBag.Title == "Event Requests" ? "bg-primary/10 dark:bg-primary/20" : "hover:bg-gray-50 dark:hover:bg-[#2a2a2a]")">
+                        <span class="material-symbols-outlined @(ViewBag.Title == "Event Requests" ? "text-primary" : "text-[#886364] dark:text-gray-400 group-hover:text-primary")">playlist_add</span>
+                        <p class="text-sm font-medium @(ViewBag.Title == "Event Requests" ? "text-primary" : "text-[#181111] dark:text-gray-200")">Event Requests</p>
+                    </a>
                     <a href="@Url.Action("Venues", "Admin")"
                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group @(ViewBag.Title == "Manage Venues" ? "bg-primary/10 dark:bg-primary/20" : "hover:bg-gray-50 dark:hover:bg-[#2a2a2a]")">
                         <span class="material-symbols-outlined @(ViewBag.Title == "Manage Venues" ? "text-primary" : "text-[#886364] dark:text-gray-400 group-hover:text-primary")">place</span>
