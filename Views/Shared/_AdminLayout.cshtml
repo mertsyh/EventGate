@@ -1,132 +1,250 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
     <meta charset="utf-8" />
     <title>Admin Dashboard - EventGate</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="~/Content/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="icon" type="image/png" href="~/images/favicon.png" />
-    @RenderSection("Styles", required: false)
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <!-- Tailwind Theme Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#ea2a33",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#211111"
+                    },
+                    fontFamily: {
+                        display: ["Be Vietnam Pro", "sans-serif"]
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    }
+                }
+            }
+        };
+    </script>
+
     <style>
-        .admin-container {
-            display: flex;
-            min-height: 100vh;
-            margin-top: 20px;
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-        .sidebar {
-            width: 250px;
-            background: #fff;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-            border-radius: 0 16px 16px 0;
-            margin-right: 20px;
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
         }
-        .sidebar li {
-            margin-bottom: 15px;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
         }
-        .sidebar a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 600;
-            display: flex;
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24;
+            display: inline-flex;
             align-items: center;
-            padding: 10px;
-            border-radius: 8px;
-            transition: 0.3s;
+            justify-content: center;
         }
-        .sidebar a:hover, .sidebar a.active {
-            background: #d22;
-            color: white;
+
+        /* Extra spacing inside admin pages so text is not cramped */
+        .admin-body h2,
+        .admin-body h3 {
+            margin-bottom: 0.75rem;
         }
-        .sidebar i {
-            width: 25px;
-            margin-right: 10px;
+
+        .admin-body p {
+            margin-bottom: 0.5rem;
         }
-        .admin-content {
-            flex: 1;
-            padding: 20px;
-            background: #fff;
-            border-radius: 16px;
-            margin-right: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .admin-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        table {
+
+        .admin-body table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 1rem;
         }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+
+        .admin-body th,
+        .admin-body td {
+            padding: 0.75rem 1rem;
         }
-        th {
-            background-color: #f8f8f8;
+
+        .admin-body thead tr {
+            background-color: #f9fafb;
+        }
+
+        /* Consistent form layout */
+        .admin-body form {
+            max-width: 720px;
+        }
+
+        .admin-body .form-group {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .admin-body .form-group label {
+            font-size: 0.9rem;
             font-weight: 600;
+            color: #181111;
         }
-        .btn-action {
-            padding: 5px 10px;
-            border-radius: 4px;
-            color: white;
-            text-decoration: none;
-            font-size: 12px;
-            margin-right: 5px;
+
+        .admin-body input[type="text"],
+        .admin-body input[type="email"],
+        .admin-body input[type="tel"],
+        .admin-body input[type="password"],
+        .admin-body select,
+        .admin-body textarea {
+            width: 100%;
+            padding: 0.55rem 0.8rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            font-size: 0.9rem;
+            outline: none;
+            box-sizing: border-box;
         }
-        .btn-edit { background: #007bff; }
-        .btn-delete { background: #dc3545; }
-        .badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            color: white;
+
+        .admin-body input[type="text"]:focus,
+        .admin-body input[type="email"]:focus,
+        .admin-body input[type="tel"]:focus,
+        .admin-body input[type="password"]:focus,
+        .admin-body select:focus,
+        .admin-body textarea:focus {
+            border-color: #ea2a33;
+            box-shadow: 0 0 0 1px rgba(234, 42, 51, 0.2);
         }
-        .bg-success { background: #28a745; }
-        .bg-warning { background: #ffc107; color: black; }
-        .bg-danger { background: #dc3545; }
     </style>
+
+    @RenderSection("Styles", required: false)
 </head>
-<body>
-    <header>
-        <a href="@Url.Action("Dashboard", "Admin")"><img src="~/images/logo.png" class="headerlogo" alt="Logo"></a>
-        <ul>
-            <li><a href="@Url.Action("Dashboard", "Admin")">ADMIN DASHBOARD</a></li>
-        </ul>
-        <div class="nav-right">
-            <a href="@Url.Action("Logout", "Admin")" class="search-btn"><i class="fa fa-sign-out-alt"></i> Logout</a>
-        </div>
-    </header>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 antialiased overflow-hidden">
+<div class="flex h-screen w-full">
+    <!-- Sidebar -->
+    <aside class="flex w-64 flex-col border-r border-[#f4f0f0] bg-white dark:bg-[#1a1a1a] dark:border-[#333] transition-colors">
+        <div class="flex h-full flex-col justify-between p-4">
+            <div class="flex flex-col gap-6">
+                <!-- Brand / Admin info -->
+                <div class="flex gap-3 items-center px-2 py-1">
+                    <a href="@Url.Action("Dashboard", "Admin")" class="bg-center bg-no-repeat bg-contain rounded-full size-10 shrink-0 shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex items-center justify-center">
+                        <img src="~/images/logo.png" alt="EventGate Admin" class="max-h-full max-w-full" />
+                    </a>
+                    <div class="flex flex-col">
+                        <h1 class="text-[#181111] dark:text-white text-base font-bold leading-tight">EventGate Admin</h1>
+                        <p class="text-[#886364] dark:text-gray-400 text-xs font-medium">Super Administrator</p>
+                    </div>
+                </div>
 
-    <div class="admin-container">
-        <div class="sidebar">
-            <ul>
-                <li><a href="@Url.Action("Dashboard", "Admin")" class="@(ViewBag.Title == "Dashboard" ? "active" : "")"><i class="fa fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="@Url.Action("Events", "Admin")" class="@(ViewBag.Title == "Events" ? "active" : "")"><i class="fa fa-calendar-alt"></i> Events</a></li>
-                <li><a href="@Url.Action("Venues", "Admin")" class="@(ViewBag.Title == "Venues" ? "active" : "")"><i class="fa fa-map-marker-alt"></i> Venues</a></li>
-                <li><a href="@Url.Action("Users", "Admin")" class="@(ViewBag.Title == "Users" ? "active" : "")"><i class="fa fa-users"></i> Users</a></li>
-                <li><a href="@Url.Action("Tickets", "Admin")" class="@(ViewBag.Title == "Tickets" ? "active" : "")"><i class="fa fa-ticket-alt"></i> Tickets</a></li>
-                <li><a href="@Url.Action("Refunds", "Admin")" class="@(ViewBag.Title == "Refunds" ? "active" : "")"><i class="fa fa-undo"></i> Refunds</a></li>
-                <li><a href="@Url.Action("Organizers", "Admin")" class="@(ViewBag.Title == "Organizers" ? "active" : "")"><i class="fa fa-user-tie"></i> Organizers</a></li>
-            </ul>
-        </div>
-        <div class="admin-content">
-            @RenderBody()
-        </div>
-    </div>
+                <!-- Navigation -->
+                <nav class="flex flex-col gap-2 mt-2">
+                    <a href="@Url.Action("Dashboard", "Admin")"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group @(ViewBag.Title == "Admin Dashboard" ? "bg-primary/10 dark:bg-primary/20" : "hover:bg-gray-50 dark:hover:bg-[#2a2a2a]")">
+                        <span class="material-symbols-outlined @(ViewBag.Title == "Admin Dashboard" ? "text-primary" : "text-[#886364] dark:text-gray-400 group-hover:text-primary")">dashboard</span>
+                        <p class="text-sm font-medium @(ViewBag.Title == "Admin Dashboard" ? "text-primary" : "text-[#181111] dark:text-gray-200")">Dashboard</p>
+                    </a>
+                    <a href="@Url.Action("Events", "Admin")"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group @(ViewBag.Title == "Manage Events" ? "bg-primary/10 dark:bg-primary/20" : "hover:bg-gray-50 dark:hover:bg-[#2a2a2a]")">
+                        <span class="material-symbols-outlined @(ViewBag.Title == "Manage Events" ? "text-primary" : "text-[#886364] dark:text-gray-400 group-hover:text-primary")">event</span>
+                        <p class="text-sm font-medium @(ViewBag.Title == "Manage Events" ? "text-primary" : "text-[#181111] dark:text-gray-200")">Events</p>
+                    </a>
+                    <a href="@Url.Action("Venues", "Admin")"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group @(ViewBag.Title == "Manage Venues" ? "bg-primary/10 dark:bg-primary/20" : "hover:bg-gray-50 dark:hover:bg-[#2a2a2a]")">
+                        <span class="material-symbols-outlined @(ViewBag.Title == "Manage Venues" ? "text-primary" : "text-[#886364] dark:text-gray-400 group-hover:text-primary")">place</span>
+                        <p class="text-sm font-medium @(ViewBag.Title == "Manage Venues" ? "text-primary" : "text-[#181111] dark:text-gray-200")">Venues</p>
+                    </a>
+                    <a href="@Url.Action("Users", "Admin")"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group @(ViewBag.Title == "Manage Users" ? "bg-primary/10 dark:bg-primary/20" : "hover:bg-gray-50 dark:hover:bg-[#2a2a2a]")">
+                        <span class="material-symbols-outlined @(ViewBag.Title == "Manage Users" ? "text-primary" : "text-[#886364] dark:text-gray-400 group-hover:text-primary")">group</span>
+                        <p class="text-sm font-medium @(ViewBag.Title == "Manage Users" ? "text-primary" : "text-[#181111] dark:text-gray-200")">Users</p>
+                    </a>
+                    <a href="@Url.Action("Tickets", "Admin")"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group @(ViewBag.Title == "Manage Tickets" ? "bg-primary/10 dark:bg-primary/20" : "hover:bg-gray-50 dark:hover:bg-[#2a2a2a]")">
+                        <span class="material-symbols-outlined @(ViewBag.Title == "Manage Tickets" ? "text-primary" : "text-[#886364] dark:text-gray-400 group-hover:text-primary")">confirmation_number</span>
+                        <p class="text-sm font-medium @(ViewBag.Title == "Manage Tickets" ? "text-primary" : "text-[#181111] dark:text-gray-200")">Tickets</p>
+                    </a>
+                    <a href="@Url.Action("Refunds", "Admin")"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group @(ViewBag.Title == "Refund Requests" ? "bg-primary/10 dark:bg-primary/20" : "hover:bg-gray-50 dark:hover:bg-[#2a2a2a]")">
+                        <span class="material-symbols-outlined @(ViewBag.Title == "Refund Requests" ? "text-primary" : "text-[#886364] dark:text-gray-400 group-hover:text-primary")">undo</span>
+                        <p class="text-sm font-medium @(ViewBag.Title == "Refund Requests" ? "text-primary" : "text-[#181111] dark:text-gray-200")">Refunds</p>
+                    </a>
+                    <a href="@Url.Action("Organizers", "Admin")"
+                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group @(ViewBag.Title == "Manage Organizers" ? "bg-primary/10 dark:bg-primary/20" : "hover:bg-gray-50 dark:hover:bg-[#2a2a2a]")">
+                        <span class="material-symbols-outlined @(ViewBag.Title == "Manage Organizers" ? "text-primary" : "text-[#886364] dark:text-gray-400 group-hover:text-primary")">domain</span>
+                        <p class="text-sm font-medium @(ViewBag.Title == "Manage Organizers" ? "text-primary" : "text-[#181111] dark:text-gray-200")">Organizers</p>
+                    </a>
+                </nav>
+            </div>
 
-    <script src="~/Scripts/site.js"></script>
+            <div class="px-2">
+                <form action="@Url.Action("Logout", "Admin")" method="post" class="w-full">
+                    @Html.AntiForgeryToken()
+                    <button type="submit"
+                            class="flex w-full items-center gap-3 px-3 py-2 text-[#886364] hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors">
+                        <span class="material-symbols-outlined text-lg">logout</span>
+                        <span class="text-sm font-medium">Logout</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex h-full flex-1 flex-col overflow-x-hidden overflow-y-auto relative">
+        <!-- Top bar -->
+        <header class="sticky top-0 z-20 flex items-center justify-between border-b border-[#f4f0f0] bg-white px-8 py-4 dark:bg-[#1a1a1a] dark:border-[#333]">
+            <div class="flex items-center gap-4">
+                <h2 class="text-[#181111] dark:text-white text-lg font-bold leading-tight">Admin Panel</h2>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex items-center h-10 w-64 rounded-lg bg-[#f4f0f0] dark:bg-[#2a2a2a] px-3 focus-within:ring-2 focus-within:ring-primary/50 transition-shadow">
+                    <span class="material-symbols-outlined text-[#886364] text-lg">search</span>
+                    <input type="text"
+                           placeholder="Search..."
+                           class="h-full w-full bg-transparent border-none text-sm text-[#181111] dark:text-white placeholder-[#886364] focus:ring-0" />
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-center bg-no-repeat bg-contain rounded-full size-9 cursor-pointer border border-gray-200 dark:border-gray-600 overflow-hidden flex items-center justify-center">
+                        <img src="~/images/logo-1.png" alt="Admin" class="max-h-full max-w-full" />
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page body wrapper -->
+            <div class="flex flex-1 flex-col p-6 lg:p-10 max-w-6xl mx-auto w-full">
+            <div class="flex flex-col bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-[#f4f0f0] dark:border-[#333] overflow-hidden">
+                    <div class="p-6 lg:p-8 admin-body">
+                        @RenderBody()
+                    </div>
+            </div>
+            <div class="h-12"></div>
+        </div>
+    </main>
+</div>
+
+@RenderSection("Scripts", required: false)
 </body>
 </html>
 

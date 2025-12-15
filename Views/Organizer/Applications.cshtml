@@ -1,25 +1,49 @@
 @model List<EventDeneme.Models.organizer_applications>
 @{
     ViewBag.Title = "Organizer Applications";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_OrganizerLayout.cshtml";
 }
 
-<div class="container" style="padding: 40px 20px;">
-    <h2>Organizer Applications</h2>
-    <a href="@Url.Action("Dashboard", "Organizer")" class="btn btn-secondary" style="margin-bottom: 20px;">Back to Dashboard</a>
+<div class="flex flex-col gap-4">
+    <div class="flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-[#181111] dark:text-white">Organizer Applications</h2>
+        <a href="@Url.Action("Dashboard", "Organizer")"
+           class="inline-flex items-center rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-[#181111] hover:bg-gray-50 dark:border-gray-600 dark:text-gray-100 dark:hover:bg-[#333]">
+            Back to Dashboard
+        </a>
+    </div>
 
     @if (Model.Any())
     {
-        <ul>
-            @foreach (var app in Model)
-            {
-                <li>Application ID: @app.id - Status: @app.status - Date: @app.application_date</li>
-            }
-        </ul>
+        <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-[#333] bg-white dark:bg-[#181818]">
+            <table class="min-w-full text-sm">
+                <thead class="bg-gray-50 dark:bg-[#222]">
+                    <tr>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200">Application ID</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200">Status</th>
+                        <th class="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200">Submitted At</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 dark:divide-[#333]">
+                    @foreach (var app in Model)
+                    {
+                        <tr class="hover:bg-gray-50 dark:hover:bg-[#222]">
+                            <td class="px-4 py-3">@app.id</td>
+                            <td class="px-4 py-3">@app.status</td>
+                            <td class="px-4 py-3">
+                                @(app.submitted_at.HasValue
+                                    ? app.submitted_at.Value.ToString("dd MMM yyyy HH:mm")
+                                    : "N/A")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
     else
     {
-        <p>No applications found.</p>
+        <p class="text-sm text-[#886364] dark:text-gray-400">No applications found.</p>
     }
 </div>
 

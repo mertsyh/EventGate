@@ -1,13 +1,13 @@
 @model List<EventDeneme.Models.events>
 @{
     ViewBag.Title = "Organizer Dashboard";
-    Layout = "~/Views/Shared/_Layout.cshtml"; // Or create _OrganizerLayout
+    Layout = "~/Views/Shared/_OrganizerLayout.cshtml";
 }
 
 <div class="container" style="padding: 40px 20px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>Organizer Dashboard</h2>
-        <div>
+        <div style="display:flex; gap:10px;">
             <a href="@Url.Action("Applications", "Organizer")" class="btn btn-secondary">My Applications</a>
             <a href="@Url.Action("Documents", "Organizer")" class="btn btn-secondary">My Documents</a>
             <a href="@Url.Action("Logout", "Organizer")" class="btn btn-danger">Logout</a>
