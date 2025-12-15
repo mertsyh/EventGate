@@ -99,6 +99,32 @@ namespace EventDeneme.Controllers
             return View(db.events.ToList());
         }
 
+        // GET: Admin/EditEvent/5
+        public ActionResult EditEvent(int id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var evt = db.events.Find(id);
+            if (evt == null) return HttpNotFound();
+            return View(evt);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditEvent(events model)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var evt = db.events.Find(model.id);
+            if (evt == null) return HttpNotFound();
+
+            evt.title = model.title;
+            evt.description = model.description;
+            evt.poster_url = model.poster_url;
+
+            db.SaveChanges();
+            TempData["Success"] = "Event updated successfully.";
+            return RedirectToAction("Events");
+        }
+
         // 4. Venues Management (admin-venues.html)
         public ActionResult Venues()
         {
@@ -106,11 +132,66 @@ namespace EventDeneme.Controllers
             return View(db.venues.ToList());
         }
 
+        // GET: Admin/EditVenue/5
+        public ActionResult EditVenue(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var venue = db.venues.Find(id);
+            if (venue == null) return HttpNotFound();
+            ViewBag.Cities = db.cities.ToList();
+            return View(venue);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditVenue(venues model)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var venue = db.venues.Find(model.id);
+            if (venue == null) return HttpNotFound();
+
+            venue.name = model.name;
+            venue.address = model.address;
+            venue.city_id = model.city_id;
+            venue.has_seating = model.has_seating;
+
+            db.SaveChanges();
+            TempData["Success"] = "Venue updated successfully.";
+            return RedirectToAction("Venues");
+        }
+ 
         // 5. Users Management (admin-users.html)
         public ActionResult Users()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View(db.users.ToList());
+        }
+
+        // GET: Admin/EditUser/5
+        public ActionResult EditUser(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var user = db.users.Find(id);
+            if (user == null) return HttpNotFound();
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditUser(users model)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var user = db.users.Find(model.id);
+            if (user == null) return HttpNotFound();
+
+            user.name = model.name;
+            user.surname = model.surname;
+            user.email = model.email;
+            user.phone = model.phone;
+
+            db.SaveChanges();
+            TempData["Success"] = "User updated successfully.";
+            return RedirectToAction("Users");
         }
 
         // 6. Tickets Management (admin-tickets.html)
@@ -132,6 +213,82 @@ namespace EventDeneme.Controllers
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View(db.organizers.ToList());
+        }
+
+        // GET: Admin/CreateOrganizer
+        public ActionResult CreateOrganizer()
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            return View();
+        }
+
+        // POST: Admin/CreateOrganizer
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateOrganizer(string LegalName, string BrandName, string ContactEmail, string ContactPhone, string Username, string Password)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+
+            if (string.IsNullOrWhiteSpace(LegalName) ||
+                string.IsNullOrWhiteSpace(BrandName) ||
+                string.IsNullOrWhiteSpace(ContactEmail) ||
+                string.IsNullOrWhiteSpace(Username) ||
+                string.IsNullOrWhiteSpace(Password))
+            {
+                ViewBag.Error = "Please fill in all required fields.";
+                return View();
+            }
+
+            if (db.organizers.Any(o => o.contact_email == ContactEmail))
+            {
+                ViewBag.Error = "An organizer with this email already exists.";
+                return View();
+            }
+
+            if (db.organizer_users.Any(u => u.email == ContactEmail || u.username == Username))
+            {
+                ViewBag.Error = "An organizer user with this email or username already exists.";
+                return View();
+            }
+
+            var organizer = new organizers
+            {
+                legal_name = LegalName,
+                brand_name = BrandName,
+                contact_email = ContactEmail,
+                contact_phone = ContactPhone,
+                status = "approved",
+                created_at = DateTime.Now
+            };
+            db.organizers.Add(organizer);
+            db.SaveChanges();
+
+            var app = new organizer_applications
+            {
+                organizer_id = organizer.id,
+                org_name = BrandName,
+                contact_email = ContactEmail,
+                submitted_at = DateTime.Now,
+                status = "approved",
+                decided_at = DateTime.Now
+            };
+            db.organizer_applications.Add(app);
+            db.SaveChanges();
+
+            var orgUser = new organizer_users
+            {
+                organizer_id = organizer.id,
+                username = Username,
+                email = ContactEmail,
+                password_hash = Password,
+                role = "Owner",
+                status = "active"
+            };
+            db.organizer_users.Add(orgUser);
+            db.SaveChanges();
+
+            TempData["Success"] = "Organizer created successfully.";
+            return RedirectToAction("Organizers");
         }
 
         // ========== DELETE ACTIONS ==========

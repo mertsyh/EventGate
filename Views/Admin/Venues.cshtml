@@ -34,6 +34,8 @@
                 <td>@(item.cities != null ? item.cities.name : "N/A")</td>
                 <td>@(item.has_seating ? "Yes" : "No")</td>
                 <td>
+                    @Html.ActionLink("Edit", "EditVenue", "Admin", new { id = item.id }, null)
+                    <span> | </span>
                     @using (Html.BeginForm("DeleteVenue", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to delete this venue?');" }))
                     {
                         @Html.AntiForgeryToken()

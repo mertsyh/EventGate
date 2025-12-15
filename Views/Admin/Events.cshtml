@@ -30,7 +30,10 @@
                 <td>@item.title</td>
                 <td>@(item.description != null && item.description.Length > 50 ? item.description.Substring(0, 50) + "..." : item.description)</td>
                 <td>
-                    <a href="@Url.Action("Details", "Event", new { id = item.id })" target="_blank">View</a> | 
+                    @Html.ActionLink("Edit", "EditEvent", "Admin", new { id = item.id }, null)
+                    <span> | </span>
+                    <a href="@Url.Action("Details", "Event", new { id = item.id })" target="_blank">View</a>
+                    <span> | </span>
                     @using (Html.BeginForm("DeleteEvent", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to delete this event?');" }))
                     {
                         @Html.AntiForgeryToken()

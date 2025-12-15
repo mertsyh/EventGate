@@ -32,6 +32,8 @@
                 <td>@item.email</td>
                 <td>@item.phone</td>
                 <td>
+                    @Html.ActionLink("Edit", "EditUser", "Admin", new { id = item.id }, null)
+                    <span> | </span>
                     @using (Html.BeginForm("BanUser", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to ban this user?');" }))
                     {
                         @Html.AntiForgeryToken()

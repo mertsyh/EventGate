@@ -1,0 +1,40 @@
+@model EventDeneme.Models.events
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Edit Event";
+}
+
+<h2>Edit Event</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        @TempData["Success"]
+    </div>
+}
+
+@using (Html.BeginForm("EditEvent", "Admin", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.id)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.title)
+        @Html.TextBoxFor(m => m.title, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.description)
+        @Html.TextAreaFor(m => m.description, new { @class = "form-control", rows = 5 })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.poster_url, "Poster URL")
+        @Html.TextBoxFor(m => m.poster_url, new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="@Url.Action("Events", "Admin")" class="btn btn-secondary">Back</a>
+}
+
+
