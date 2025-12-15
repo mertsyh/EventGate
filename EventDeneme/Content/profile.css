@@ -122,13 +122,17 @@ input {
         border-radius: 12px;
         font-weight: 600;
         color: #fff;
-        background: rgba(17, 24, 39, 0.85);
+        background: #d22;
         box-shadow: 0 4px 15px rgba(0,0,0,0.15);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
         cursor: pointer;
         transition: all 0.3s ease;
         text-decoration:none;
+        transition:transform 0.5s ease;
+    }
+    .form-buttons a:hover{
+        transform:translateY(-5px);
     }
 .hidden {
     display: none !important;
@@ -146,20 +150,7 @@ label {
     background: rgba(17, 24, 39, 1);
 }
 
-@media (max-width: 600px) {
-    .profile-box {
-        padding: 30px 20px;
-    }
 
-    input, label {
-        width: 100%;
-    }
-
-    .toggle-buttons {
-        gap: 15px;
-        font-size: 18px;
-    }
-}
 /* Tickets grid */
 .tickets-grid {
     display: grid;
@@ -212,4 +203,98 @@ label {
     justify-content: center;
     font-size: 12px;
     color: #6b7280;
+}
+
+/* ========================= */
+/* RESPONSIVE FIXES */
+/* ========================= */
+
+@media (max-width: 900px) {
+    .profile-box {
+        max-width: 90%;
+        padding: 35px 25px;
+    }
+
+    input {
+        width: 70%;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .profile-section {
+        padding: 30px 10px;
+        align-items: flex-start;
+    }
+
+    .profile-box {
+        width: 70%;
+        padding: 25px 18px;
+        border-radius: 16px;
+    }
+
+    /* Toggle buttons */
+    .toggle-buttons {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+        .toggle-buttons button {
+            font-size: 16px;
+            padding: 8px 10px;
+        }
+
+    h1 {
+        font-size: 20px;
+        margin-bottom: 18px;
+    }
+
+    /* Forms */
+    form {
+        width: 100%;
+    }
+
+    label {
+        width: 100%;
+        text-align: left;
+    }
+
+    input {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    /* Buttons stack */
+    .form-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+        .form-buttons button,
+        .form-buttons a {
+            width: 80%;
+            left:10%;
+        }
+
+    /* Tickets */
+    .tickets-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .ticket-card {
+        padding: 16px;
+    }
+
+    .ticket-title {
+        font-size: 16px;
+    }
+
+    .ticket-info {
+        font-size: 13px;
+    }
+
+    .ticket-qr {
+        height: 100px;
+    }
 }

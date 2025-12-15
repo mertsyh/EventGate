@@ -42,6 +42,26 @@ namespace EventDeneme.Controllers
             var user = db.users.FirstOrDefault(x => x.id == userId);
             ViewBag.DefaultTab = "MyTickets";
             return View("Index", user);
+        } 
+        public ActionResult Refunds()
+        {
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login", "Register");
+
+            int userId = Convert.ToInt32(Session["UserID"]);
+            var user = db.users.FirstOrDefault(x => x.id == userId);
+            ViewBag.DefaultTab = "Refunds";
+            return View("Index", user);
+        }
+        public ActionResult ChangePassword()
+        {
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login", "Register");
+
+            int userId = Convert.ToInt32(Session["UserID"]);
+            var user = db.users.FirstOrDefault(x => x.id == userId);
+            ViewBag.DefaultTab = "ChangePassword";
+            return View("Index", user);
         }
 
 
