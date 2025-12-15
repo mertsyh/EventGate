@@ -172,13 +172,20 @@ namespace EventDeneme.Controllers
             ViewBag.venues = db.venues.ToList();
             return View();
         }
-        public ActionResult Search(string q)
+        public ActionResult Search(int? cityId, int? categoryId, int? venueId, string date)
         {
             ViewBag.cities = db.cities.ToList();
             ViewBag.venues = db.venues.ToList();
-            ViewBag.Query = q;
-            return View();
+            ViewBag.categories = db.categories.ToList();
+
+            ViewBag.CityId = cityId;
+            ViewBag.CategoryId = categoryId;
+            ViewBag.VenueId = venueId;
+            ViewBag.Date = date;
+
+            return View(); // Eventpages layout + rightcontent var
         }
+
 
         [HttpPost]
         public JsonResult SearchEvents(string name)
