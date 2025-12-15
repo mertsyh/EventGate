@@ -72,12 +72,24 @@
 
             <div class="form-group">
                 <label>Venue*</label>
-                <select name="venueId" required>
-                    @foreach (var v in (IEnumerable<EventDeneme.Models.venues>)ViewBag.Venues)
-                    {
-                        <option value="@v.id">@v.name</option>
-                    }
-                </select>
+                @{
+                    var venues = ViewBag.Venues as IEnumerable<EventDeneme.Models.venues>;
+                }
+                @if (venues == null || !venues.Any())
+                {
+                    <p style="color:#b91c1c; font-size:0.9rem;">
+                        No venues are configured yet. Please contact the admin to add a venue before creating an event.
+                    </p>
+                }
+                else
+                {
+                    <select name="venueId" required>
+                        @foreach (var v in venues)
+                        {
+                            <option value="@v.id">@v.name</option>
+                        }
+                    </select>
+                }
             </div>
 
             <div class="form-group">

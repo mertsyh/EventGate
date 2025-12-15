@@ -440,13 +440,29 @@ namespace EventDeneme.Controllers
         public ActionResult DeleteEvent(int id)
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+
             var evt = db.events.Find(id);
-            if (evt != null)
+            if (evt == null)
             {
-                db.events.Remove(evt);
-                db.SaveChanges();
-                TempData["Success"] = "Event deleted successfully.";
+                TempData["Success"] = "Event not found or already deleted.";
+                return RedirectToAction("Events");
             }
+
+            // Soft-delete: keep event and related data in DB for integrity (tickets, orders, etc.),
+            // but mark it as deleted/cancelled so it is not used anymore.
+            evt.status = "deleted";
+            evt.updated_at = DateTime.Now;
+
+            // Optionally, mark all related performances as cancelled as well
+            var performances = db.performances.Where(p => p.event_id == evt.id).ToList();
+            foreach (var perf in performances)
+            {
+                perf.status = "cancelled";
+            }
+
+            db.SaveChanges();
+            TempData["Success"] = "Event marked as deleted successfully.";
+
             return RedirectToAction("Events");
         }
 
