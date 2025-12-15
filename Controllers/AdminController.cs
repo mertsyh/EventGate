@@ -96,10 +96,11 @@ namespace EventDeneme.Controllers
         public ActionResult Events()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
-            var approved = db.events
-                .Where(e => e.status == "approved" || e.status == null || e.status == "")
+            // Admin should see all events (approved, pending, rejected)
+            var allEvents = db.events
+                .OrderByDescending(e => e.created_at)
                 .ToList();
-            return View(approved);
+            return View(allEvents);
         }
 
         // GET: Admin/CreateEvent (direct admin-created event)

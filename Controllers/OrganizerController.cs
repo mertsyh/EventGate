@@ -87,13 +87,27 @@ namespace EventDeneme.Controllers
         {
             if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
             ViewBag.Categories = db.categories.ToList();
+            ViewBag.Venues = db.venues.ToList();
             return View();
         }
 
         // POST: Organizer/CreateEvent
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreateEvent(int categoryId, string Title, string Description, string Language, string AgeLimit, string PosterUrl)
+        public ActionResult CreateEvent(
+            int categoryId,
+            string Title,
+            string Description,
+            string Language,
+            string AgeLimit,
+            string PosterUrl,
+            long venueId,
+            DateTime performanceStart,
+            string tierName,
+            string seatSection,
+            int? capacity,
+            decimal price,
+            string currency)
         {
             if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
 
@@ -114,6 +128,31 @@ namespace EventDeneme.Controllers
                 updated_at = DateTime.Now
             };
             db.events.Add(evt);
+            db.SaveChanges();
+
+            // Create initial performance for this event
+            var performance = new performances
+            {
+                event_id = evt.id,
+                venue_id = venueId,
+                start_datetime = performanceStart,
+                status = "pending"
+            };
+            db.performances.Add(performance);
+            db.SaveChanges();
+
+            // Create a basic price tier for this performance
+            var tier = new price_tiers
+            {
+                performance_id = performance.id,
+                name = string.IsNullOrWhiteSpace(tierName) ? "Standard" : tierName,
+                allocation_type = "general",
+                capacity = capacity,
+                price = price,
+                currency = string.IsNullOrWhiteSpace(currency) ? "TRY" : currency,
+                seatmap_section = string.IsNullOrWhiteSpace(seatSection) ? "General" : seatSection
+            };
+            db.price_tiers.Add(tier);
             db.SaveChanges();
 
             var moderation = new moderation_events
