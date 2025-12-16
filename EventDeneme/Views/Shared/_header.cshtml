@@ -64,10 +64,31 @@
     </div>
 </header>
 <script>
-    document.getElementById("btnSearch").addEventListener("click", function () {
-        const q = document.getElementById("txtSearch").value;
-        if (q.trim() !== "") {
+    document.addEventListener("DOMContentLoaded", function () {
+
+    const btn = document.getElementById("btnSearch");
+        const input = document.getElementById("txtSearch");
+
+        if (!btn || !input) return;
+
+        function runSearch() {
+        const q = input.value.trim();
+        if (q !== "") {
             window.location.href = "/Event/Search?q=" + encodeURIComponent(q);
         }
+    }
+
+        // Icon click
+        btn.addEventListener("click", runSearch);
+
+        // Enter key
+        input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+        runSearch();
+        }
     });
+
+});
+
 </script>

@@ -172,19 +172,61 @@ namespace EventDeneme.Controllers
             ViewBag.venues = db.venues.ToList();
             return View();
         }
-        public ActionResult Search(int? cityId, int? categoryId, int? venueId, string date)
+        public ActionResult Search(
+      string q,               
+      int? cityId,
+      int? categoryId,
+      int? venueId,
+      string date
+  )
         {
             ViewBag.cities = db.cities.ToList();
             ViewBag.venues = db.venues.ToList();
             ViewBag.categories = db.categories.ToList();
 
-            ViewBag.CityId = cityId;
-            ViewBag.CategoryId = categoryId;
-            ViewBag.VenueId = venueId;
-            ViewBag.Date = date;
+            var query = db.events.AsQueryable();
 
-            return View(); // Eventpages layout + rightcontent var
+            // 🔍 TEXT SEARCH (EN KRİTİK SATIR)
+            if (!string.IsNullOrWhiteSpace(q))
+                query = query.Where(e => e.title.Contains(q));
+
+            if (categoryId.HasValue)
+                query = query.Where(e => e.category_id == categoryId);
+
+            if (cityId.HasValue)
+                query = query.Where(e => e.performances.Any(p => p.venues.city_id == cityId));
+
+            if (venueId.HasValue)
+                query = query.Where(e => e.performances.Any(p => p.venue_id == venueId));
+
+            if (!string.IsNullOrEmpty(date) &&
+                DateTime.TryParse(date, out DateTime selectedDate))
+            {
+                query = query.Where(e =>
+                    e.performances.Any(p => p.start_datetime.Date == selectedDate.Date));
+            }
+
+            var result = query
+                .ToList()
+                .Select(e => new EventCardViewModel
+                {
+                    EventId = e.id,
+                    Title = e.title,
+                    StartDate = e.performances.OrderBy(p => p.start_datetime)
+                                              .FirstOrDefault()?.start_datetime,
+                    Venue = e.performances.FirstOrDefault()?.venues.name,
+                    City = e.performances.FirstOrDefault()?.venues.cities.name,
+                    Price = e.performances.SelectMany(p => p.price_tiers)
+                                          .OrderBy(t => t.price)
+                                          .FirstOrDefault()?.price,
+                    ImageUrl = e.poster_url
+                })
+                .ToList();
+
+            return View(result);
         }
+
+
 
 
         [HttpPost]

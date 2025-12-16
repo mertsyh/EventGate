@@ -1,44 +1,37 @@
 ﻿@model List<EventDeneme.Models.EventCardViewModel>
+
 @{
     Layout = "~/Views/Event/Eventpages.cshtml";
-    ViewBag.title = "Search";
-    var query = ViewBag.Query as string;
+    ViewBag.Title = "Search Results";
 }
 
-<div id="searchResults"></div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-$(function () {
+<div class="rightcontent">
+    @if (Model != null && Model.Any())
+    {
+        foreach (var e in Model)
+        {
+            <div class="event-card">
+                <img src="@Url.Content(e.ImageUrl)" alt="@e.Title" />
 
-    $.ajax({
-        type: "post",
-        url: "/Event/SearchEvents",
-        dataType: "json",
-        data: { name: "@query" },
+                <div class="event-info">
+                    <h3>@e.Title</h3>
+                    <p>• @e.Venue</p>
 
-        success: function (data) {
-            $("#searchResults").empty();
-
-            if (data.length > 0) {
-                $.each(data, function (i, e) {
-                    $("#searchResults").append(`
-                        <div class="event-card">
-                            <img src="${e.poster_url}" />
-                            <div class="event-info">
-                                <h3>${e.title}</h3>
-                                <p>${e.description}</p>
-                                <a href="/Event/Details/${e.id}" class="btn-book">Book Now</a>
-                            </div>
-                        </div>
-                    `);
-                });
-            } else {
-                $("#searchResults").html("<p>No events found.</p>");
-            }
+                    <div class="price-row">
+                        <span class="price">₺@e.Price+</span>
+                        <a href="@Url.Action("Details","Event", new { id = e.EventId })"
+                           class="btn-book">
+                            Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
         }
-    });
-
-});
-</script>
+    }
+    else
+    {
+        <p>No events found.</p>
+    }
+</div>
