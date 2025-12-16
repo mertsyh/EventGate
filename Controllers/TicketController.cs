@@ -17,8 +17,17 @@ namespace EventDeneme.Controllers
             var eventItem = db.events.FirstOrDefault(e => e.id == id);
             if (eventItem == null) return HttpNotFound();
 
+            if (eventItem.status != "approved")
+            {
+                ViewBag.Message = "This event is not available for sale.";
+                return View("Error");
+            }
+
             // Performance selection (for now first performance)
-            var performance = eventItem.performances.OrderBy(p => p.start_datetime).FirstOrDefault();
+            var performance = eventItem.performances
+                .Where(p => p.status != "cancelled")
+                .OrderBy(p => p.start_datetime)
+                .FirstOrDefault();
             if (performance == null)
             {
                 ViewBag.Message = "No scheduled performance found for this event.";
@@ -168,6 +177,20 @@ namespace EventDeneme.Controllers
                 db.orders.Add(order);
                 db.SaveChanges(); // Save to get ID
 
+                // 2b. Create payment record for this order (for refunds)
+                var payment = new payments
+                {
+                    order_id = order.id,
+                    provider = "manual",
+                    provider_payment_id = Guid.NewGuid().ToString(),
+                    amount = model.TotalAmount,
+                    currency = "TRY",
+                    status = "captured",
+                    captured_at = DateTime.Now
+                };
+                db.payments.Add(payment);
+                db.SaveChanges();
+
                 // 3. Update seats and create order items
                 var seatIds = model.SelectedSeatIds.Split(',').Select(long.Parse).ToList();
                 var seatsToUpdate = db.performance_seats.Where(ps => seatIds.Contains(ps.id)).ToList();
@@ -249,6 +272,121 @@ namespace EventDeneme.Controllers
         public ActionResult Failed()
         {
             return View();
+        }
+
+        // GET: Ticket/Details/5 (ticket details for logged-in user)
+        public ActionResult Details(long id)
+        {
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login", "Register");
+
+            long userId = Convert.ToInt64(Session["UserID"]);
+            var user = db.users.FirstOrDefault(u => u.id == userId);
+            if (user == null)
+                return RedirectToAction("Login", "Register");
+
+            var ticket = db.tickets.Find(id);
+            if (ticket == null) return HttpNotFound();
+
+            var oi = ticket.order_items;
+            if (oi == null) return HttpNotFound();
+            var order = oi.orders;
+            if (order == null) return HttpNotFound();
+
+            // Ownership check: order belongs to logged-in user or guest order with same email
+            if (!(order.user_id == userId || (order.user_id == null && order.email == user.email)))
+                return new HttpUnauthorizedResult();
+
+            var perf = db.performances.FirstOrDefault(p => p.id == oi.performance_id);
+            var ev = perf != null ? db.events.FirstOrDefault(e => e.id == perf.event_id) : null;
+            var venue = perf != null ? db.venues.FirstOrDefault(v => v.id == perf.venue_id) : null;
+            var city = venue != null ? db.cities.FirstOrDefault(c => c.id == venue.city_id) : null;
+            var seat = oi.seat_id.HasValue ? db.seats.FirstOrDefault(s => s.id == oi.seat_id.Value) : null;
+
+            var model = new TicketDetailsViewModel
+            {
+                TicketId = ticket.id,
+                TicketCode = ticket.ticket_code,
+                QR = ticket.qr_code_url,
+                PurchasedAt = order.created_at,
+                EventTitle = ev?.title,
+                EventPoster = ev?.poster_url,
+                StartDate = perf?.start_datetime,
+                EndDate = perf?.end_datetime,
+                VenueName = venue?.name,
+                CityName = city?.name,
+                Price = oi.unit_price,
+                SeatRow = seat?.row_label,
+                SeatNumber = seat?.seat_number
+            };
+
+            return View(model);
+        }
+
+        // POST: Ticket/RequestRefund
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RequestRefund(long ticketId)
+        {
+            if (Session["UserID"] == null)
+                return RedirectToAction("Login", "Register");
+
+            long userId = Convert.ToInt64(Session["UserID"]);
+            var user = db.users.FirstOrDefault(u => u.id == userId);
+            if (user == null)
+                return RedirectToAction("Login", "Register");
+
+            var ticket = db.tickets.Find(ticketId);
+            if (ticket == null) return HttpNotFound();
+
+            var oi = ticket.order_items;
+            if (oi == null) return HttpNotFound();
+            var order = oi.orders;
+            if (order == null) return HttpNotFound();
+
+            if (!(order.user_id == userId || (order.user_id == null && order.email == user.email)))
+                return new HttpUnauthorizedResult();
+
+            var payment = db.payments.FirstOrDefault(p => p.order_id == order.id);
+            if (payment == null)
+            {
+                // Create a synthetic payment if missing (for older orders)
+                payment = new payments
+                {
+                    order_id = order.id,
+                    provider = "manual",
+                    provider_payment_id = Guid.NewGuid().ToString(),
+                    amount = order.total_amount,
+                    currency = order.currency,
+                    status = "captured",
+                    captured_at = order.created_at ?? DateTime.Now
+                };
+                db.payments.Add(payment);
+                db.SaveChanges();
+            }
+
+            // Prevent duplicate pending/approved refunds for same payment
+            bool hasActiveRefund = db.refunds.Any(r => r.payment_id == payment.id && r.status != "rejected");
+            if (!hasActiveRefund)
+            {
+                var refund = new refunds
+                {
+                    payment_id = payment.id,
+                    amount = payment.amount,
+                    status = "pending",
+                    provider_refund_id = null,
+                    processed_at = null
+                };
+                db.refunds.Add(refund);
+                db.SaveChanges();
+                TempData["Success"] = "Your refund request has been submitted and is pending review.";
+            }
+            else
+            {
+                TempData["Success"] = "A refund request already exists for this order.";
+            }
+
+            return RedirectToAction("Details", new { id = ticketId });
         }
 
         // Demo Data Seeder Helper

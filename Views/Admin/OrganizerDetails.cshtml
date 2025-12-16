@@ -128,11 +128,16 @@
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-success">Approve Organizer</button>
                 }
-                using (Html.BeginForm("RejectOrganizer", "Admin", new { id = Model.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to reject this organizer?');" }))
+                using (Html.BeginForm("RejectOrganizer", "Admin", new { id = Model.id }, FormMethod.Post, new { style = "display:inline; margin-right:10px;", onsubmit = "return confirm('Are you sure you want to reject this organizer?');" }))
                 {
                     @Html.AntiForgeryToken()
                     <button type="submit" class="btn btn-danger">Reject Organizer</button>
                 }
+            }
+            using (Html.BeginForm("DeleteOrganizer", "Admin", new { id = Model.id }, FormMethod.Post, new { style = "display:inline; margin-right:10px;", onsubmit = "return confirm('Are you sure you want to delete this organizer? This will disable their users and events.');" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-secondary">Delete Organizer</button>
             }
             <a href="@Url.Action("Organizers", "Admin")" class="btn btn-secondary" style="margin-left:10px;">Back to List</a>
         </div>

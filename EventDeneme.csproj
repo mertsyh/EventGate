@@ -120,6 +120,8 @@
       <LastGenOutput>pr2.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\site.js" />
+    <Content Include="Views\Profile\MyTickets.cshtml" />
+    <Content Include="Views\Profile\Refunds.cshtml" />
     <Content Include="Web.config" />
     <Content Include="images\acil.jpeg" />
     <Content Include="images\amadeus.jpg" />
@@ -346,11 +348,13 @@
     <Content Include="Views\Venue\Index.cshtml" />
     <Content Include="Views\Event\Index.cshtml" />
     <Content Include="Views\Home\Terms.cshtml" />
-    <Content Include="Views\Profile\MyTickets.cshtml" />
-    <Content Include="Views\Profile\Refunds.cshtml" />
     <Content Include="Views\register\ForgotPassword.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_OrganizerLayout.cshtml" />
+    <Content Include="Views\Organizer\ManagePerformances.cshtml" />
+    <Content Include="Views\Organizer\ManagePrices.cshtml" />
+    <Content Include="Views\Organizer\EditEvent.cshtml" />
+    <Content Include="Views\Ticket\Details.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

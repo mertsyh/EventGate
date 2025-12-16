@@ -99,22 +99,36 @@
                 <div class="event-info">
 
                     @{
-                        var remaining = e.StartDate.Value - DateTime.Now;
-                        string timeLeft =
-                            $"{remaining.Days} Days";
+                        bool hasDate = e.StartDate.HasValue;
+                        bool isPast = hasDate && e.StartDate.Value < DateTime.Now;
+                        string timeLeft = "";
+                        if (hasDate && !isPast)
+                        {
+                            var remaining = e.StartDate.Value - DateTime.Now;
+                            timeLeft = $"{remaining.Days} Days";
+                        }
                     }
 
-                    <span class="time-tag">
-                        <i class="fa-regular fa-clock"></i> @timeLeft
-                    </span>
+                    @if (!isPast)
+                    {
+                        <span class="time-tag">
+                            <i class="fa-regular fa-clock"></i> @timeLeft
+                        </span>
+                    }
 
                     <h3>@e.Title</h3>
 
                     <p>• @e.Venue</p>
                     <div class="price-row">
                         <span class="price">₺@e.Price+</span>
-
-                        <a href="@Url.Action("Details", "Event", new { id = e.EventId })">Book Now</a>
+                        @if (!isPast)
+                        {
+                            <a href="@Url.Action("Details", "Event", new { id = e.EventId })">Book Now</a>
+                        }
+                        else
+                        {
+                            <span class="ended-label">Event Ended</span>
+                        }
                     </div>
                 </div>
             </div>

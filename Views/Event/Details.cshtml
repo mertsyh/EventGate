@@ -8,7 +8,7 @@
 }
 
 <section class="event-hero">
-    <img src="@Model.ImageUrl" alt="@Model.Title">
+    <img src="@Url.Content(Model.ImageUrl ?? "~/images/login_background.png")" alt="@Model.Title">
     <div class="event-hero-overlay"></div>
 
     <div class="event-hero-content">

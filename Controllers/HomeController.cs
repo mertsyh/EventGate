@@ -23,15 +23,16 @@ namespace ProjeAdi.Controllers
             ViewBag.categories = db.categories.ToList();
             ViewBag.venues = db.venues.ToList();
 
+            DateTime now = DateTime.Now;
+
             var events = db.events
+                .Where(e => e.status != "deleted")
                 .ToList()
                 .Select(e => new EventCardViewModel
                 {
                     EventId = e.id,
                     Title = e.title,
-                    StartDate = e.performances
-                                    .OrderBy(p => p.start_datetime)
-                                    .FirstOrDefault()?.start_datetime,
+                    StartDate = GetNextOrFirstPerformanceDate(e.performances, now),
                     Venue = e.performances
                                 .FirstOrDefault()?.venues.name,
                     City = e.performances
@@ -43,7 +44,6 @@ namespace ProjeAdi.Controllers
                     ImageUrl = e.poster_url
                 })
                 .ToList();
-            DateTime now = DateTime.Now;
             DateTime nextWeek = now.AddDays(7);
 
             var lastWeekEvents = events
@@ -77,6 +77,26 @@ namespace ProjeAdi.Controllers
         public ActionResult Terms()
         {
             return View();
+        }
+
+        // Helper: choose next upcoming performance date if exists, otherwise first performance
+        private static System.DateTime? GetNextOrFirstPerformanceDate(
+            System.Collections.Generic.ICollection<performances> perfs,
+            System.DateTime now)
+        {
+            if (perfs == null || !perfs.Any()) return null;
+
+            var upcoming = perfs
+                .Where(p => p.start_datetime >= now && p.status != "cancelled")
+                .OrderBy(p => p.start_datetime)
+                .FirstOrDefault();
+
+            if (upcoming != null) return upcoming.start_datetime;
+
+            return perfs
+                .OrderBy(p => p.start_datetime)
+                .FirstOrDefault()
+                ?.start_datetime;
         }
 
     }

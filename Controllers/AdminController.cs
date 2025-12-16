@@ -328,6 +328,13 @@ namespace EventDeneme.Controllers
                 {
                     evt.status = "approved";
                     evt.updated_at = DateTime.Now;
+
+                    // mark related performances as approved as well
+                    var perfs = db.performances.Where(p => p.event_id == evt.id).ToList();
+                    foreach (var perf in perfs)
+                    {
+                        perf.status = "approved";
+                    }
                 }
                 db.SaveChanges();
                 TempData["Success"] = "Event request approved.";
@@ -523,6 +530,42 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Organizers");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteOrganizer(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var organizer = db.organizers.Find(id);
+            if (organizer != null)
+            {
+                // Soft delete organizer: mark as deleted and deactivate related users and events
+                organizer.status = "deleted";
+
+                var orgUsers = db.organizer_users.Where(u => u.organizer_id == id).ToList();
+                foreach (var user in orgUsers)
+                {
+                    user.status = "inactive";
+                }
+
+                var orgEvents = db.events.Where(e => e.organizer_id == id).ToList();
+                foreach (var evt in orgEvents)
+                {
+                    evt.status = "deleted";
+                    evt.updated_at = DateTime.Now;
+
+                    var perfs = db.performances.Where(p => p.event_id == evt.id).ToList();
+                    foreach (var perf in perfs)
+                    {
+                        perf.status = "cancelled";
+                    }
+                }
+
+                db.SaveChanges();
+                TempData["Success"] = "Organizer deleted and related users/events disabled.";
+            }
+            return RedirectToAction("Organizers");
+        }
+
         // ========== REFUND ACTIONS ==========
 
         [HttpPost]
@@ -534,6 +577,26 @@ namespace EventDeneme.Controllers
             {
                 refund.status = "approved";
                 refund.processed_at = DateTime.Now;
+
+                var payment = refund.payments;
+                if (payment != null)
+                {
+                    payment.status = "refunded";
+                    var order = payment.orders;
+                    if (order != null)
+                    {
+                        order.status = "refunded";
+                        var orderItems = db.order_items.Where(oi => oi.order_id == order.id).ToList();
+                        foreach (var oi in orderItems)
+                        {
+                            foreach (var ticket in oi.tickets.ToList())
+                            {
+                                ticket.status = "refunded";
+                            }
+                        }
+                    }
+                }
+
                 db.SaveChanges();
                 TempData["Success"] = "Refund approved successfully.";
             }

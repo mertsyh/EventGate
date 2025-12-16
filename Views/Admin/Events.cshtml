@@ -23,16 +23,25 @@
             <th>ID</th>
             <th>Title</th>
             <th>Description</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
+            var status = item.status ?? "unknown";
+            var badgeClass = status == "approved" ? "badge-success" :
+                             status == "pending" ? "badge-warning" :
+                             status == "rejected" ? "badge-danger" :
+                             status == "deleted" ? "badge-secondary" : "badge-light";
             <tr>
                 <td>@item.id</td>
                 <td>@item.title</td>
                 <td>@(item.description != null && item.description.Length > 50 ? item.description.Substring(0, 50) + "..." : item.description)</td>
+                <td>
+                    <span class="badge @badgeClass">@status</span>
+                </td>
                 <td>
                     @Html.ActionLink("Edit", "EditEvent", "Admin", new { id = item.id }, null)
                     <span> | </span>

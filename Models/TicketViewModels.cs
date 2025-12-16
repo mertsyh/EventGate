@@ -60,6 +60,7 @@ namespace EventDeneme.Models
 
     public class UserTicketViewModel
     {
+        public long TicketId { get; set; }
         public string EventTitle { get; set; }
         public DateTime Date { get; set; }
         public string Venue { get; set; }
@@ -69,6 +70,15 @@ namespace EventDeneme.Models
         public string HolderName { get; set; }
         public decimal Price { get; set; }
         public string Status { get; set; }
+    }
+
+    public class UserRefundViewModel
+    {
+        public long RefundId { get; set; }
+        public decimal Amount { get; set; }
+        public string Status { get; set; }
+        public DateTime? RequestedAt { get; set; }
+        public DateTime? ProcessedAt { get; set; }
     }
 }
 

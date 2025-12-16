@@ -1,0 +1,95 @@
+@model IEnumerable<EventDeneme.Models.price_tiers>
+@{
+    ViewBag.Title = "Manage Prices";
+    Layout = "~/Views/Shared/_OrganizerLayout.cshtml";
+    var perf = ViewBag.Performance as EventDeneme.Models.performances;
+}
+
+<div class="container" style="padding: 40px 20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2>Manage Prices - @perf.events.title (@perf.start_datetime)</h2>
+        <a href="@Url.Action("ManagePerformances", "Organizer", new { eventId = perf.event_id })" class="btn btn-secondary">Back to Performances</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <h3>Add Price Tier</h3>
+    @using (Html.BeginForm("AddPriceTier", "Organizer", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("performanceId", perf.id)
+
+        <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Standard" />
+        </div>
+
+        <div class="form-group">
+            <label>Seat Section</label>
+            <input type="text" name="seatmapSection" placeholder="General" />
+        </div>
+
+        <div class="form-group">
+            <label>Capacity</label>
+            <input type="number" name="capacity" min="1" />
+        </div>
+
+        <div class="form-group">
+            <label>Price</label>
+            <input type="number" name="price" step="0.01" min="0" required />
+        </div>
+
+        <div class="form-group">
+            <label>Currency</label>
+            <input type="text" name="currency" placeholder="TRY" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add</button>
+    }
+
+    <h3 style="margin-top:30px;">Existing Tiers</h3>
+    @if (!Model.Any())
+    {
+        <p>No price tiers defined yet.</p>
+    }
+    else
+    {
+        <table class="table" style="margin-top:10px;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Section</th>
+                    <th>Capacity</th>
+                    <th>Price</th>
+                    <th>Currency</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    <tr>
+                        <td>@t.name</td>
+                        <td>@t.seatmap_section</td>
+                        <td>@(t.capacity.HasValue ? t.capacity.ToString() : "-")</td>
+                        <td>@t.price</td>
+                        <td>@t.currency</td>
+                        <td>
+                            @using (Html.BeginForm("DeletePriceTier", "Organizer", FormMethod.Post, new { onsubmit = "return confirm('Delete this price tier?');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("id", t.id)
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+

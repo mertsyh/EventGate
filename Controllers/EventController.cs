@@ -17,13 +17,16 @@ namespace EventDeneme.Controllers
             ViewBag.cities = db.cities.ToList();
             ViewBag.venues = db.venues.ToList();
 
+            DateTime now = DateTime.Now;
+
             var events = db.events
+                .Where(e => e.status != "deleted")
                 .ToList()
                 .Select(e => new EventCardViewModel
                 {
                     EventId = e.id,
                     Title = e.title,
-                    StartDate = e.performances.OrderBy(p => p.start_datetime).FirstOrDefault()?.start_datetime,
+                    StartDate = GetNextOrFirstPerformanceDate(e.performances, now),
                     Venue = e.performances.FirstOrDefault()?.venues.name,
                     City = e.performances.FirstOrDefault()?.venues.cities.name,
                     Price = e.performances.SelectMany(p => p.price_tiers).OrderBy(t => t.price).FirstOrDefault()?.price,
@@ -43,14 +46,16 @@ namespace EventDeneme.Controllers
             ViewBag.cities = db.cities.ToList();
             ViewBag.venues = db.venues.ToList();
 
+            DateTime now = DateTime.Now;
+
             var movies = db.events
-                .Where(e => e.category_id == category)
+                .Where(e => e.category_id == category && e.status != "deleted")
                 .ToList()   // First get from DB, then map
                 .Select(e => new EventCardViewModel
                 {
                     EventId = e.id,
                     Title = e.title,
-                    StartDate = e.performances.OrderBy(p => p.start_datetime).FirstOrDefault()?.start_datetime,
+                    StartDate = GetNextOrFirstPerformanceDate(e.performances, now),
                     Venue = e.performances.FirstOrDefault()?.venues.name,
                     City = e.performances.FirstOrDefault()?.venues.cities.name,
                     Price = e.performances.SelectMany(p => p.price_tiers).OrderBy(t => t.price).FirstOrDefault()?.price,
@@ -70,14 +75,16 @@ namespace EventDeneme.Controllers
             ViewBag.cities = db.cities.ToList();
             ViewBag.venues = db.venues.ToList();
 
+            DateTime now = DateTime.Now;
+
             var concerts = db.events
-                .Where(e => e.category_id == category)
+                .Where(e => e.category_id == category && e.status != "deleted")
                 .ToList()
                 .Select(e => new EventCardViewModel
                 {
                     EventId = e.id,
                     Title = e.title,
-                    StartDate = e.performances.OrderBy(p => p.start_datetime).FirstOrDefault()?.start_datetime,
+                    StartDate = GetNextOrFirstPerformanceDate(e.performances, now),
                     Venue = e.performances.FirstOrDefault()?.venues.name,
                     City = e.performances.FirstOrDefault()?.venues.cities.name,
                     Price = e.performances.SelectMany(p => p.price_tiers).OrderBy(t => t.price).FirstOrDefault()?.price,
@@ -98,6 +105,38 @@ namespace EventDeneme.Controllers
             if (eventRaw == null)
                 return HttpNotFound();
 
+            // Deleted event sayfasına sadece admin veya etkinlik sahibi organizer erişebilsin
+            if (eventRaw.status == "deleted")
+            {
+                bool isAdmin = Session["AdminID"] != null;
+                long? organizerId = null;
+                if (Session["OrganizerID"] != null)
+                {
+                    organizerId = Convert.ToInt64(Session["OrganizerID"]);
+                }
+
+                bool isOwner = organizerId.HasValue && eventRaw.organizer_id == organizerId.Value;
+
+                if (!isAdmin && !isOwner)
+                {
+                    return HttpNotFound();
+                }
+            }
+
+            DateTime now = DateTime.Now;
+            var nextPerf = eventRaw.performances
+                .Where(p => p.start_datetime >= now && p.status != "cancelled")
+                .OrderBy(p => p.start_datetime)
+                .FirstOrDefault();
+
+            bool hasUpcoming = nextPerf != null;
+            if (!hasUpcoming)
+            {
+                nextPerf = eventRaw.performances
+                    .OrderBy(p => p.start_datetime)
+                    .FirstOrDefault();
+            }
+
             var evt = new EventDetailViewModel
             {
                 EventId = eventRaw.id,
@@ -106,11 +145,11 @@ namespace EventDeneme.Controllers
                 ImageUrl = eventRaw.poster_url,
                 Venue = eventRaw.performances.FirstOrDefault()?.venues.name,
                 City = eventRaw.performances.FirstOrDefault()?.venues.cities.name,
-                Date = eventRaw.performances.OrderBy(p => p.start_datetime).FirstOrDefault()?.start_datetime,
+                Date = nextPerf?.start_datetime,
                 Price = eventRaw.performances.SelectMany(p => p.price_tiers).OrderBy(t => t.price).FirstOrDefault()?.price
             };
 
-            ViewBag.IsPastEvent = evt.Date < DateTime.Now;
+            ViewBag.IsPastEvent = !hasUpcoming;
 
             return View(evt);
         }
@@ -120,7 +159,7 @@ namespace EventDeneme.Controllers
         {
             // Load data into memory to avoid EF translation issues
             var eventsQuery = db.events
-                .Where(e => !categoryId.HasValue || e.category_id == categoryId)
+                .Where(e => e.status != "deleted" && (!categoryId.HasValue || e.category_id == categoryId))
                 .ToList();
 
             // City
@@ -169,7 +208,7 @@ namespace EventDeneme.Controllers
                 {
                     EventId = e.id,
                     Title = e.title,
-                    StartDate = e.performances.OrderBy(p => p.start_datetime).FirstOrDefault()?.start_datetime,
+                    StartDate = GetNextOrFirstPerformanceDate(e.performances, now),
                     Venue = e.performances.FirstOrDefault()?.venues.name,
                     City = e.performances.FirstOrDefault()?.venues.cities.name,
                     Price = e.performances.SelectMany(p => p.price_tiers).OrderBy(t => t.price).FirstOrDefault()?.price,
@@ -178,6 +217,26 @@ namespace EventDeneme.Controllers
                 .ToList();
 
             return PartialView("_EventCards", result);
+        }
+
+        // Helper: choose next upcoming performance date if exists, otherwise first performance
+        private static System.DateTime? GetNextOrFirstPerformanceDate(
+            System.Collections.Generic.ICollection<performances> perfs,
+            System.DateTime now)
+        {
+            if (perfs == null || !perfs.Any()) return null;
+
+            var upcoming = perfs
+                .Where(p => p.start_datetime >= now && p.status != "cancelled")
+                .OrderBy(p => p.start_datetime)
+                .FirstOrDefault();
+
+            if (upcoming != null) return upcoming.start_datetime;
+
+            return perfs
+                .OrderBy(p => p.start_datetime)
+                .FirstOrDefault()
+                ?.start_datetime;
         }
 
         public ActionResult Theater()

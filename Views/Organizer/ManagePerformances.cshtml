@@ -1,0 +1,87 @@
+@model IEnumerable<EventDeneme.Models.performances>
+@{
+    ViewBag.Title = "Manage Performances";
+    Layout = "~/Views/Shared/_OrganizerLayout.cshtml";
+    var evt = ViewBag.Event as EventDeneme.Models.events;
+    var venues = ViewBag.Venues as IEnumerable<EventDeneme.Models.venues>;
+}
+
+<div class="container" style="padding: 40px 20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2>Manage Performances - @evt.title</h2>
+        <a href="@Url.Action("Dashboard", "Organizer")" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <h3>Add New Performance</h3>
+    @using (Html.BeginForm("AddPerformance", "Organizer", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("eventId", evt.id)
+
+        <div class="form-group">
+            <label>Venue</label>
+            <select name="venueId" required>
+                @foreach (var v in venues)
+                {
+                    <option value="@v.id">@v.name</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Start Date &amp; Time</label>
+            <input type="datetime-local" name="startDateTime" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Performance</button>
+    }
+
+    <h3 style="margin-top:30px;">Existing Performances</h3>
+    @if (!Model.Any())
+    {
+        <p>No performances defined yet.</p>
+    }
+    else
+    {
+        <table class="table" style="margin-top:10px;">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Venue</th>
+                    <th>Status</th>
+                    <th>Prices</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td>@p.start_datetime</td>
+                        <td>@p.venues?.name</td>
+                        <td>@p.status</td>
+                        <td>
+                            <a href="@Url.Action("ManagePrices", "Organizer", new { performanceId = p.id })"
+                               class="btn btn-sm btn-info">Manage Prices</a>
+                        </td>
+                        <td>
+                            @using (Html.BeginForm("DeletePerformance", "Organizer", FormMethod.Post, new { onsubmit = "return confirm('Cancel this performance?');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("id", p.id)
+                                <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+
