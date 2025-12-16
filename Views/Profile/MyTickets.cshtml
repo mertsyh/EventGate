@@ -1,0 +1,41 @@
+@model List<EventDeneme.Models.UserTicketViewModel>
+@{
+    ViewBag.Title = "My Tickets";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="padding: 40px 20px;">
+    <h2>My Tickets</h2>
+    
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info" style="padding: 15px; background-color: #e9ecef; border-radius: 5px;">
+            You haven't purchased any tickets yet. <a href="@Url.Action("Index", "Home")" style="color: #d22; font-weight: bold;">Browse Events</a>
+        </div>
+    }
+    else
+    {
+        <div class="ticket-list" style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
+            @foreach (var ticket in Model)
+            {
+                <div class="ticket-card" style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <div class="ticket-info" style="flex: 1; min-width: 300px;">
+                        <h3 style="margin: 0 0 10px 0; color: #d22;">@ticket.EventTitle</h3>
+                        <p style="margin: 0; color: #555; line-height: 1.6;">
+                            <strong>Date:</strong> @ticket.Date.ToString("dd MMMM yyyy HH:mm") <br />
+                            <strong>Venue:</strong> @ticket.Venue <br />
+                            <strong>Seat:</strong> @ticket.SeatLabel <br />
+                            <strong>Price:</strong> @ticket.Price.ToString("C2") <br />
+                            <strong>Holder:</strong> @ticket.HolderName
+                        </p>
+                    </div>
+                    <div class="ticket-actions" style="text-align: center; padding: 10px;">
+                        <img src="@ticket.QrUrl" alt="QR Code" style="width: 100px; height: 100px; display: block; margin: 0 auto 10px auto;" />
+                        <span style="background: #f0f0f0; padding: 5px 10px; border-radius: 4px; font-family: monospace; border: 1px solid #ccc; font-weight: bold;">@ticket.TicketCode</span>
+                        <div style="margin-top: 5px; color: green; font-size: 0.9em; font-weight: bold;">@ticket.Status.ToUpper()</div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

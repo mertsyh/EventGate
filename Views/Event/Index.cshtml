@@ -1,0 +1,18 @@
+@model List<EventDeneme.Models.EventCardViewModel>
+@{
+    Layout = "~/Views/Event/Eventpages.cshtml";
+    ViewBag.Title = "All Events";
+}
+
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        @Html.Partial("_EventCards", new List<EventDeneme.Models.EventCardViewModel> { item })
+    }
+}
+else
+{
+    <p style="padding: 20px;">No events found.</p>
+}
+

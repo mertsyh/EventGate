@@ -1,0 +1,14 @@
+﻿@model List<EventDeneme.Models.EventCardViewModel>
+@{ 
+    Layout = "~/Views/Event/Eventpages.cshtml";
+    ViewBag.Title = "Cinema";
+}
+
+@if (Model != null && Model.Any())
+{
+    @Html.Partial("_EventCards", Model)
+}
+else
+{
+    <p style="padding: 20px;">No movies found.</p>
+}

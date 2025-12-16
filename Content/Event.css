@@ -1,0 +1,209 @@
+﻿.eventscontainer {
+    width: 95%;
+    padding: 10px;
+    min-height: 800px;
+    display: flex;
+    gap: 20px;
+    margin: auto;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    border-radius: 16px;
+   
+}
+
+.leftmenu {
+    border-radius: 16px;
+    min-width: 15%;
+    max-height: 400px !important;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(13.4px);
+    -webkit-backdrop-filter: blur(13.4px);
+    border: 1px solid rgba(255, 255, 255, 0.73);
+    padding: 15px;
+    display: flex;
+    position: static;
+    flex-direction: column;
+    left: 10px;
+    
+ 
+}
+
+.rightcontent {
+    width: 85%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    position: relative;
+ 
+}
+
+
+.event-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+    .event-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .event-card img {
+        width: 100%;
+        height: 210px;
+        object-fit: cover;
+    }
+
+.event-body {
+    padding: 6px;
+}
+
+.event-title {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.event-location {
+    font-size: 13px;
+    color: gray;
+    margin: 5px 0;
+}
+
+
+.event-price {
+    color: green;
+    font-weight: bold;
+    margin-top: 6px;
+}
+
+.filter-option input[type="radio"] {
+    display: none;
+}
+.filter-option.clear-filter:hover {
+    background: #d22;
+    color: white;
+    transition:1s;
+}
+.filter-option.clear-filter:hover i {
+    transform:scale(1.4);
+    transition:1s;
+}
+
+
+.filter-option {
+    background: rgba(0,0,0,0.0);
+    border: 1px solid whitesmoke;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 20px;
+    padding: 6px 15px;
+    transition: 0.3s;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    color: #374151;
+    margin: 6px;
+    width:110px;
+}
+
+    .filter-option:has(input[type="radio"]:checked) {
+        background: #d22;
+        color: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+@media screen and (max-width: 900px) {
+
+    .eventscontainer {
+        flex-direction: column; /* Stack vertically instead of side-by-side */
+        width: 90%;
+        margin-top: 80px; /* Reduce top margin */
+        padding: 5px;
+        min-height: auto;
+    }
+    .search-box {
+        transform:scale(0.8);
+    }
+    /* --- TOP MENU (previously left menu) --- */
+    .leftmenu {
+        position: relative; /* Remove fixed positioning */
+        width: 90%;
+        left: 0;
+        top: 0;
+        margin: 0 auto 15px auto; /* Center */
+        /* Layout */
+        flex-direction: row;
+        flex-wrap: wrap; /* Wrap to next line if needed */
+        justify-content: center; /* Center completely */
+        align-items: center;
+        padding: 8px;
+        min-height: auto; /* Remove fixed height */
+        height: auto;
+    }
+
+    /* Reduce menu button sizes (scale effect) */
+    .filter-option {
+        width: auto; /* Let width depend on content */
+        font-size: 12px; /* Smaller text */
+        padding: 5px 10px; /* Thinner buttons */
+        margin: 5px; /* Tighter spacing */
+        flex-grow: 1; /* Spread across screen */
+        text-align: center;
+      
+    }
+
+    /* --- RIGHT CONTENT AREA --- */
+    .rightcontent {
+        width: 100%;
+        left: 0;
+        display: flex;
+        flex-direction: column; /* Stack cards vertically */
+        gap: 5px;
+     
+    }
+
+    /* --- HORIZONTAL CARD LAYOUT (image left, text right) --- */
+    .event-card {
+        display: flex; /* Row layout */
+        flex-direction: row;
+        height: 120px; /* Fixed compact height */
+        width: 100%;
+    }
+
+        .event-card img {
+            width: 35%; /* Image width */
+            height: 100%; /* Full card height */
+            object-fit: cover;
+        }
+   
+ 
+
+
+    .event-body {
+        width: 65%; /* Text area width */
+        padding: 8px 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Vertical center */
+    }
+
+    /* Card text scaling */
+    .event-title {
+        font-size: 14px;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Truncate long titles with ... */
+    }
+
+    .event-location {
+        font-size: 11px;
+        margin: 2px 0;
+    }
+
+    .event-price {
+        font-size: 13px;
+        margin-top: 4px;
+    }
+}
+
