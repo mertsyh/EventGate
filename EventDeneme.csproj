@@ -350,6 +350,7 @@
     <Content Include="Views\Profile\Refunds.cshtml" />
     <Content Include="Views\register\ForgotPassword.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_OrganizerLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
