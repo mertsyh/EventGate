@@ -1,0 +1,21 @@
+@model List<EventDeneme.Models.venues>
+@{
+    ViewBag.Title = "Venues";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="padding: 40px 20px;">
+    <h1>All Venues</h1>
+    <div class="venue-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+        @foreach (var venue in Model)
+        {
+            <div class="venue-card" style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                <h3>@venue.name</h3>
+                <p><i class="fa-solid fa-location-dot"></i> @(venue.cities != null ? venue.cities.name : "")</p>
+                <p>@venue.address</p>
+                <a href="@Url.Action("Details", "Venue", new { id = venue.id })" class="btn btn-primary" style="background-color: #d22; border:none;">View Details</a>
+            </div>
+        }
+    </div>
+</div>
+

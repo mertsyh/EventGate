@@ -1,0 +1,60 @@
+@model List<EventDeneme.Models.moderation_events>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Event Requests";
+}
+
+<h2>Pending Event Requests</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        @TempData["Success"]
+    </div>
+}
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Event ID</th>
+                <th>Submitted By</th>
+                <th>Status</th>
+                <th>Reviewed At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.id</td>
+                    <td>@item.event_id</td>
+                    <td>@item.submitted_by</td>
+                    <td>@item.status</td>
+                    <td>@(item.reviewed_at.HasValue ? item.reviewed_at.Value.ToString("dd MMM yyyy HH:mm") : "Pending")</td>
+                    <td>
+                        @using (Html.BeginForm("ApproveEventRequest", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" style="background:none; border:none; color:green; cursor:pointer; text-decoration:underline; padding:0; margin-right:5px;">Approve</button>
+                        }
+                        @using (Html.BeginForm("RejectEventRequest", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to reject this event?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" style="background:none; border:none; color:#d22; cursor:pointer; text-decoration:underline; padding:0;">Reject</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No pending event requests.</p>
+}
+
+

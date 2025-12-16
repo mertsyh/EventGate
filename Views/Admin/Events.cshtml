@@ -1,0 +1,60 @@
+@model List<EventDeneme.Models.events>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Manage Events";
+}
+
+<h2>Manage Events</h2>
+
+<p>
+    <a href="@Url.Action("CreateEvent", "Admin")" class="btn btn-primary">Add Event</a>
+</p>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        @TempData["Success"]
+    </div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var status = item.status ?? "unknown";
+            var badgeClass = status == "approved" ? "badge-success" :
+                             status == "pending" ? "badge-warning" :
+                             status == "rejected" ? "badge-danger" :
+                             status == "deleted" ? "badge-secondary" : "badge-light";
+            <tr>
+                <td>@item.id</td>
+                <td>@item.title</td>
+                <td>@(item.description != null && item.description.Length > 50 ? item.description.Substring(0, 50) + "..." : item.description)</td>
+                <td>
+                    <span class="badge @badgeClass">@status</span>
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditEvent", "Admin", new { id = item.id }, null)
+                    <span> | </span>
+                    <a href="@Url.Action("Details", "Event", new { id = item.id })" target="_blank">View</a>
+                    <span> | </span>
+                    @using (Html.BeginForm("DeleteEvent", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to delete this event?');" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" style="background:none; border:none; color:#d22; cursor:pointer; text-decoration:underline; padding:0;">Delete</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

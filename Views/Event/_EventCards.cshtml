@@ -1,0 +1,32 @@
+﻿@model List<EventDeneme.Models.EventCardViewModel>
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <div class="event-card">
+            <img src="@Url.Content(item.ImageUrl ?? "~/images/login_background.png")"
+                 alt="@item.Title"
+                 onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
+            <div class="event-info">
+                <h3>@item.Title</h3>
+                <p>
+                    @(item.StartDate.HasValue ? item.StartDate.Value.ToString("MMM dd") : "TBA") • 
+                    @(item.Venue ?? item.City ?? "TBA")
+                </p>
+                <span class="price">@(item.Price.HasValue ? item.Price.Value.ToString("C2") : "")</span>
+                @{
+                    bool isPast = item.StartDate.HasValue && item.StartDate.Value < DateTime.Now;
+                }
+                @if (!isPast)
+                {
+                    <a href="@Url.Action("Details", "Event", new { id = item.EventId })">Book Now</a>
+                }
+                else
+                {
+                    <span class="ended-label">Event Ended</span>
+                }
+            </div>
+        </div>
+    }
+}

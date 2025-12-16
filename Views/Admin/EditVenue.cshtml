@@ -1,0 +1,52 @@
+@model EventDeneme.Models.venues
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Edit Venue";
+}
+
+<h2>Edit Venue</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        @TempData["Success"]
+    </div>
+}
+
+@using (Html.BeginForm("EditVenue", "Admin", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.id)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.name)
+        @Html.TextBoxFor(m => m.name, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.address)
+        @Html.TextBoxFor(m => m.address, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.Label("City")
+        <select name="city_id" class="form-control">
+            @foreach (var c in (IEnumerable<EventDeneme.Models.cities>)ViewBag.Cities)
+            {
+                <option value="@c.id" @(c.id == Model.city_id ? "selected" : "")>@c.name</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>
+            @Html.CheckBoxFor(m => m.has_seating)
+            Has seating
+        </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="@Url.Action("Venues", "Admin")" class="btn btn-secondary">Back</a>
+}
+
+

@@ -1,0 +1,157 @@
+@model EventDeneme.Models.organizers
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Organizer Details";
+}
+
+<h2>Organizer Details</h2>
+
+<div class="container-fluid" style="padding: 20px;">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Basic Information</h4>
+            <table class="table">
+                <tr>
+                    <th>ID:</th>
+                    <td>@Model.id</td>
+                </tr>
+                <tr>
+                    <th>Legal Name:</th>
+                    <td>@Model.legal_name</td>
+                </tr>
+                <tr>
+                    <th>Brand Name:</th>
+                    <td>@Model.brand_name</td>
+                </tr>
+                <tr>
+                    <th>Tax ID:</th>
+                    <td>@(Model.tax_id ?? "N/A")</td>
+                </tr>
+                <tr>
+                    <th>Contact Email:</th>
+                    <td>@Model.contact_email</td>
+                </tr>
+                <tr>
+                    <th>Contact Phone:</th>
+                    <td>@(Model.contact_phone ?? "N/A")</td>
+                </tr>
+                <tr>
+                    <th>Status:</th>
+                    <td>
+                        <span class="badge @(Model.status == "approved" ? "badge-success" : Model.status == "rejected" ? "badge-danger" : "badge-warning")">
+                            @Model.status
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Created At:</th>
+                    <td>@(Model.created_at.HasValue ? Model.created_at.Value.ToString("dd MMM yyyy HH:mm") : "N/A")</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-12">
+            <h4>Organizer Users</h4>
+            @if (Model.organizer_users != null && Model.organizer_users.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Model.organizer_users)
+                        {
+                            <tr>
+                                <td>@user.username</td>
+                                <td>@user.email</td>
+                                <td>@user.role</td>
+                                <td>@user.status</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No users found for this organizer.</p>
+            }
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-12">
+            <h4>Applications</h4>
+            @if (Model.organizer_applications != null && Model.organizer_applications.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Application ID</th>
+                            <th>Submitted At</th>
+                            <th>Status</th>
+                            <th>Review Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var app in Model.organizer_applications)
+                        {
+                            <tr>
+                                <td>@app.id</td>
+                                <td>@(app.submitted_at.HasValue ? app.submitted_at.Value.ToString("dd MMM yyyy HH:mm") : "N/A")</td>
+                                <td>@app.status</td>
+                                <td>@(app.review_notes ?? "N/A")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No applications found.</p>
+            }
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-md-12">
+            @if (Model.status == "pending")
+            {
+                using (Html.BeginForm("ApproveOrganizer", "Admin", new { id = Model.id }, FormMethod.Post, new { style = "display:inline; margin-right:10px;" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-success">Approve Organizer</button>
+                }
+                using (Html.BeginForm("RejectOrganizer", "Admin", new { id = Model.id }, FormMethod.Post, new { style = "display:inline; margin-right:10px;", onsubmit = "return confirm('Are you sure you want to reject this organizer?');" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Reject Organizer</button>
+                }
+            }
+            using (Html.BeginForm("DeleteOrganizer", "Admin", new { id = Model.id }, FormMethod.Post, new { style = "display:inline; margin-right:10px;", onsubmit = "return confirm('Are you sure you want to delete this organizer? This will disable their users and events.');" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-secondary">Delete Organizer</button>
+            }
+            <a href="@Url.Action("Organizers", "Admin")" class="btn btn-secondary" style="margin-left:10px;">Back to List</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge {
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+    .badge-success { background-color: #28a745; color: white; }
+    .badge-danger { background-color: #dc3545; color: white; }
+    .badge-warning { background-color: #ffc107; color: black; }
+</style>
+

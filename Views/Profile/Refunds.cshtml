@@ -1,0 +1,16 @@
+@{
+    ViewBag.Title = "Refund Requests";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container" style="padding: 40px 20px;">
+    <h2>Refund Requests</h2>
+    <p>You have no active refund requests.</p>
+    
+    <div style="margin-top:20px;">
+        <h4>Request a Refund</h4>
+        <p>To request a refund, please contact support with your Ticket ID.</p>
+        <a href="@Url.Action("Contact", "Home")" class="btn btn-secondary">Contact Support</a>
+    </div>
+</div>
+
