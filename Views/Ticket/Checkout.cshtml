@@ -344,9 +344,15 @@
             cursor: pointer;
         }
 
-        .summary-card {
+        .summary-sticky-container {
             position: sticky;
             top: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .summary-card {
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -558,7 +564,6 @@
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            margin-top: 24px;
             width: 100%;
             box-sizing: border-box;
         }
@@ -606,8 +611,11 @@
                 max-width: 100%;
             }
 
-            .summary-card {
+            .summary-sticky-container {
                 position: static;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
             }
 
             .checkout-content {
@@ -829,71 +837,72 @@
 
         
         <div class="checkout-summary-section">
-            <div class="summary-card">
-                <div class="summary-header-image">
-                    <img src="@Url.Content(Model.EventImageUrl ?? "~/images/login_background.png")" alt="@Model.EventTitle" />
-                    <div class="summary-header-overlay"></div>
-                    <div class="summary-header-content">
-                        @if (!string.IsNullOrEmpty(Model.CategoryName))
+            <div class="summary-sticky-container">
+                <div class="summary-card">
+                    <div class="summary-header-image">
+                        <img src="@Url.Content(Model.EventImageUrl ?? "~/images/login_background.png")" alt="@Model.EventTitle" />
+                        <div class="summary-header-overlay"></div>
+                        <div class="summary-header-content">
+                            @if (!string.IsNullOrEmpty(Model.CategoryName))
+                            {
+                                <span class="summary-category-badge">@Model.CategoryName</span>
+                            }
+                            <h3 class="summary-event-title">@Model.EventTitle</h3>
+                        </div>
+                    </div>
+                    <div class="summary-body">
+                        @if (Model.EventDate.HasValue)
                         {
-                            <span class="summary-category-badge">@Model.CategoryName</span>
+                            <div class="summary-detail-item">
+                                <div class="summary-detail-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="summary-detail-content">
+                                    <div class="summary-detail-title">@Model.EventDate.Value.ToString("MMMM dd, yyyy")</div>
+                                    <div class="summary-detail-text">@Model.EventDate.Value.ToString("dddd") • @Model.EventDate.Value.ToString("hh:mm tt")</div>
+                                    @if (!string.IsNullOrEmpty(Model.VenueName))
+                                    {
+                                        <div class="summary-detail-text" style="margin-top: 4px;">
+                                            <i class="fas fa-map-marker-alt" style="font-size: 12px;"></i>
+                                            @Model.VenueName@(!string.IsNullOrEmpty(Model.CityName) ? ", " + Model.CityName : "")
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                         }
-                        <h3 class="summary-event-title">@Model.EventTitle</h3>
+
+                        <div style="margin-bottom: 16px;">
+                            <div class="summary-ticket-item">
+                                <div class="summary-ticket-info">
+                                    <span class="summary-ticket-name">Ticket</span>
+                                    <span class="summary-ticket-quantity">x @Model.SeatCount @(Model.SeatCount == 1 ? "Item" : "Items")</span>
+                                </div>
+                                <span class="summary-ticket-price">@Model.TotalAmount.ToString("N2") ₺</span>
+                            </div>
+                        </div>
+
+                        <div class="summary-total">
+                            <div class="summary-total-label">
+                                <span class="summary-total-text">Total Amount</span>
+                                <span class="summary-total-note">Taxes Included</span>
+                            </div>
+                            <div class="summary-total-amount">@Model.TotalAmount.ToString("N2") ₺</div>
+                        </div>
+
+                        <div class="trust-message">
+                            <i class="fas fa-lock"></i>
+                            <span>Your payment information is protected by 256-bit SSL certificate.</span>
+                        </div>
                     </div>
                 </div>
-                <div class="summary-body">
-                    @if (Model.EventDate.HasValue)
-                    {
-                        <div class="summary-detail-item">
-                            <div class="summary-detail-icon">
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                            <div class="summary-detail-content">
-                                <div class="summary-detail-title">@Model.EventDate.Value.ToString("MMMM dd, yyyy")</div>
-                                <div class="summary-detail-text">@Model.EventDate.Value.ToString("dddd") • @Model.EventDate.Value.ToString("hh:mm tt")</div>
-                                @if (!string.IsNullOrEmpty(Model.VenueName))
-                                {
-                                    <div class="summary-detail-text" style="margin-top: 4px;">
-                                        <i class="fas fa-map-marker-alt" style="font-size: 12px;"></i>
-                                        @Model.VenueName@(!string.IsNullOrEmpty(Model.CityName) ? ", " + Model.CityName : "")
-                                    </div>
-                                }
-                            </div>
+
+                <div class="timer-card">
+                    <i class="fas fa-exclamation-circle timer-icon"></i>
+                    <div class="timer-content">
+                        <div class="timer-title">Time is running out!</div>
+                        <div class="timer-text">
+                            Time remaining to reserve your tickets: <span class="timer-display" id="timer">15:00</span>
                         </div>
-                    }
-
-                    <div style="margin-bottom: 16px;">
-                        <div class="summary-ticket-item">
-                            <div class="summary-ticket-info">
-                                <span class="summary-ticket-name">Ticket</span>
-                                <span class="summary-ticket-quantity">x @Model.SeatCount @(Model.SeatCount == 1 ? "Item" : "Items")</span>
-                            </div>
-                            <span class="summary-ticket-price">@Model.TotalAmount.ToString("N2") ₺</span>
-                        </div>
-                    </div>
-
-                    <div class="summary-total">
-                        <div class="summary-total-label">
-                            <span class="summary-total-text">Total Amount</span>
-                            <span class="summary-total-note">Taxes Included</span>
-                        </div>
-                        <div class="summary-total-amount">@Model.TotalAmount.ToString("N2") ₺</div>
-                    </div>
-
-                    <div class="trust-message">
-                        <i class="fas fa-lock"></i>
-                        <span>Your payment information is protected by 256-bit SSL certificate.</span>
-                    </div>
-                </div>
-            </div>
-
-            
-            <div class="timer-card">
-                <i class="fas fa-exclamation-circle timer-icon"></i>
-                <div class="timer-content">
-                    <div class="timer-title">Time is running out!</div>
-                    <div class="timer-text">
-                        Time remaining to reserve your tickets: <span class="timer-display" id="timer">15:00</span>
                     </div>
                 </div>
             </div>

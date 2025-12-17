@@ -181,9 +181,6 @@ namespace EventDeneme.Controllers
             TempData["Success"] = "Event updated successfully.";
             return RedirectToAction("Events");
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-     
         
         public ActionResult Venues()
         {
