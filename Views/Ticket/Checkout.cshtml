@@ -6,10 +6,16 @@
 
 @section Styles {
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         .checkout-container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         .checkout-header {
@@ -94,16 +100,20 @@
             display: flex;
             gap: 32px;
             flex-wrap: wrap;
+            align-items: flex-start;
         }
 
         .checkout-form-section {
             flex: 1;
             min-width: 300px;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         .checkout-summary-section {
             width: 380px;
             flex-shrink: 0;
+            max-width: 100%;
         }
 
         .form-card {
@@ -113,6 +123,8 @@
             margin-bottom: 24px;
             border: 1px solid #e5e7eb;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            width: 100%;
+            overflow-x: hidden;
         }
 
         .form-card-header {
@@ -145,8 +157,9 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
+            width: 100%;
         }
 
         .form-group {
@@ -167,6 +180,8 @@
 
         .form-input-wrapper {
             position: relative;
+            width: 100%;
+            max-width: 100%;
         }
 
         .form-input-icon {
@@ -188,6 +203,8 @@
             font-size: 14px;
             transition: all 0.2s;
             background: white;
+            box-sizing: border-box;
+            max-width: 100%;
         }
 
         .form-input:focus {
@@ -230,6 +247,22 @@
             margin-bottom: 24px;
             overflow-x: auto;
             padding-bottom: 8px;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .payment-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .payment-tabs::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .payment-tabs::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
         }
 
         .payment-tab {
@@ -269,6 +302,8 @@
             right: 12px;
             top: 50%;
             transform: translateY(-50%);
+            pointer-events: none;
+            z-index: 1;
         }
 
         .card-brand-icon {
@@ -317,6 +352,8 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             border: 1px solid #e5e7eb;
             overflow: hidden;
+            width: 100%;
+            max-width: 100%;
         }
 
         .summary-header-image {
@@ -550,24 +587,39 @@
             font-variant-numeric: tabular-nums;
         }
 
-        @media (max-width: 1024px) {
+        @@media (max-width: 1024px) {
+            .checkout-container {
+                padding: 16px;
+            }
+
             .checkout-summary-section {
                 width: 100%;
+                max-width: 100%;
             }
 
             .summary-card {
                 position: static;
             }
+
+            .checkout-content {
+                gap: 24px;
+            }
         }
 
-        @media (max-width: 768px) {
+        @@media (max-width: 768px) {
+            .checkout-container {
+                padding: 12px;
+            }
+
             .checkout-content {
                 flex-direction: column;
+                gap: 20px;
             }
 
             .checkout-header-content {
                 flex-direction: column;
                 gap: 12px;
+                padding: 0 12px;
             }
 
             .secure-badge {
@@ -580,6 +632,42 @@
 
             .form-grid {
                 grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .checkout-form-section {
+                min-width: 100%;
+            }
+
+            .payment-tabs {
+                gap: 12px;
+            }
+
+            .payment-tab {
+                padding: 10px 16px;
+                font-size: 14px;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .checkout-container {
+                padding: 8px;
+            }
+
+            .form-card {
+                padding: 16px;
+            }
+
+            .summary-body {
+                padding: 20px;
+            }
+
+            .form-input {
+                font-size: 16px; /* iOS zoom önleme */
             }
         }
     </style>
