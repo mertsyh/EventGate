@@ -109,6 +109,58 @@ namespace EventDeneme.Controllers
             return View(model);
         }
 
+        // GET: Ticket/Checkout
+        // Comes here from Cart checkout
+        public ActionResult Checkout(long performanceId, string selectedSeats)
+        {
+            if (string.IsNullOrEmpty(selectedSeats))
+            {
+                // Redirect back (we need EventId from performance)
+                var perf = db.performances.Find(performanceId);
+                if (perf == null) return HttpNotFound();
+                return RedirectToAction("Buy", new { id = perf.event_id });
+            }
+
+            var seatIds = selectedSeats.Split(',').Select(long.Parse).ToList();
+            
+            // Fiyat hesapla
+            decimal totalAmount = 0;
+            var seatsToBuy = db.performance_seats.Where(ps => seatIds.Contains(ps.id)).ToList();
+            var priceTiers = db.price_tiers.Where(pt => pt.performance_id == performanceId).ToList();
+
+            foreach (var seat in seatsToBuy)
+            {
+                 var tier = priceTiers.FirstOrDefault(pt => pt.id == seat.price_tier_id);
+                 if (tier != null) totalAmount += tier.price;
+                 else 
+                 {
+                     var tierBySection = priceTiers.FirstOrDefault(pt => pt.seatmap_section == seat.seats.seatmap_section);
+                     if (tierBySection != null) totalAmount += tierBySection.price;
+                 }
+            }
+
+            var perfInfo = db.performances.Find(performanceId);
+            if (perfInfo == null) return HttpNotFound();
+            var eventInfo = perfInfo.events;
+            if (eventInfo == null) return HttpNotFound();
+
+            var model = new CheckoutViewModel
+            {
+                PerformanceId = performanceId,
+                SelectedSeatIds = selectedSeats,
+                TotalAmount = totalAmount,
+                EventTitle = eventInfo.title,
+                SeatCount = seatIds.Count,
+                EventImageUrl = eventInfo.poster_url,
+                EventDate = perfInfo.start_datetime,
+                VenueName = perfInfo.venues != null ? perfInfo.venues.name : "",
+                CityName = perfInfo.venues != null && perfInfo.venues.cities != null ? perfInfo.venues.cities.name : "",
+                CategoryName = eventInfo.categories != null ? eventInfo.categories.display_name : ""
+            };
+
+            return View(model);
+        }
+
         // POST: Ticket/Checkout
         // Comes here when user selects seats and continues
         [HttpPost]
