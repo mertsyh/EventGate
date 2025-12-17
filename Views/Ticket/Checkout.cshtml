@@ -559,15 +559,20 @@
             align-items: flex-start;
             gap: 12px;
             margin-top: 24px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .timer-icon {
             color: #f97316;
             margin-top: 2px;
+            font-size: 18px;
+            flex-shrink: 0;
         }
 
         .timer-content {
             flex: 1;
+            min-width: 0;
         }
 
         .timer-title {
@@ -575,16 +580,20 @@
             font-weight: 600;
             color: #c2410c;
             margin-bottom: 4px;
+            line-height: 1.4;
         }
 
         .timer-text {
             font-size: 12px;
             color: #9a3412;
+            line-height: 1.5;
+            word-wrap: break-word;
         }
 
         .timer-display {
             font-weight: bold;
             font-variant-numeric: tabular-nums;
+            color: #c2410c;
         }
 
         @@media (max-width: 1024px) {
@@ -663,11 +672,34 @@
             }
 
             .summary-body {
-                padding: 20px;
+                padding: 16px;
             }
 
             .form-input {
                 font-size: 16px; /* iOS zoom önleme */
+            }
+
+            .timer-card {
+                padding: 10px;
+                margin-top: 16px;
+            }
+
+            .timer-title {
+                font-size: 13px;
+            }
+
+            .timer-text {
+                font-size: 11px;
+            }
+
+            .summary-detail-item {
+                padding-bottom: 12px;
+                margin-bottom: 12px;
+            }
+
+            .summary-total {
+                padding: 12px 0;
+                margin-bottom: 16px;
             }
         }
     </style>
@@ -749,16 +781,6 @@
                         <h3 class="form-card-title">Payment Method</h3>
                     </div>
 
-                    <div class="payment-tabs">
-                        <div class="payment-tab active">
-                            <i class="fas fa-credit-card"></i>
-                            <span>Credit / Debit Card</span>
-                        </div>
-                        <div class="payment-tab">
-                            <i class="fas fa-university"></i>
-                            <span>Bank Transfer / EFT</span>
-                        </div>
-                    </div>
 
                     <div class="form-grid">
                         <div class="form-group full-width">
@@ -867,7 +889,7 @@
 
             <!-- Timer Card -->
             <div class="timer-card">
-                <i class="fas fa-clock timer-icon"></i>
+                <i class="fas fa-exclamation-circle timer-icon"></i>
                 <div class="timer-content">
                     <div class="timer-title">Time is running out!</div>
                     <div class="timer-text">

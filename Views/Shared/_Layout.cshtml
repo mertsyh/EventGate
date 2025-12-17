@@ -19,13 +19,135 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <style>
+        .global-alert-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10000;
+            max-width: 600px;
+            width: calc(100% - 40px);
+            pointer-events: none;
+        }
+
+        .global-alert {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            animation: slideDown 0.3s ease-out;
+            border-left: 4px solid;
+        }
+
+        .global-alert.success {
+            border-left-color: #10b981;
+            background: linear-gradient(to right, #d1fae5 0%, white 10%);
+        }
+
+        .global-alert.error {
+            border-left-color: #ef4444;
+            background: linear-gradient(to right, #fee2e2 0%, white 10%);
+        }
+
+        .global-alert.warning {
+            border-left-color: #f59e0b;
+            background: linear-gradient(to right, #fef3c7 0%, white 10%);
+        }
+
+        .global-alert.info {
+            border-left-color: #3b82f6;
+            background: linear-gradient(to right, #dbeafe 0%, white 10%);
+        }
+
+        .global-alert-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .global-alert.success .global-alert-icon {
+            color: #10b981;
+        }
+
+        .global-alert.error .global-alert-icon {
+            color: #ef4444;
+        }
+
+        .global-alert.warning .global-alert-icon {
+            color: #f59e0b;
+        }
+
+        .global-alert.info .global-alert-icon {
+            color: #3b82f6;
+        }
+
+        .global-alert-content {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: #111;
+            line-height: 1.5;
+        }
+
+        .global-alert-close {
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .global-alert-close:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: #111;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .global-alert-container {
+                top: 10px;
+                width: calc(100% - 20px);
+            }
+
+            .global-alert {
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+        }
+    </style>
 
     @RenderSection("Styles", required: false)
 </head>
 
 <body>
 
- 
+    <!-- Global Alert Container -->
+    <div class="global-alert-container" id="globalAlertContainer"></div>
+
     @Html.Partial("_Header")
 
 
@@ -37,6 +159,57 @@
     @Html.Partial("_Footer")
 
     <script src="~/Scripts/site.js"></script>
+    <script>
+        (function() {
+            function showAlert(message, type) {
+                type = type || 'success';
+                const container = document.getElementById('globalAlertContainer');
+                if (!container) return;
+
+                const alert = document.createElement('div');
+                alert.className = 'global-alert ' + type;
+                
+                const icons = {
+                    success: 'fa-check-circle',
+                    error: 'fa-exclamation-circle',
+                    warning: 'fa-exclamation-triangle',
+                    info: 'fa-info-circle'
+                };
+
+                alert.innerHTML = `
+                    <i class="fas ${icons[type] || icons.success} global-alert-icon"></i>
+                    <div class="global-alert-content">${message}</div>
+                    <button class="global-alert-close" onclick="this.parentElement.remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+
+                container.appendChild(alert);
+
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    if (alert.parentElement) {
+                        alert.style.animation = 'slideDown 0.3s ease-out reverse';
+                        setTimeout(() => alert.remove(), 300);
+                    }
+                }, 5000);
+            }
+
+            // Check for TempData messages
+            @if (TempData["Success"] != null)
+            {
+                <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Success"].ToString()))', 'success');</text>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Error"].ToString()))', 'error');</text>
+            }
+            @if (ViewBag.Error != null)
+            {
+                <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(ViewBag.Error.ToString()))', 'error');</text>
+            }
+        })();
+    </script>
 
 </body>
 </html>
