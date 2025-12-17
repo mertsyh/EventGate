@@ -164,7 +164,8 @@ namespace EventDeneme.Controllers
         // POST: Ticket/Checkout
         // Comes here when user selects seats and continues
         [HttpPost]
-        public ActionResult Checkout(long performanceId, string selectedSeats)
+        [ActionName("Checkout")]
+        public ActionResult CheckoutPost(long performanceId, string selectedSeats)
         {
             if (string.IsNullOrEmpty(selectedSeats))
             {
