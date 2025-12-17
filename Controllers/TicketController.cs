@@ -17,20 +17,31 @@ namespace EventDeneme.Controllers
             var eventItem = db.events.FirstOrDefault(e => e.id == id);
             if (eventItem == null) return HttpNotFound();
 
-            if (eventItem.status != "approved")
+            // Check if event is deleted
+            if (eventItem.status == "deleted")
             {
                 ViewBag.Message = "This event is not available for sale.";
                 return View("Error");
             }
 
-            // Performance selection (for now first performance)
+            DateTime now = DateTime.Now;
+
+            // Performance selection - get next upcoming performance that is available for sale
             var performance = eventItem.performances
-                .Where(p => p.status != "cancelled")
+                .Where(p => 
+                    p.status != "cancelled" &&
+                    // Check if performance hasn't ended
+                    (p.end_datetime.HasValue ? p.end_datetime.Value > now : p.start_datetime > now) &&
+                    // Check sales dates if they exist
+                    (!p.sales_start.HasValue || p.sales_start.Value <= now) &&
+                    (!p.sales_end.HasValue || p.sales_end.Value > now)
+                )
                 .OrderBy(p => p.start_datetime)
                 .FirstOrDefault();
+            
             if (performance == null)
             {
-                ViewBag.Message = "No scheduled performance found for this event.";
+                ViewBag.Message = "This event is not available for sale.";
                 return View("Error");
             }
 

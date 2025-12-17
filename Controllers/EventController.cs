@@ -20,10 +20,9 @@ namespace EventDeneme.Controllers
             DateTime now = DateTime.Now;
 
             var events = db.events
-      .Where(e => e.status != "deleted" &&
-                  e.performances.Any(p => p.start_datetime >= now && p.status != "cancelled"))
-
-                  .ToList()
+                .Where(e => e.status != "deleted")
+                .ToList()
+                .Where(e => HasUpcomingPerformances(e.performances, now))
                 .Select(e => new EventCardViewModel
                 {
                     EventId = e.id,
@@ -53,6 +52,7 @@ namespace EventDeneme.Controllers
             var movies = db.events
                 .Where(e => e.category_id == category && e.status != "deleted")
                 .ToList()   // First get from DB, then map
+                .Where(e => HasUpcomingPerformances(e.performances, now))
                 .Select(e => new EventCardViewModel
                 {
                     EventId = e.id,
@@ -82,6 +82,7 @@ namespace EventDeneme.Controllers
             var concerts = db.events
                 .Where(e => e.category_id == category && e.status != "deleted")
                 .ToList()
+                .Where(e => HasUpcomingPerformances(e.performances, now))
                 .Select(e => new EventCardViewModel
                 {
                     EventId = e.id,
@@ -159,9 +160,13 @@ namespace EventDeneme.Controllers
         // -------------------- AJAX FILTER --------------------
         public ActionResult Filter(int? cityId, int? venueId, string dateFilter, int? categoryId)
         {
+            DateTime now = DateTime.Now;
+            
             // Load data into memory to avoid EF translation issues
             var eventsQuery = db.events
                 .Where(e => e.status != "deleted" && (!categoryId.HasValue || e.category_id == categoryId))
+                .ToList()
+                .Where(e => HasUpcomingPerformances(e.performances, now))
                 .ToList();
 
             // City
@@ -177,8 +182,6 @@ namespace EventDeneme.Controllers
                     .ToList();
 
             // Date filter (now works in memory, not in EF)
-            DateTime now = DateTime.Now;
-
             if (dateFilter == "today")
             {
                 eventsQuery = eventsQuery
@@ -210,10 +213,10 @@ namespace EventDeneme.Controllers
                 {
                     var perf = e.performances
       .Where(p =>
-          p.start_datetime >= now &&
           p.status != "cancelled" &&
-          (dateFilter != "week" || p.start_datetime <= now.AddDays(7)) &&
-          (dateFilter != "month" || p.start_datetime <= now.AddMonths(1)) &&
+          (p.end_datetime.HasValue ? p.end_datetime.Value > now : p.start_datetime > now) &&
+          (dateFilter != "week" || (p.start_datetime >= now && p.start_datetime <= now.AddDays(7))) &&
+          (dateFilter != "month" || (p.start_datetime >= now && p.start_datetime <= now.AddMonths(1))) &&
           (dateFilter != "today" || p.start_datetime.Date == now.Date)
       )
       .OrderBy(p => p.start_datetime)
@@ -234,6 +237,28 @@ namespace EventDeneme.Controllers
                 .ToList();
             return PartialView("_EventCards", result);
 
+        }
+
+        // Helper: check if event has any upcoming (not ended) performances
+        private static bool HasUpcomingPerformances(
+            System.Collections.Generic.ICollection<performances> perfs,
+            System.DateTime now)
+        {
+            if (perfs == null || !perfs.Any()) return false;
+
+            return perfs.Any(p =>
+            {
+                if (p.status == "cancelled") return false;
+                
+                // If end_datetime is set, check if it's in the future
+                if (p.end_datetime.HasValue)
+                {
+                    return p.end_datetime.Value > now;
+                }
+                
+                // If end_datetime is not set, check if start_datetime is in the future
+                return p.start_datetime > now;
+            });
         }
 
         // Helper: choose next upcoming performance date if exists, otherwise first performance
@@ -258,10 +283,31 @@ namespace EventDeneme.Controllers
 
         public ActionResult Theater()
         {
-            ViewBag.CategoryId = 3;
+            int category = 3;
+
+            ViewBag.CategoryId = category;
             ViewBag.cities = db.cities.ToList();
             ViewBag.venues = db.venues.ToList();
-            return View();
+
+            DateTime now = DateTime.Now;
+
+            var theaterEvents = db.events
+                .Where(e => e.category_id == category && e.status != "deleted")
+                .ToList()
+                .Where(e => HasUpcomingPerformances(e.performances, now))
+                .Select(e => new EventCardViewModel
+                {
+                    EventId = e.id,
+                    Title = e.title,
+                    StartDate = GetNextOrFirstPerformanceDate(e.performances, now),
+                    Venue = e.performances.FirstOrDefault()?.venues.name,
+                    City = e.performances.FirstOrDefault()?.venues.cities.name,
+                    Price = e.performances.SelectMany(p => p.price_tiers).OrderBy(t => t.price).FirstOrDefault()?.price,
+                    ImageUrl = e.poster_url
+                })
+                .ToList();
+
+            return View(theaterEvents);
         }
         public ActionResult Search(
       string q,               
@@ -274,6 +320,8 @@ namespace EventDeneme.Controllers
             ViewBag.cities = db.cities.ToList();
             ViewBag.venues = db.venues.ToList();
             ViewBag.categories = db.categories.ToList();
+
+            DateTime now = DateTime.Now;
 
             var query = db.events.AsQueryable();
 
@@ -299,12 +347,12 @@ namespace EventDeneme.Controllers
 
             var result = query
                 .ToList()
+                .Where(e => HasUpcomingPerformances(e.performances, now))
                 .Select(e => new EventCardViewModel
                 {
                     EventId = e.id,
                     Title = e.title,
-                    StartDate = e.performances.OrderBy(p => p.start_datetime)
-                                              .FirstOrDefault()?.start_datetime,
+                    StartDate = GetNextOrFirstPerformanceDate(e.performances, now),
                     Venue = e.performances.FirstOrDefault()?.venues.name,
                     City = e.performances.FirstOrDefault()?.venues.cities.name,
                     Price = e.performances.SelectMany(p => p.price_tiers)
@@ -323,8 +371,12 @@ namespace EventDeneme.Controllers
         [HttpPost]
         public JsonResult SearchEvents(string name)
         {
+            DateTime now = DateTime.Now;
+            
             var events = db.events
-                .Where(e => e.title.Contains(name))
+                .Where(e => e.title.Contains(name) && e.status != "deleted")
+                .ToList()
+                .Where(e => HasUpcomingPerformances(e.performances, now))
                 .Select(e => new
                 {
                     e.id,
