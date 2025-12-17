@@ -101,7 +101,7 @@
                 },
                 error: function (xhr) {
                     console.error("Filter error:", xhr.responseText);
-                    alert("An error occurred while filtering.");
+                    window.showAlert("An error occurred while filtering.", "error");
                 }
             });
 

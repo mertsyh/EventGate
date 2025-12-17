@@ -923,7 +923,7 @@
             if (seconds === 0) {
                 if (minutes === 0) {
                     clearInterval(timer);
-                    alert('Your time has expired! Please try again.');
+                    window.showAlert('Your time has expired! Please try again.', 'warning');
                     window.location.href = '@Url.Action("Index", "Event")';
                     return;
                 }
@@ -1092,7 +1092,7 @@
 
             if (!isValid) {
                 e.preventDefault();
-                alert('Please fix the following errors:\n' + errors.join('\n'));
+                window.showAlert('Please fix the following errors:\n' + errors.join('\n'), 'error');
                 return false;
             }
 
@@ -1129,5 +1129,3 @@
         });
     });
 </script>
-
-

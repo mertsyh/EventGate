@@ -161,7 +161,7 @@
     <script src="~/Scripts/site.js"></script>
     <script>
         (function() {
-            function showAlert(message, type) {
+            window.showAlert = function(message, type) {
                 type = type || 'success';
                 const container = document.getElementById('globalAlertContainer');
                 if (!container) return;
@@ -178,7 +178,7 @@
 
                 alert.innerHTML = `
                     <i class="fas ${icons[type] || icons.success} global-alert-icon"></i>
-                    <div class="global-alert-content">${message}</div>
+                    <div class="global-alert-content">${message.replace(/\n/g, '<br>')}</div>
                     <button class="global-alert-close" onclick="this.parentElement.remove()">
                         <i class="fas fa-times"></i>
                     </button>
@@ -193,20 +193,20 @@
                         setTimeout(() => alert.remove(), 300);
                     }
                 }, 5000);
-            }
+            };
 
             
             @if (TempData["Success"] != null)
             {
-                <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Success"].ToString()))', 'success');</text>
+                <text>window.showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Success"].ToString()))', 'success');</text>
             }
             @if (TempData["Error"] != null)
             {
-                <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Error"].ToString()))', 'error');</text>
+                <text>window.showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Error"].ToString()))', 'error');</text>
             }
             @if (ViewBag.Error != null)
             {
-                <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(ViewBag.Error.ToString()))', 'error');</text>
+                <text>window.showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(ViewBag.Error.ToString()))', 'error');</text>
             }
         })();
     </script>

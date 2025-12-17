@@ -307,11 +307,11 @@
                         
                         $('#cart-count').text(response.itemCount || 0);
                     } else {
-                        alert(response.message);
+                        window.showAlert(response.message, 'error');
                     }
                 },
                 error: function() {
-                    alert('Error updating quantity. Please try again.');
+                    window.showAlert('Error updating quantity. Please try again.', 'error');
                 }
             });
         });
@@ -343,16 +343,13 @@
                         
                         $('#cart-count').text(response.itemCount || 0);
                     } else {
-                        alert(response.message);
+                        window.showAlert(response.message, 'error');
                     }
                 },
                 error: function() {
-                    alert('Error removing item. Please try again.');
+                    window.showAlert('Error removing item. Please try again.', 'error');
                 }
             });
         });
     });
 </script>
-
-
-

@@ -105,7 +105,7 @@
         
         document.getElementById('btn-add-to-cart').addEventListener('click', function() {
             if (selectedSeatIds.length === 0) {
-                alert('Please select at least one seat.');
+                window.showAlert('Please select at least one seat.', 'warning');
                 return;
             }
 
@@ -130,7 +130,7 @@
                 .then(function(results) {
                     var allSuccess = results.every(function(r) { return r.success; });
                     if (allSuccess) {
-                        alert('Items added to cart successfully!');
+                        window.showAlert('Items added to cart successfully!', 'success');
                         
                         selectedSeatIds = [];
                         currentTotal = 0;
@@ -151,11 +151,11 @@
                             });
                     } else {
                         var errors = results.filter(function(r) { return !r.success; }).map(function(r) { return r.message; });
-                        alert('Some items could not be added:\n' + errors.join('\n'));
+                        window.showAlert('Some items could not be added:\n' + errors.join('\n'), 'error');
                     }
                 })
                 .catch(function(error) {
-                    alert('Error adding items to cart. Please try again.');
+                    window.showAlert('Error adding items to cart. Please try again.', 'error');
                     console.error(error);
                 })
                 .finally(function() {
@@ -201,6 +201,3 @@
         </div>
     </div>
 }
-
-
-
