@@ -4,12 +4,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container" style="padding: 40px 20px; max-width: 1200px;">
-    <h1 style="margin-bottom: 30px;">Shopping Cart</h1>
+<div class="container" style="padding: 40px 20px; max-width: 1200px; @(Model.Items == null || !Model.Items.Any() ? "display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh;" : "")">
+    @if (Model.Items != null && Model.Items.Any())
+    {
+        <h1 style="margin-bottom: 30px;">Shopping Cart</h1>
+    }
 
     @if (Model.Items == null || !Model.Items.Any())
     {
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 60px 20px; min-height: 60vh;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px;">
             <i class="fa-solid fa-cart-shopping" style="font-size: 64px; color: #ccc; margin-bottom: 20px;"></i>
             <h2 style="color: #666; margin-bottom: 10px;">Your cart is empty</h2>
             <p style="color: #999; margin-bottom: 30px;">Add some tickets to your cart to get started.</p>
