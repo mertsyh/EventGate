@@ -1,4 +1,4 @@
-﻿
+
 <header>
     <a href="@Url.Action("Index","Home")">
         <img class="headerlogo" src="~/images/logo.png" alt="EventGate Logo" />
@@ -49,14 +49,14 @@
 
             <ul class="dropdown">
 
-                @*  unsigned *@
+                
                 @if (Session["UserID"] == null)
                 {
                     <li><a href="/Register/Signin">Sign in</a></li>
                 }
                 else
                 {
-                    @* signed *@
+                    
                     <li><a href="@Url.Action("Index", "Profile")">Profile</a></li>
                     <li><a href="@Url.Action("MyTickets", "Profile")">My Tickets</a></li>
 
@@ -85,10 +85,10 @@
         }
     }
 
-        // Icon click
+        
         btn.addEventListener("click", runSearch);
 
-        // Enter key
+        
         input.addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             e.preventDefault();
@@ -96,7 +96,7 @@
         }
     });
 
-    // Load cart count on page load
+    
     function loadCartCount() {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', '@Url.Action("GetCartCount", "Cart")', true);
@@ -123,8 +123,10 @@
         xhr.send();
     }
 
-    // Load cart count when page loads
+    
     loadCartCount();
 });
 
 </script>
+
+

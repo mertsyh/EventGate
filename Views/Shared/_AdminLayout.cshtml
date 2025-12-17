@@ -7,18 +7,18 @@
 
     <link rel="icon" type="image/png" href="~/images/favicon.png" />
 
-    <!-- Tailwind CSS -->
+    
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-    <!-- Google Fonts -->
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-    <!-- Material Symbols -->
+    
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
-    <!-- Tailwind Theme Config -->
+    
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -236,7 +236,7 @@
             color: #111;
         }
 
-        @keyframes slideDown {
+        @@keyframes slideDown {
             from {
                 opacity: 0;
                 transform: translateY(-20px);
@@ -261,14 +261,14 @@
     </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-gray-100 antialiased overflow-hidden">
-    <!-- Global Alert Container -->
+    
     <div class="global-alert-container" id="globalAlertContainer"></div>
 <div class="flex h-screen w-full">
-    <!-- Sidebar -->
+    
     <aside class="flex w-64 flex-col border-r border-[#f4f0f0] bg-white dark:bg-[#1a1a1a] dark:border-[#333] transition-colors">
         <div class="flex h-full flex-col justify-between p-4">
             <div class="flex flex-col gap-6">
-                <!-- Brand / Admin info -->
+                
                 <div class="flex gap-3 items-center px-2 py-1">
                     <a href="@Url.Action("Dashboard", "Admin")" class="bg-center bg-no-repeat bg-contain rounded-full size-10 shrink-0 shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden flex items-center justify-center">
                         <img src="~/images/logo.png" alt="EventGate Admin" class="max-h-full max-w-full" />
@@ -279,7 +279,7 @@
                     </div>
                 </div>
 
-                <!-- Navigation -->
+                
                 <nav class="flex flex-col gap-2 mt-2">
                     <a href="@Url.Action("Dashboard", "Admin")"
                        class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group @(ViewBag.Title == "Admin Dashboard" ? "bg-primary/10 dark:bg-primary/20" : "hover:bg-gray-50 dark:hover:bg-[#2a2a2a]")">
@@ -337,9 +337,9 @@
         </div>
     </aside>
 
-    <!-- Main content -->
+    
     <main class="flex h-full flex-1 flex-col overflow-x-hidden overflow-y-auto relative">
-        <!-- Top bar -->
+        
         <header class="sticky top-0 z-20 flex items-center justify-between border-b border-[#f4f0f0] bg-white px-8 py-4 dark:bg-[#1a1a1a] dark:border-[#333]">
             <div class="flex items-center gap-4">
                 <h2 class="text-[#181111] dark:text-white text-lg font-bold leading-tight">Admin Panel</h2>
@@ -359,7 +359,7 @@
             </div>
         </header>
 
-        <!-- Page body wrapper -->
+        
             <div class="flex flex-1 flex-col p-6 lg:p-10 max-w-6xl mx-auto w-full">
             <div class="flex flex-col bg-white dark:bg-[#1a1a1a] rounded-xl shadow-sm border border-[#f4f0f0] dark:border-[#333] overflow-hidden">
                     <div class="p-6 lg:p-8 admin-body">
@@ -399,7 +399,7 @@
 
             container.appendChild(alert);
 
-            // Auto remove after 5 seconds
+            
             setTimeout(() => {
                 if (alert.parentElement) {
                     alert.style.animation = 'slideDown 0.3s ease-out reverse';
@@ -408,7 +408,7 @@
             }, 5000);
         }
 
-        // Check for TempData messages
+        
         @if (TempData["Success"] != null)
         {
             <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Success"].ToString()))', 'success');</text>
@@ -425,4 +425,6 @@
 </script>
 </body>
 </html>
+
+
 

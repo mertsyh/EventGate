@@ -1,4 +1,4 @@
-﻿@model List<EventDeneme.Models.EventCardViewModel>
+@model List<EventDeneme.Models.EventCardViewModel>
 
 @if (Model != null)
 {
@@ -11,7 +11,7 @@
             <div class="event-info">
                 <h3>@item.Title</h3>
                 <p>
-                    @(item.StartDate.HasValue ? item.StartDate.Value.ToString("MMM dd") : "TBA") • 
+                    @(item.StartDate.HasValue ? item.StartDate.Value.ToString("MMM dd") : "TBA") � 
                     @(item.Venue ?? item.City ?? "TBA")
                 </p>
                 <span class="price">@(item.Price.HasValue ? item.Price.Value.ToString("C2") : "")</span>
@@ -30,3 +30,5 @@
         </div>
     }
 }
+
+

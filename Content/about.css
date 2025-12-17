@@ -1,4 +1,4 @@
-﻿.about-us-section {
+.about-us-section {
     padding: 60px 20px;
     max-width: 900px;
     margin: 40px auto;
@@ -163,3 +163,5 @@
     .contact-form button:hover {
         background: #d22;
     }
+
+

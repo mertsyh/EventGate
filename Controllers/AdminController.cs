@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,7 +11,7 @@ namespace EventDeneme.Controllers
     {
         private pr2Entities1 db = new pr2Entities1();
 
-        // Admin Auth Helper
+        
         private bool IsAdminLoggedIn()
         {
             return Session["AdminID"] != null;
@@ -27,7 +27,7 @@ namespace EventDeneme.Controllers
             }
         }
 
-        // 1. Admin Login (admin-login.html)
+        
         public ActionResult Login()
         {
             if (IsAdminLoggedIn()) return RedirectToAction("Dashboard");
@@ -60,7 +60,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Login");
         }
 
-        // 2. Dashboard (admin-dashboard.html)
+        
         public ActionResult Dashboard()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
@@ -68,15 +68,15 @@ namespace EventDeneme.Controllers
             ViewBag.TotalEvents = db.events.Count();
             ViewBag.TotalUsers = db.users.Count();
             ViewBag.TotalOrganizers = db.organizers.Count();
-            // Add more stats as needed
+            
             return View();
         }
 
-        // Run this once to create a default admin, then remove or comment it out.
+        
         public ActionResult CreateDefaultAdmin()
         {
             string password = "admin123";
-            string hashedPassword = HashPassword(password); // use existing HashPassword method
+            string hashedPassword = HashPassword(password); 
 
             var admin = new admins
             {
@@ -92,11 +92,11 @@ namespace EventDeneme.Controllers
             return Content("Default admin created. Username: admin, Password: admin123");
         }
 
-        // 3. Events Management (admin-events.html)
+        
         public ActionResult Events()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
-            // Admin should see all events (approved, pending, rejected)
+            
             var allEvents = db.events
       .Where(e => e.status != "deleted")
       .OrderByDescending(e => e.created_at)
@@ -105,7 +105,7 @@ namespace EventDeneme.Controllers
             return View(allEvents);
         }
 
-        // GET: Admin/CreateEvent (direct admin-created event)
+        
         public ActionResult CreateEvent()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
@@ -114,7 +114,7 @@ namespace EventDeneme.Controllers
             return View();
         }
 
-        // POST: Admin/CreateEvent
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateEvent(int categoryId, long organizerId, string Title, string Description, string Language, string AgeLimit, string PosterUrl)
@@ -151,7 +151,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Events");
         }
 
-        // GET: Admin/EditEvent/5
+        
         public ActionResult EditEvent(int id)
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
@@ -184,14 +184,14 @@ namespace EventDeneme.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
      
-        // 4. Venues Management (admin-venues.html)
+        
         public ActionResult Venues()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View(db.venues.ToList());
         }
 
-        // GET: Admin/CreateVenue
+        
         public ActionResult CreateVenue()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
@@ -199,7 +199,7 @@ namespace EventDeneme.Controllers
             return View();
         }
 
-        // POST: Admin/CreateVenue
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateVenue(long cityId, string Name, string Address, bool hasSeating = false)
@@ -228,7 +228,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Venues");
         }
 
-        // GET: Admin/EditVenue/5
+        
         public ActionResult EditVenue(long id)
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
@@ -256,14 +256,14 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Venues");
         }
  
-        // 5. Users Management (admin-users.html)
+        
         public ActionResult Users()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View(db.users.ToList());
         }
 
-        // GET: Admin/EditUser/5
+        
         public ActionResult EditUser(long id)
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
@@ -290,28 +290,28 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Users");
         }
 
-        // 6. Tickets Management (admin-tickets.html)
+        
         public ActionResult Tickets()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View(db.tickets.ToList());
         }
 
-        // 7. Refunds Management (admin-refunds.html)
+        
         public ActionResult Refunds()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View(db.refunds.ToList());
         }
 
-        // 8. Organizers Management (admin-organizers.html)
+        
         public ActionResult Organizers()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View(db.organizers.ToList());
         }
 
-        // 9. Event Requests (pending events from organizers)
+        
         public ActionResult EventRequests()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
@@ -375,14 +375,14 @@ namespace EventDeneme.Controllers
             return RedirectToAction("EventRequests");
         }
 
-        // GET: Admin/CreateOrganizer
+        
         public ActionResult CreateOrganizer()
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             return View();
         }
 
-        // POST: Admin/CreateOrganizer
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateOrganizer(string LegalName, string BrandName, string ContactEmail, string ContactPhone, string Username, string Password)
@@ -451,7 +451,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Organizers");
         }
 
-        // ========== DELETE ACTIONS ==========
+        
 
         [HttpPost]
         public ActionResult DeleteEvent(int id)
@@ -465,12 +465,12 @@ namespace EventDeneme.Controllers
                 return RedirectToAction("Events");
             }
 
-            // Soft-delete: keep event and related data in DB for integrity (tickets, orders, etc.),
-            // but mark it as deleted/cancelled so it is not used anymore.
+            
+            
             evt.status = "deleted";
             evt.updated_at = DateTime.Now;
 
-            // Optionally, mark all related performances as cancelled as well
+            
             var performances = db.performances.Where(p => p.event_id == evt.id).ToList();
             foreach (var perf in performances)
             {
@@ -497,7 +497,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Venues");
         }
 
-        // ========== ORGANIZER ACTIONS ==========
+        
 
         public ActionResult OrganizerDetails(long id)
         {
@@ -548,7 +548,7 @@ namespace EventDeneme.Controllers
             var organizer = db.organizers.Find(id);
             if (organizer != null)
             {
-                // Soft delete organizer: mark as deleted and deactivate related users and events
+                
                 organizer.status = "deleted";
 
                 var orgUsers = db.organizer_users.Where(u => u.organizer_id == id).ToList();
@@ -576,7 +576,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Organizers");
         }
 
-        // ========== REFUND ACTIONS ==========
+        
 
         [HttpPost]
         public ActionResult ApproveRefund(long id)
@@ -628,17 +628,19 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Refunds");
         }
 
-        // ========== USER ACTIONS ==========
+        
 
         [HttpPost]
         public ActionResult BanUser(long id)
         {
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
-            // Note: users table might not have a status field, so this is a placeholder
-            // You may need to add a status field or use a different approach
+            
+            
             TempData["Success"] = "User ban functionality - to be implemented with user status field.";
             return RedirectToAction("Users");
         }
     }
 }
+
+
 

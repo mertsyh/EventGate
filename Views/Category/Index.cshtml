@@ -9,7 +9,7 @@
     <div class="category-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
         @foreach (var cat in Model)
         {
-            // Simple mapping for demo icons
+            
             string icon = "fa-calendar";
             if (cat.name.ToLower().Contains("music") || cat.name.ToLower().Contains("concert")) icon = "fa-music";
             else if (cat.name.ToLower().Contains("cinema") || cat.name.ToLower().Contains("movie")) icon = "fa-film";
@@ -19,7 +19,7 @@
                 <i class="fa-solid @icon" style="font-size: 50px; color: #d22; margin-bottom: 15px;"></i>
                 <h3 style="margin: 0;">@cat.name</h3>
                 
-                <!-- Link to Event Controller Filter logic or specific pages -->
+                
                 @{
                     string actionName = "Index";
                     if (cat.name.ToLower() == "cinema") actionName = "Cinema";
@@ -32,4 +32,6 @@
         }
     </div>
 </div>
+
+
 

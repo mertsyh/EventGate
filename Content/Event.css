@@ -1,4 +1,4 @@
-﻿.eventscontainer {
+.eventscontainer {
     width: 95%;
     padding: 10px;
     min-height: 800px;
@@ -115,64 +115,64 @@
 @media screen and (max-width: 900px) {
 
     .eventscontainer {
-        flex-direction: column; /* Stack vertically instead of side-by-side */
+        flex-direction: column; 
         width: 90%;
-        margin-top: 80px; /* Reduce top margin */
+        margin-top: 80px; 
         padding: 5px;
         min-height: auto;
     }
     .search-box {
         transform:scale(0.8);
     }
-    /* --- TOP MENU (previously left menu) --- */
+    
     .leftmenu {
-        position: relative; /* Remove fixed positioning */
+        position: relative; 
         width: 90%;
         left: 0;
         top: 0;
-        margin: 0 auto 15px auto; /* Center */
-        /* Layout */
+        margin: 0 auto 15px auto; 
+        
         flex-direction: row;
-        flex-wrap: wrap; /* Wrap to next line if needed */
-        justify-content: center; /* Center completely */
+        flex-wrap: wrap; 
+        justify-content: center; 
         align-items: center;
         padding: 8px;
-        min-height: auto; /* Remove fixed height */
+        min-height: auto; 
         height: auto;
     }
 
-    /* Reduce menu button sizes (scale effect) */
+    
     .filter-option {
-        width: auto; /* Let width depend on content */
-        font-size: 12px; /* Smaller text */
-        padding: 5px 10px; /* Thinner buttons */
-        margin: 5px; /* Tighter spacing */
-        flex-grow: 1; /* Spread across screen */
+        width: auto; 
+        font-size: 12px; 
+        padding: 5px 10px; 
+        margin: 5px; 
+        flex-grow: 1; 
         text-align: center;
       
     }
 
-    /* --- RIGHT CONTENT AREA --- */
+    
     .rightcontent {
         width: 100%;
         left: 0;
         display: flex;
-        flex-direction: column; /* Stack cards vertically */
+        flex-direction: column; 
         gap: 5px;
      
     }
 
-    /* --- HORIZONTAL CARD LAYOUT (image left, text right) --- */
+    
     .event-card {
-        display: flex; /* Row layout */
+        display: flex; 
         flex-direction: row;
-        height: 120px; /* Fixed compact height */
+        height: 120px; 
         width: 100%;
     }
 
         .event-card img {
-            width: 35%; /* Image width */
-            height: 100%; /* Full card height */
+            width: 35%; 
+            height: 100%; 
             object-fit: cover;
         }
    
@@ -180,20 +180,20 @@
 
 
     .event-body {
-        width: 65%; /* Text area width */
+        width: 65%; 
         padding: 8px 12px;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Vertical center */
+        justify-content: center; 
     }
 
-    /* Card text scaling */
+    
     .event-title {
         font-size: 14px;
         margin-bottom: 2px;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis; /* Truncate long titles with ... */
+        text-overflow: ellipsis; 
     }
 
     .event-location {
@@ -206,4 +206,6 @@
         margin-top: 4px;
     }
 }
+
+
 

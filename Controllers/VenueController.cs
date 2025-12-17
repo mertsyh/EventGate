@@ -9,14 +9,14 @@ namespace EventDeneme.Controllers
     {
         pr2Entities1 db = new pr2Entities1();
 
-        // GET: Venue (venues.html)
+        
         public ActionResult Index()
         {
             var venues = db.venues.ToList();
             return View(venues);
         }
 
-        // GET: Venue/Details/5 (venue-details.html)
+        
         public ActionResult Details(int id)
         {
             var venue = db.venues.Find(id);
@@ -25,4 +25,6 @@ namespace EventDeneme.Controllers
         }
     }
 }
+
+
 

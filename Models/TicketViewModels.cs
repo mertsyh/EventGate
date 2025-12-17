@@ -21,16 +21,16 @@ namespace EventDeneme.Models
         public string Row { get; set; }
         public string Number { get; set; }
         public decimal Price { get; set; }
-        public string Status { get; set; } // available, sold, etc.
+        public string Status { get; set; } 
     }
 
     public class CheckoutViewModel
     {
         public long PerformanceId { get; set; }
-        public string SelectedSeatIds { get; set; } // Comma separated IDs
+        public string SelectedSeatIds { get; set; } 
         public decimal TotalAmount { get; set; }
-        public string EventTitle { get; set; } // Display purpose
-        public int SeatCount { get; set; } // Display purpose
+        public string EventTitle { get; set; } 
+        public int SeatCount { get; set; } 
         public string EventImageUrl { get; set; }
         public DateTime? EventDate { get; set; }
         public string VenueName { get; set; }
@@ -91,4 +91,6 @@ namespace EventDeneme.Models
         public DateTime? ProcessedAt { get; set; }
     }
 }
+
+
 

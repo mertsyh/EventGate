@@ -1,4 +1,4 @@
-﻿@model EventDeneme.Models.users
+@model EventDeneme.Models.users
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -184,18 +184,18 @@
         history.pushState(null, '', '/Profile/ChangePassword');
     });
 
-    // Refunds – tam sayfa geçiş, server tarafı refund listesini doldursun
+    
     refundsBtn.addEventListener('click', () => {
         window.location.href = '/Profile/Refunds';
     });
 
-    /* 🔥 MY TICKETS – SERVER TARAFINDAN VERİ YÜKLENSİN DİYE TAM SAYFA GEÇİŞ */
+    /* ?? MY TICKETS � SERVER TARAFINDAN VER� Y�KLENS�N D�YE TAM SAYFA GE��� */
     myTicketsBtn.addEventListener('click', () => {
         window.location.href = '/Profile/MyTickets';
     });
 
-    /* 🔄 BACK / FORWARD SUPPORT */
-    // Sayfa ilk yüklendiğinde, URL'e göre doğru sekmeyi aç
+    /* ?? BACK / FORWARD SUPPORT */
+    
     (function initTabFromUrl() {
         const path = window.location.pathname;
         hideAll();
@@ -214,3 +214,4 @@
         }
     })();
 </script>
+

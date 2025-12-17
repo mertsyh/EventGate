@@ -12,7 +12,7 @@
 
     <h3>Seat Selection</h3>
 
-    @using (Html.BeginForm("Checkout", "Ticket", FormMethod.Post))
+    @using (Html.BeginForm("Checkout", "Ticket", FormMethod.Post, new { id = "checkoutForm" }))
     {
         @Html.HiddenFor(m => m.PerformanceId)
         <input type="hidden" id="selectedSeats" name="selectedSeats" value="" />
@@ -31,7 +31,7 @@
                                 <div class="seat-item" style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; cursor: pointer; text-align: center; min-width: 60px;" 
                                      onclick="toggleSeat(this, '@seat.PerformanceSeatId', @seat.Price)">
                                     <div>@seat.Row - @seat.Number</div>
-                                    <div style="font-size: 0.8em; color: #666;">@seat.Price.ToString("C2")</div>
+                                    <div style="font-size: 0.8em; color: #666;">@seat.Price.ToString("N2") ₺</div>
                                 </div>
                             }
                         </div>
@@ -67,14 +67,14 @@
         var index = selectedSeatIds.indexOf(seatId);
 
         if (index === -1) {
-            // Select
+            
             selectedSeatIds.push(seatId);
             element.style.backgroundColor = '#e7004c';
             element.style.color = 'white';
             element.style.borderColor = '#e7004c';
             currentTotal += parseFloat(price);
         } else {
-            // Deselect
+            
             selectedSeatIds.splice(index, 1);
             element.style.backgroundColor = '';
             element.style.color = '';
@@ -87,7 +87,7 @@
 
         function updateSummary() {
             document.getElementById('selectedSeats').value = selectedSeatIds.join(',');
-            // TL formatting: replace . with , if needed or use simple toFixed
+            
             document.getElementById('total-price').innerText = currentTotal.toFixed(2);
             
             var listDiv = document.getElementById('selected-list');
@@ -102,7 +102,7 @@
             }
         }
 
-        // Add to Cart functionality
+        
         document.getElementById('btn-add-to-cart').addEventListener('click', function() {
             if (selectedSeatIds.length === 0) {
                 alert('Please select at least one seat.');
@@ -131,11 +131,11 @@
                     var allSuccess = results.every(function(r) { return r.success; });
                     if (allSuccess) {
                         alert('Items added to cart successfully!');
-                        // Reset selection
+                        
                         selectedSeatIds = [];
                         currentTotal = 0;
                         updateSummary();
-                        // Update cart count in header
+                        
                         fetch('@Url.Action("GetCartCount", "Cart")')
                             .then(function(response) { return response.json(); })
                             .then(function(data) {
@@ -163,5 +163,44 @@
                     button.innerHTML = '<i class="fa-solid fa-cart-plus"></i> Add to Cart';
                 });
         });
+
+        
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            @if (Session["UserID"] == null)
+            {
+                <text>
+                e.preventDefault();
+                
+                
+                var modal = document.getElementById('loginModal');
+                modal.style.display = 'flex';
+                </text>
+            }
+        });
+
+        function continueAsGuest() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('checkoutForm').submit();
+        }
 </script>
+
+
+@if (Session["UserID"] == null)
+{
+    <div id="loginModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 30px; border-radius: 12px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+            <div style="font-size: 48px; color: #e7004c; margin-bottom: 16px;">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <h3 style="margin-top: 0; color: #111; margin-bottom: 12px;">Login or Continue as Guest</h3>
+            <p style="color: #666; margin: 0 0 24px 0; line-height: 1.5;">Would you like to login to access your tickets easily, or continue as a guest?</p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <a href="@Url.Action("Signin", "Register")" style="background: #e7004c; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: block;">Login</a>
+                <button onclick="continueAsGuest()" style="background: #6b7280; color: white; padding: 12px 24px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; width: 100%;">Continue as Guest</button>
+            </div>
+        </div>
+    </div>
+}
+
+
 

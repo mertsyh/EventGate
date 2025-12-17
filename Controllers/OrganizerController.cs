@@ -9,7 +9,7 @@ namespace EventDeneme.Controllers
     {
         pr2Entities1 db = new pr2Entities1();
 
-        // Helper: Check login
+        
         private bool IsOrganizerLoggedIn()
         {
             return Session["OrganizerUserID"] != null;
@@ -27,7 +27,7 @@ namespace EventDeneme.Controllers
             return evt != null;
         }
 
-        // GET: Organizer/Login (organizer-login.html)
+        
         public ActionResult Login()
         {
             if (IsOrganizerLoggedIn()) return RedirectToAction("Dashboard");
@@ -37,8 +37,8 @@ namespace EventDeneme.Controllers
         [HttpPost]
         public ActionResult Login(string email, string password)
         {
-            // Note: In real app, password should be hashed.
-            // Using organizer_users table for login
+            
+            
             var orgUser = db.organizer_users.FirstOrDefault(u => u.email == email && u.password_hash == password);
             
             if (orgUser != null)
@@ -59,7 +59,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Login");
         }
 
-        // GET: Organizer/Dashboard (organizer-dashboard.html)
+        
         public ActionResult Dashboard()
         {
             if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
@@ -70,12 +70,12 @@ namespace EventDeneme.Controllers
                 .OrderByDescending(e => e.created_at)
                 .ToList();
             
-            // Organizer'ın tüm etkinliklerinin ID'lerini al
+            
             var eventIds = events.Select(e => e.id).ToList();
             
             if (eventIds.Any())
             {
-                // Bu etkinliklere ait tüm performansların ID'lerini al
+                
                 var performanceIds = db.performances
                     .Where(p => eventIds.Contains(p.event_id))
                     .Select(p => p.id)
@@ -83,19 +83,19 @@ namespace EventDeneme.Controllers
                 
                 if (performanceIds.Any())
                 {
-                    // Bu performanslara ait tüm order_items'ları al
+                    
                     var orderItemIds = db.order_items
                         .Where(oi => performanceIds.Contains(oi.performance_id))
                         .Select(oi => oi.id)
                         .ToList();
                     
-                    // Ticket sayısını hesapla (her order_item bir ticket'a karşılık gelir)
+                    
                     int totalTicketsSold = db.tickets
                         .Where(t => orderItemIds.Contains(t.order_item_id))
                         .Count();
                     
-                    // Toplam geliri hesapla
-                    // Organizer'ın etkinliklerine ait performansların order_items'larından order'ları bul
+                    
+                    
                     var orderIds = db.order_items
                         .Where(oi => performanceIds.Contains(oi.performance_id))
                         .Select(oi => oi.order_id)
@@ -124,7 +124,7 @@ namespace EventDeneme.Controllers
             return View(events);
         }
 
-        // GET: Organizer/Applications (organizer-applications.html)
+        
         public ActionResult Applications()
         {
              if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
@@ -133,7 +133,7 @@ namespace EventDeneme.Controllers
              return View(apps);
         }
 
-        // GET: Organizer/CreateEvent – submit event request for admin approval
+        
         public ActionResult CreateEvent()
         {
             if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
@@ -142,7 +142,7 @@ namespace EventDeneme.Controllers
             return View();
         }
 
-        // POST: Organizer/CreateEvent
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreateEvent(
@@ -185,7 +185,7 @@ namespace EventDeneme.Controllers
             db.events.Add(evt);
             db.SaveChanges();
 
-            // Create initial performance for this event
+            
             var performance = new performances
             {
                 event_id = evt.id,
@@ -196,7 +196,7 @@ namespace EventDeneme.Controllers
             db.performances.Add(performance);
             db.SaveChanges();
 
-            // Create a basic price tier for this performance
+            
             var tier = new price_tiers
             {
                 performance_id = performance.id,
@@ -223,7 +223,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        // GET: Organizer/EditEvent/5
+        
         public ActionResult EditEvent(long id)
         {
             if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
@@ -237,7 +237,7 @@ namespace EventDeneme.Controllers
             return View(evt);
         }
 
-        // POST: Organizer/EditEvent/5
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult EditEvent(
@@ -281,7 +281,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        // POST: Organizer/DeleteEvent/5 (soft delete)
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteEvent(long id)
@@ -295,7 +295,7 @@ namespace EventDeneme.Controllers
             evt.status = "deleted";
             evt.updated_at = DateTime.Now;
 
-            // cancel related performances as well
+            
             var perfs = db.performances.Where(p => p.event_id == evt.id).ToList();
             foreach (var p in perfs)
             {
@@ -307,7 +307,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Dashboard");
         }
 
-        // GET: Organizer/ManagePerformances?eventId=5
+        
         public ActionResult ManagePerformances(long eventId)
         {
             if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
@@ -325,7 +325,7 @@ namespace EventDeneme.Controllers
             return View(perfs);
         }
 
-        // POST: Organizer/AddPerformance
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddPerformance(long eventId, long venueId, DateTime startDateTime)
@@ -347,7 +347,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("ManagePerformances", new { eventId });
         }
 
-        // POST: Organizer/DeletePerformance
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeletePerformance(long id)
@@ -365,7 +365,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("ManagePerformances", new { eventId = perf.event_id });
         }
 
-        // GET: Organizer/ManagePrices?performanceId=10
+        
         public ActionResult ManagePrices(long performanceId)
         {
             if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
@@ -379,7 +379,7 @@ namespace EventDeneme.Controllers
             return View(tiers);
         }
 
-        // POST: Organizer/AddPriceTier
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddPriceTier(
@@ -413,7 +413,7 @@ namespace EventDeneme.Controllers
             return RedirectToAction("ManagePrices", new { performanceId });
         }
 
-        // POST: Organizer/DeletePriceTier
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeletePriceTier(long id)
@@ -435,4 +435,6 @@ namespace EventDeneme.Controllers
         }
     }
 }
+
+
 

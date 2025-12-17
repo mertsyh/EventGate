@@ -1,4 +1,4 @@
-﻿using EventDeneme.Models;
+using EventDeneme.Models;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
@@ -80,7 +80,7 @@ namespace ProjeAdi.Controllers
             return View();
         }
 
-        // Helper: check if event has any upcoming (not ended) performances
+        
         private static bool HasUpcomingPerformances(
             System.Collections.Generic.ICollection<performances> perfs,
             System.DateTime now)
@@ -91,18 +91,18 @@ namespace ProjeAdi.Controllers
             {
                 if (p.status == "cancelled") return false;
                 
-                // If end_datetime is set, check if it's in the future
+                
                 if (p.end_datetime.HasValue)
                 {
                     return p.end_datetime.Value > now;
                 }
                 
-                // If end_datetime is not set, check if start_datetime is in the future
+                
                 return p.start_datetime > now;
             });
         }
 
-        // Helper: choose next upcoming performance date if exists, otherwise first performance
+        
         private static System.DateTime? GetNextOrFirstPerformanceDate(
             System.Collections.Generic.ICollection<performances> perfs,
             System.DateTime now)
@@ -124,3 +124,5 @@ namespace ProjeAdi.Controllers
 
     }
 }
+
+

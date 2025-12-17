@@ -11,7 +11,7 @@ namespace EventDeneme.Controllers
     {
         pr2Entities1 db = new pr2Entities1();
 
-        // Helper: Get or create cart for current user/session
+        
         private carts GetOrCreateCart()
         {
             long? userId = null;
@@ -20,7 +20,7 @@ namespace EventDeneme.Controllers
                 userId = Convert.ToInt64(Session["UserID"]);
             }
 
-            // Try to find existing active cart
+            
             var cart = db.carts
                 .FirstOrDefault(c => 
                     (userId.HasValue && c.user_id == userId.Value || !userId.HasValue && c.user_id == null) &&
@@ -28,7 +28,7 @@ namespace EventDeneme.Controllers
 
             if (cart == null)
             {
-                // Create new cart
+                
                 cart = new carts
                 {
                     user_id = userId,
@@ -43,7 +43,7 @@ namespace EventDeneme.Controllers
             return cart;
         }
 
-        // GET: Cart
+        
         public ActionResult Index()
         {
             var cart = GetOrCreateCart();
@@ -68,7 +68,7 @@ namespace EventDeneme.Controllers
                 var seat = item.seat_id.HasValue ? db.seats.FirstOrDefault(s => s.id == item.seat_id.Value) : null;
                 var priceTier = db.price_tiers.FirstOrDefault(pt => pt.id == item.price_tier_id);
                 
-                // Find performance_seat if exists
+                
                 var perfSeat = seat != null ? 
                     db.performance_seats.FirstOrDefault(ps => ps.performance_id == performance.id && ps.seat_id == seat.id) : 
                     null;
@@ -100,7 +100,7 @@ namespace EventDeneme.Controllers
             return View(viewModel);
         }
 
-        // POST: Cart/AddToCart
+        
         [HttpPost]
         public JsonResult AddToCart(long performanceSeatId, int quantity = 1)
         {
@@ -119,11 +119,11 @@ namespace EventDeneme.Controllers
                     return Json(new { success = false, message = "Seat is not available." });
                 }
 
-                // Get price tier
+                
                 var priceTier = db.price_tiers.FirstOrDefault(pt => pt.id == perfSeat.price_tier_id);
                 if (priceTier == null)
                 {
-                    // Try to find by section
+                    
                     var seat = perfSeat.seats;
                     if (seat != null)
                     {
@@ -138,7 +138,7 @@ namespace EventDeneme.Controllers
                     return Json(new { success = false, message = "Price tier not found." });
                 }
 
-                // Check if item already exists in cart
+                
                 var existingItem = db.cart_items
                     .FirstOrDefault(ci => ci.cart_id == cart.id && 
                                          ci.performance_id == perfSeat.performance_id &&
@@ -147,12 +147,12 @@ namespace EventDeneme.Controllers
 
                 if (existingItem != null)
                 {
-                    // Update quantity
+                    
                     existingItem.quantity += quantity;
                 }
                 else
                 {
-                    // Create new cart item
+                    
                     var cartItem = new cart_items
                     {
                         cart_id = cart.id,
@@ -169,7 +169,7 @@ namespace EventDeneme.Controllers
                 cart.updated_at = DateTime.Now;
                 db.SaveChanges();
 
-                // Get updated cart count
+                
                 var itemCount = db.cart_items
                     .Where(ci => ci.cart_id == cart.id && ci.status == "active")
                     .Sum(ci => (int?)ci.quantity) ?? 0;
@@ -182,7 +182,7 @@ namespace EventDeneme.Controllers
             }
         }
 
-        // POST: Cart/RemoveFromCart
+        
         [HttpPost]
         public JsonResult RemoveFromCart(long cartItemId)
         {
@@ -197,7 +197,7 @@ namespace EventDeneme.Controllers
                 cartItem.status = "removed";
                 db.SaveChanges();
 
-                // Get updated cart count
+                
                 var cart = db.carts.Find(cartItem.cart_id);
                 var itemCount = db.cart_items
                     .Where(ci => ci.cart_id == cart.id && ci.status == "active")
@@ -211,7 +211,7 @@ namespace EventDeneme.Controllers
             }
         }
 
-        // POST: Cart/UpdateQuantity
+        
         [HttpPost]
         public JsonResult UpdateQuantity(long cartItemId, int quantity)
         {
@@ -255,7 +255,7 @@ namespace EventDeneme.Controllers
             }
         }
 
-        // GET: Cart/GetCartCount
+        
         public JsonResult GetCartCount()
         {
             try
@@ -273,7 +273,7 @@ namespace EventDeneme.Controllers
             }
         }
 
-        // POST: Cart/Checkout
+        
         [HttpPost]
         public ActionResult Checkout()
         {
@@ -288,16 +288,16 @@ namespace EventDeneme.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Group by performance
+            
             var performanceGroups = cartItems.GroupBy(ci => ci.performance_id);
 
-            // For now, redirect to first performance's checkout
-            // In a full implementation, you might want to handle multiple performances
+            
+            
             var firstGroup = performanceGroups.First();
             var firstItem = firstGroup.First();
             var performanceId = firstItem.performance_id;
 
-            // Get selected seat IDs (performance_seat IDs)
+            
             var seatIds = new List<string>();
             foreach (var item in cartItems.Where(ci => ci.performance_id == performanceId))
             {
@@ -326,4 +326,6 @@ namespace EventDeneme.Controllers
         }
     }
 }
+
+
 

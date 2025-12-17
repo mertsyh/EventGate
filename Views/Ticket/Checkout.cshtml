@@ -736,7 +736,7 @@
     </nav>
 
     <div class="checkout-content">
-        <!-- Left Column: Forms -->
+        
         <div class="checkout-form-section">
             @using (Html.BeginForm("ProcessPayment", "Ticket", FormMethod.Post))
             {
@@ -745,7 +745,7 @@
                 @Html.HiddenFor(m => m.SelectedSeatIds)
                 @Html.HiddenFor(m => m.TotalAmount)
 
-                <!-- Contact Info Section -->
+                
                 <div class="form-card">
                     <div class="form-card-header">
                         <div class="step-number">1</div>
@@ -774,7 +774,7 @@
                     </div>
                 </div>
 
-                <!-- Payment Section -->
+                
                 <div class="form-card">
                     <div class="form-card-header">
                         <div class="step-number">2</div>
@@ -827,7 +827,7 @@
             }
         </div>
 
-        <!-- Right Column: Order Summary -->
+        
         <div class="checkout-summary-section">
             <div class="summary-card">
                 <div class="summary-header-image">
@@ -887,7 +887,7 @@
                 </div>
             </div>
 
-            <!-- Timer Card -->
+            
             <div class="timer-card">
                 <i class="fas fa-exclamation-circle timer-icon"></i>
                 <div class="timer-content">
@@ -904,10 +904,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        // Form ID ekle
+        
         $('form').attr('id', 'checkoutForm');
 
-        // Timer - 15 dakika geri sayım
+        
         var minutes = 15;
         var seconds = 0;
         var timer = setInterval(function() {
@@ -927,7 +927,7 @@
             $('#timer').text(display);
         }, 1000);
 
-        // Kart numarası formatı (boşluk ekleme)
+        
         $('#CardNumber').on('input', function () {
             var value = $(this).val().replace(/\s/g, '');
             var formatted = value.match(/.{1,4}/g)?.join(' ') || value;
@@ -936,7 +936,7 @@
             }
         });
 
-        // Kart numarası sadece sayı
+        
         $('#CardNumber').on('keypress', function (e) {
             var char = String.fromCharCode(e.which);
             if (!/[0-9\s]/.test(char)) {
@@ -944,7 +944,7 @@
             }
         });
 
-        // Expiry date formatı (MM/YY)
+        
         $('#ExpiryDate').on('input', function () {
             var value = $(this).val().replace(/\D/g, '');
             if (value.length >= 2) {
@@ -953,7 +953,7 @@
             $(this).val(value);
         });
 
-        // Expiry date sadece sayı ve /
+        
         $('#ExpiryDate').on('keypress', function (e) {
             var char = String.fromCharCode(e.which);
             if (!/[0-9\/]/.test(char)) {
@@ -961,7 +961,7 @@
             }
         });
 
-        // CVV sadece sayı ve max 4 karakter
+        
         $('#CVV').on('input', function () {
             $(this).val($(this).val().replace(/\D/g, ''));
             if ($(this).val().length > 4) {
@@ -969,7 +969,7 @@
             }
         });
 
-        // CVV sadece sayı
+        
         $('#CVV').on('keypress', function (e) {
             var char = String.fromCharCode(e.which);
             if (!/[0-9]/.test(char)) {
@@ -977,17 +977,17 @@
             }
         });
 
-        // Telefon numarası formatı
+        
         $('#Phone').on('input', function () {
             $(this).val($(this).val().replace(/[^\d\+\-\(\)\s]/g, ''));
         });
 
-        // Form submit validasyonu
+        
         $('#checkoutForm').on('submit', function (e) {
             var isValid = true;
             var errors = [];
 
-            // Full Name validasyonu
+            
             var fullName = $('#FullName').val().trim();
             var nameWords = fullName.split(/\s+/).filter(function(word) { return word.length > 0; });
             if (nameWords.length < 2) {
@@ -1011,14 +1011,14 @@
                 }
             }
 
-            // Kart numarası validasyonu
+            
             var cardNumber = $('#CardNumber').val().replace(/\s/g, '');
             if (!/^\d{13,19}$/.test(cardNumber)) {
                 isValid = false;
                 errors.push('Card number must be 13-19 digits');
                 $('#CardNumber').css('border-color', '#dc2626');
             } else {
-                // Luhn algoritması kontrolü
+                
                 if (!validateLuhn(cardNumber)) {
                     isValid = false;
                     errors.push('Invalid card number (Luhn check failed)');
@@ -1028,7 +1028,7 @@
                 }
             }
 
-            // CVV validasyonu
+            
             var cvv = $('#CVV').val();
             if (!/^\d{3,4}$/.test(cvv)) {
                 isValid = false;
@@ -1038,7 +1038,7 @@
                 $('#CVV').css('border-color', '');
             }
 
-            // Expiry date validasyonu
+            
             var expiryDate = $('#ExpiryDate').val();
             if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
                 isValid = false;
@@ -1066,7 +1066,7 @@
                 }
             }
 
-            // Telefon validasyonu
+            
             var phone = $('#Phone').val().replace(/[\s\-\(\)]/g, '');
             if (phone.startsWith('+90')) {
                 phone = phone.substring(3);
@@ -1090,7 +1090,7 @@
             return true;
         });
 
-        // Luhn algoritması
+        
         function validateLuhn(cardNumber) {
             var sum = 0;
             var alternate = false;
@@ -1112,7 +1112,7 @@
             return (sum % 10 === 0);
         }
 
-        // Input değiştiğinde border rengini sıfırla
+        
         $('#FullName, #CardNumber, #CVV, #ExpiryDate, #Phone').on('input', function () {
             if ($(this).css('border-color') === 'rgb(220, 38, 38)') {
                 $(this).css('border-color', '');
@@ -1120,3 +1120,5 @@
         });
     });
 </script>
+
+

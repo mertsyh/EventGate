@@ -281,7 +281,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        // Update quantity
+        
         $('.quantity-input').on('change', function() {
             var cartItemId = $(this).data('cart-item-id');
             var quantity = parseInt($(this).val());
@@ -300,11 +300,11 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        // Update subtotal
+                        
                         $('.item-subtotal[data-cart-item-id="' + cartItemId + '"]').text(response.subtotal.toFixed(2) + ' ₺');
-                        // Update total
+                        
                         $('#cart-total').text(response.totalAmount.toFixed(2) + ' ₺');
-                        // Update cart count in header
+                        
                         $('#cart-count').text(response.itemCount || 0);
                     } else {
                         alert(response.message);
@@ -316,7 +316,7 @@
             });
         });
 
-        // Remove item
+        
         $('.remove-item-btn').on('click', function() {
             if (!confirm('Are you sure you want to remove this item from your cart?')) {
                 return;
@@ -335,12 +335,12 @@
                     if (response.success) {
                         $item.fadeOut(300, function() {
                             $(this).remove();
-                            // Reload page if cart is empty
+                            
                             if ($('.cart-item').length === 0) {
                                 location.reload();
                             }
                         });
-                        // Update cart count in header
+                        
                         $('#cart-count').text(response.itemCount || 0);
                     } else {
                         alert(response.message);
@@ -353,4 +353,6 @@
         });
     });
 </script>
+
+
 

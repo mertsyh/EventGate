@@ -9,7 +9,7 @@ namespace EventDeneme.Controllers
     {
         pr2Entities1 db = new pr2Entities1();
 
-        // GET: Category (categories.html)
+        
         public ActionResult Index()
         {
             var categories = db.categories.ToList();
@@ -17,4 +17,6 @@ namespace EventDeneme.Controllers
         }
     }
 }
+
+
 

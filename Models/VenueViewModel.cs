@@ -29,3 +29,5 @@ namespace EventDeneme.Models
         public bool HasSeating { get; set; }
     }
 }
+
+

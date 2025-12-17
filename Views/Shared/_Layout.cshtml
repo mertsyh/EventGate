@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -116,7 +116,7 @@
             color: #111;
         }
 
-        @keyframes slideDown {
+        @@keyframes slideDown {
             from {
                 opacity: 0;
                 transform: translateY(-20px);
@@ -145,7 +145,7 @@
 
 <body>
 
-    <!-- Global Alert Container -->
+    
     <div class="global-alert-container" id="globalAlertContainer"></div>
 
     @Html.Partial("_Header")
@@ -186,7 +186,7 @@
 
                 container.appendChild(alert);
 
-                // Auto remove after 5 seconds
+                
                 setTimeout(() => {
                     if (alert.parentElement) {
                         alert.style.animation = 'slideDown 0.3s ease-out reverse';
@@ -195,7 +195,7 @@
                 }, 5000);
             }
 
-            // Check for TempData messages
+            
             @if (TempData["Success"] != null)
             {
                 <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Success"].ToString()))', 'success');</text>
@@ -213,3 +213,5 @@
 
 </body>
 </html>
+
+

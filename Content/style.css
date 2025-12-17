@@ -1,4 +1,4 @@
-﻿body {
+body {
     margin: 0;
     background: #d6d6d6;
     background: linear-gradient(180deg, rgba(214, 214, 214, 1) 0%, rgba(245, 245, 245, 1) 28%);
@@ -229,7 +229,7 @@ header i {
     backdrop-filter: blur(13.4px);
     -webkit-backdrop-filter: blur(13.4px);
     border: 1px solid rgba(255, 255, 255, 0.73);
-    flex-wrap: nowrap; /* Prevent line wrapping */
+    flex-wrap: nowrap; 
     overflow-x: auto;
 }
 
@@ -931,3 +931,5 @@ footer {
         font-size: 13px;
     }
 }
+
+

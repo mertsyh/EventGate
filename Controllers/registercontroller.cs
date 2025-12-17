@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -60,7 +60,7 @@ namespace EventDeneme.Controllers
         [HttpPost]
         public ActionResult ForgotPassword(string Email)
         {
-            // Demo logic: Check if user exists
+            
             var user = db.users.FirstOrDefault(x => x.email == Email);
             if (user == null)
             {
@@ -68,7 +68,7 @@ namespace EventDeneme.Controllers
                 return View();
             }
 
-            // In real app: Send email with reset token
+            
             ViewBag.Message = "Password reset link has been sent to your email.";
             return View();
         }
@@ -113,3 +113,5 @@ namespace EventDeneme.Controllers
         }
     }
 }
+
+

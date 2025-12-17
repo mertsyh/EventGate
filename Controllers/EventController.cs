@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +11,7 @@ namespace EventDeneme.Controllers
     {
         pr2Entities1 db = new pr2Entities1();
 
-        // -------------------- HOME / ALL EVENTS --------------------
+        
         public ActionResult Index()
         {
             ViewBag.cities = db.cities.ToList();
@@ -38,7 +38,7 @@ namespace EventDeneme.Controllers
             return View(events);
         }
 
-        // -------------------- CINEMA --------------------
+        
         public ActionResult Cinema()
         {
             int category = 2;
@@ -51,7 +51,7 @@ namespace EventDeneme.Controllers
 
             var movies = db.events
                 .Where(e => e.category_id == category && e.status != "deleted")
-                .ToList()   // First get from DB, then map
+                .ToList()   
                 .Where(e => HasUpcomingPerformances(e.performances, now))
                 .Select(e => new EventCardViewModel
                 {
@@ -68,7 +68,7 @@ namespace EventDeneme.Controllers
             return View(movies);
         }
 
-        // -------------------- MUSIC --------------------
+        
         public ActionResult Music()
         {
             int category = 1;
@@ -98,7 +98,7 @@ namespace EventDeneme.Controllers
             return View(concerts);
         }
 
-        // -------------------- DETAILS --------------------
+        
         public ActionResult Details(int id)
         {
             var eventRaw = db.events
@@ -108,7 +108,7 @@ namespace EventDeneme.Controllers
             if (eventRaw == null)
                 return HttpNotFound();
 
-            // Deleted event sayfasına sadece admin veya etkinlik sahibi organizer erişebilsin
+            
             if (eventRaw.status == "deleted")
             {
                 bool isAdmin = Session["AdminID"] != null;
@@ -157,31 +157,31 @@ namespace EventDeneme.Controllers
             return View(evt);
         }
 
-        // -------------------- AJAX FILTER --------------------
+        
         public ActionResult Filter(int? cityId, int? venueId, string dateFilter, int? categoryId)
         {
             DateTime now = DateTime.Now;
             
-            // Load data into memory to avoid EF translation issues
+            
             var eventsQuery = db.events
                 .Where(e => e.status != "deleted" && (!categoryId.HasValue || e.category_id == categoryId))
                 .ToList()
                 .Where(e => HasUpcomingPerformances(e.performances, now))
                 .ToList();
 
-            // City
+            
             if (cityId.HasValue)
                 eventsQuery = eventsQuery
                     .Where(e => e.performances.Any(p => p.venues.city_id == cityId))
                     .ToList();
 
-            // Venue
+            
             if (venueId.HasValue)
                 eventsQuery = eventsQuery
                     .Where(e => e.performances.Any(p => p.venue_id == venueId))
                     .ToList();
 
-            // Date filter (now works in memory, not in EF)
+            
             if (dateFilter == "today")
             {
                 eventsQuery = eventsQuery
@@ -207,7 +207,7 @@ namespace EventDeneme.Controllers
                     .ToList();
             }
 
-            // Result — Entity to ViewModel
+            
             var result = eventsQuery
                 .Select(e =>
                 {
@@ -239,7 +239,7 @@ namespace EventDeneme.Controllers
 
         }
 
-        // Helper: check if event has any upcoming (not ended) performances
+        
         private static bool HasUpcomingPerformances(
             System.Collections.Generic.ICollection<performances> perfs,
             System.DateTime now)
@@ -250,18 +250,18 @@ namespace EventDeneme.Controllers
             {
                 if (p.status == "cancelled") return false;
                 
-                // If end_datetime is set, check if it's in the future
+                
                 if (p.end_datetime.HasValue)
                 {
                     return p.end_datetime.Value > now;
                 }
                 
-                // If end_datetime is not set, check if start_datetime is in the future
+                
                 return p.start_datetime > now;
             });
         }
 
-        // Helper: choose next upcoming performance date if exists, otherwise first performance
+        
         private static System.DateTime? GetNextOrFirstPerformanceDate(
             System.Collections.Generic.ICollection<performances> perfs,
             System.DateTime now)
@@ -325,7 +325,7 @@ namespace EventDeneme.Controllers
 
             var query = db.events.AsQueryable();
 
-            // 🔍 TEXT SEARCH (EN KRİTİK SATIR)
+            
             if (!string.IsNullOrWhiteSpace(q))
                 query = query.Where(e => e.title.Contains(q));
 
@@ -391,3 +391,5 @@ namespace EventDeneme.Controllers
 
     }
 }
+
+

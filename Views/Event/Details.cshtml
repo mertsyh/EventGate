@@ -1,4 +1,4 @@
-﻿@model EventDeneme.Models.EventDetailViewModel
+@model EventDeneme.Models.EventDetailViewModel
 
 @{
     ViewBag.Title = Model.Title;
@@ -15,7 +15,7 @@
         <h1>@Model.Title</h1>
 
         <p>
-            @Model.Date• @Model.Venue
+            @Model.Date� @Model.Venue
         </p>
 
         @if (!isPast)
@@ -58,7 +58,7 @@
         <i class="fa-solid fa-ticket"></i>
         <div>
             <h3>Starting Price</h3>
-            <p>₺@Model.Price</p>
+            <p>?@Model.Price</p>
         </div>
     </div>
 </section>
@@ -224,3 +224,5 @@
             line-height: 1.6;
         }
 </style>
+
+

@@ -1,4 +1,4 @@
-﻿
+
 @{
 
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -74,7 +74,7 @@
             var categoryId = '@ViewBag.CategoryId'; 
             if (dateFilter === "clear") {
 
-                // reset dropdowns
+                
                 $('#CityId').val('');
                 $('#VenueId').val('');
 
@@ -105,13 +105,15 @@
                 }
             });
 
-        } // applyFilters biter
+        } 
 
 
-        // filtre tetikleyicileri
+        
         $('#CityId, #VenueId').on('change', applyFilters);
         $('input[name="date"]').on('change', applyFilters);
 
     });
 </script>
+
+
 

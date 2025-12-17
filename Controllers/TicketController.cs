@@ -11,13 +11,11 @@ namespace EventDeneme.Controllers
     {
         pr2Entities1 db = new pr2Entities1();
 
-        // GET: Ticket/Buy/5
         public ActionResult Buy(int id)
         {
             var eventItem = db.events.FirstOrDefault(e => e.id == id);
             if (eventItem == null) return HttpNotFound();
 
-            // Check if event is deleted
             if (eventItem.status == "deleted")
             {
                 ViewBag.Message = "This event is not available for sale.";
@@ -26,15 +24,12 @@ namespace EventDeneme.Controllers
 
             DateTime now = DateTime.Now;
 
-            // Performance selection - get next upcoming performance that is available for sale
             var performance = eventItem.performances
                 .Where(p => 
                     p.status != "cancelled" &&
-                    // Check if performance hasn't ended
-                    (p.end_datetime.HasValue ? p.end_datetime.Value > now : p.start_datetime > now) &&
-                    // Check sales dates if they exist
-                    (!p.sales_start.HasValue || p.sales_start.Value <= now) &&
-                    (!p.sales_end.HasValue || p.sales_end.Value > now)
+                    (p.end_datetime != null ? p.end_datetime.Value > now : p.start_datetime > now) &&
+                    (p.sales_start == null || p.sales_start.Value <= now) &&
+                    (p.sales_end == null || p.sales_end.Value > now)
                 )
                 .OrderBy(p => p.start_datetime)
                 .FirstOrDefault();
@@ -45,17 +40,13 @@ namespace EventDeneme.Controllers
                 return View("Error");
             }
 
-            // AUTO-SEED: If there are no seats in DB, create demo seats.
-            // This part should be removed in production.
             if (!db.performance_seats.Any(ps => ps.performance_id == performance.id))
             {
                 SeedSeats(performance.id, performance.venue_id);
             }
 
-            // Load price tiers
             var priceTiers = db.price_tiers.Where(pt => pt.performance_id == performance.id).ToList();
 
-            // Load seats
             var perfSeats = db.performance_seats
                 .Where(ps => ps.performance_id == performance.id && ps.status == "available")
                 .ToList();
@@ -64,16 +55,14 @@ namespace EventDeneme.Controllers
 
             foreach (var ps in perfSeats)
             {
-                // Find price
                 decimal price = 0;
-                var tier = priceTiers.FirstOrDefault(pt => pt.id == ps.price_tier_id);
+                var tier = priceTiers.FirstOrDefault(pt => pt.id == (ps.price_tier_id ?? 0));
                 if (tier != null)
                 {
                     price = tier.price;
                 }
                 else
                 {
-                    // ID ile bulunamazsa Section ile dene
                     var tierBySection = priceTiers.FirstOrDefault(pt => pt.seatmap_section == ps.seats.seatmap_section);
                     if (tierBySection != null) price = tierBySection.price;
                 }
@@ -89,13 +78,6 @@ namespace EventDeneme.Controllers
                 });
             }
 
-            // If there are no seats or all are sold
-            if (!seatViewModels.Any())
-            {
-                // For demo purposes, we could create fake seats or return empty.
-                // For now, it returns empty.
-            }
-
             var model = new SeatSelectionViewModel
             {
                 EventId = eventItem.id,
@@ -109,28 +91,24 @@ namespace EventDeneme.Controllers
             return View(model);
         }
 
-        // GET: Ticket/Checkout
-        // Comes here from Cart checkout
         public ActionResult Checkout(long performanceId, string selectedSeats)
         {
             if (string.IsNullOrEmpty(selectedSeats))
             {
-                // Redirect back (we need EventId from performance)
                 var perf = db.performances.Find(performanceId);
                 if (perf == null) return HttpNotFound();
-                return RedirectToAction("Buy", new { id = perf.event_id });
+                return RedirectToAction("Buy", new { id = (int)perf.event_id });
             }
 
             var seatIds = selectedSeats.Split(',').Select(long.Parse).ToList();
             
-            // Fiyat hesapla
             decimal totalAmount = 0;
             var seatsToBuy = db.performance_seats.Where(ps => seatIds.Contains(ps.id)).ToList();
             var priceTiers = db.price_tiers.Where(pt => pt.performance_id == performanceId).ToList();
 
             foreach (var seat in seatsToBuy)
             {
-                 var tier = priceTiers.FirstOrDefault(pt => pt.id == seat.price_tier_id);
+                 var tier = priceTiers.FirstOrDefault(pt => pt.id == (seat.price_tier_id ?? 0));
                  if (tier != null) totalAmount += tier.price;
                  else 
                  {
@@ -161,29 +139,25 @@ namespace EventDeneme.Controllers
             return View(model);
         }
 
-        // POST: Ticket/Checkout
-        // Comes here when user selects seats and continues
         [HttpPost]
         [ActionName("Checkout")]
         public ActionResult CheckoutPost(long performanceId, string selectedSeats)
         {
             if (string.IsNullOrEmpty(selectedSeats))
             {
-                // Redirect back (we need EventId from performance)
                 var perf = db.performances.Find(performanceId);
-                return RedirectToAction("Buy", new { id = perf.event_id });
+                return RedirectToAction("Buy", new { id = (int)perf.event_id });
             }
 
             var seatIds = selectedSeats.Split(',').Select(long.Parse).ToList();
             
-            // Fiyat hesapla
             decimal totalAmount = 0;
             var seatsToBuy = db.performance_seats.Where(ps => seatIds.Contains(ps.id)).ToList();
             var priceTiers = db.price_tiers.Where(pt => pt.performance_id == performanceId).ToList();
 
             foreach (var seat in seatsToBuy)
             {
-                 var tier = priceTiers.FirstOrDefault(pt => pt.id == seat.price_tier_id);
+                 var tier = priceTiers.FirstOrDefault(pt => pt.id == (seat.price_tier_id ?? 0));
                  if (tier != null) totalAmount += tier.price;
                  else 
                  {
@@ -223,11 +197,9 @@ namespace EventDeneme.Controllers
 
             try
             {
-                // 1. Payment process (simulation)
                 bool paymentSuccess = true; 
                 if (!paymentSuccess) return RedirectToAction("Failed");
 
-                // 2. Create order
                 long? userId = null;
                 if (Session["UserID"] != null)
                 {
@@ -245,9 +217,8 @@ namespace EventDeneme.Controllers
                     created_at = DateTime.Now
                 };
                 db.orders.Add(order);
-                db.SaveChanges(); // Save to get ID
+                db.SaveChanges(); 
 
-                // 2b. Create payment record for this order (for refunds)
                 var payment = new payments
                 {
                     order_id = order.id,
@@ -261,28 +232,23 @@ namespace EventDeneme.Controllers
                 db.payments.Add(payment);
                 db.SaveChanges();
 
-                // 3. Update seats and create order items
                 var seatIds = model.SelectedSeatIds.Split(',').Select(long.Parse).ToList();
                 var seatsToUpdate = db.performance_seats.Where(ps => seatIds.Contains(ps.id)).ToList();
                 var priceTiers = db.price_tiers.Where(pt => pt.performance_id == model.PerformanceId).ToList();
 
                 foreach (var seat in seatsToUpdate)
                 {
-                    // Ideally check if seat already sold (concurrency)
                     if (seat.status != "available")
                     {
-                        // Error: seat taken by someone else
                         return RedirectToAction("Failed"); 
                     }
 
                     seat.status = "sold";
                     
-                    // Order Item ekle
-                    // Find price and tier ID
                     decimal unitPrice = 0;
                     long priceTierId = 0;
 
-                    var tier = priceTiers.FirstOrDefault(pt => pt.id == seat.price_tier_id);
+                    var tier = priceTiers.FirstOrDefault(pt => pt.id == (seat.price_tier_id ?? 0));
                     if (tier != null)
                     {
                         unitPrice = tier.price;
@@ -307,9 +273,8 @@ namespace EventDeneme.Controllers
                         unit_price = unitPrice
                     };
                     db.order_items.Add(item);
-                    db.SaveChanges(); // Item ID needed for Ticket
+                    db.SaveChanges(); 
 
-                    // 4. Create ticket (for reporting)
                     var ticket = new tickets
                     {
                         order_item_id = item.id,
@@ -325,17 +290,77 @@ namespace EventDeneme.Controllers
 
                 db.SaveChanges();
 
-                return RedirectToAction("Success");
+                try
+                {
+                    var cart = db.carts.FirstOrDefault(c => 
+                        (userId != null && c.user_id == userId || userId == null && c.user_id == null) &&
+                        c.status == "active");
+                    
+                    if (cart != null)
+                    {
+                        var purchasedSeatIds = seatsToUpdate.Select(s => (long?)s.seat_id).ToList();
+                        
+                        var cartItemsToRemove = db.cart_items
+                            .Where(ci => ci.cart_id == cart.id && 
+                                         ci.status == "active" && 
+                                         ci.performance_id == model.PerformanceId)
+                            .ToList() 
+                            .Where(ci => ci.seat_id != null && purchasedSeatIds.Contains(ci.seat_id))
+                            .ToList();
+                        
+                        foreach (var cartItem in cartItemsToRemove)
+                        {
+                            cartItem.status = "removed";
+                        }
+                        db.SaveChanges();
+                    }
+                }
+                catch
+                {
+                }
+
+                var firstTicket = db.tickets
+                    .Where(t => t.order_items.order_id == order.id)
+                    .OrderBy(t => t.id)
+                    .FirstOrDefault();
+
+                long? ticketIdForRedirect = firstTicket != null ? (long?)firstTicket.id : null;
+                return RedirectToAction("Success", new { orderId = order.id, ticketId = ticketIdForRedirect });
             }
             catch (Exception)
             {
-                // Log ex
                 return RedirectToAction("Failed");
             }
         }
 
-        public ActionResult Success()
+        public ActionResult Success(long? orderId, long? ticketId)
         {
+            if (orderId != null)
+            {
+                long id = orderId.Value;
+                var order = db.orders.Find(id);
+                if (order != null)
+                {
+                    ViewBag.OrderId = order.id;
+                    ViewBag.OrderEmail = order.email;
+                    
+                    var tickets = db.tickets
+                        .Where(t => t.order_items.order_id == order.id)
+                        .ToList() 
+                        .Select(t => new { t.id, t.ticket_code })
+                        .ToList<dynamic>();
+                    
+                    ViewBag.Tickets = tickets;
+                    if (ticketId != null)
+                    {
+                        ViewBag.TicketId = ticketId.Value;
+                    }
+                    else
+                    {
+                        ViewBag.TicketId = null;
+                    }
+                }
+            }
             return View();
         }
 
@@ -344,17 +369,8 @@ namespace EventDeneme.Controllers
             return View();
         }
 
-        // GET: Ticket/Details/5 (ticket details for logged-in user)
-        public ActionResult Details(long id)
+        public ActionResult Details(long id, string email = null)
         {
-            if (Session["UserID"] == null)
-                return RedirectToAction("Login", "Register");
-
-            long userId = Convert.ToInt64(Session["UserID"]);
-            var user = db.users.FirstOrDefault(u => u.id == userId);
-            if (user == null)
-                return RedirectToAction("Login", "Register");
-
             var ticket = db.tickets.Find(id);
             if (ticket == null) return HttpNotFound();
 
@@ -363,15 +379,42 @@ namespace EventDeneme.Controllers
             var order = oi.orders;
             if (order == null) return HttpNotFound();
 
-            // Ownership check: order belongs to logged-in user or guest order with same email
-            if (!(order.user_id == userId || (order.user_id == null && order.email == user.email)))
-                return new HttpUnauthorizedResult();
+            bool hasAccess = false;
+            
+            if (Session["UserID"] != null)
+            {
+                long userId = Convert.ToInt64(Session["UserID"]);
+                var user = db.users.FirstOrDefault(u => u.id == userId);
+                if (user != null)
+                {
+                    hasAccess = order.user_id == userId || (order.user_id == null && order.email == user.email);
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(email) && !string.IsNullOrEmpty(order.email))
+                {
+                    hasAccess = order.email.Equals(email, StringComparison.OrdinalIgnoreCase);
+                }
+            }
+
+            if (!hasAccess)
+            {
+                if (Session["UserID"] == null && string.IsNullOrEmpty(email))
+                {
+                    ViewBag.TicketId = id;
+                    ViewBag.RequiresEmail = true;
+                    return View("DetailsEmail");
+                }
+                TempData["Error"] = "You don't have permission to view this ticket. Please check your email address.";
+                return RedirectToAction("Index", "Home");
+            }
 
             var perf = db.performances.FirstOrDefault(p => p.id == oi.performance_id);
             var ev = perf != null ? db.events.FirstOrDefault(e => e.id == perf.event_id) : null;
             var venue = perf != null ? db.venues.FirstOrDefault(v => v.id == perf.venue_id) : null;
             var city = venue != null ? db.cities.FirstOrDefault(c => c.id == venue.city_id) : null;
-            var seat = oi.seat_id.HasValue ? db.seats.FirstOrDefault(s => s.id == oi.seat_id.Value) : null;
+            var seat = db.seats.FirstOrDefault(s => s.id == (oi.seat_id ?? 0));
 
             var model = new TicketDetailsViewModel
             {
@@ -393,7 +436,6 @@ namespace EventDeneme.Controllers
             return View(model);
         }
 
-        // POST: Ticket/RequestRefund
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult RequestRefund(long ticketId)
@@ -420,7 +462,6 @@ namespace EventDeneme.Controllers
             var payment = db.payments.FirstOrDefault(p => p.order_id == order.id);
             if (payment == null)
             {
-                // Create a synthetic payment if missing (for older orders)
                 payment = new payments
                 {
                     order_id = order.id,
@@ -435,7 +476,6 @@ namespace EventDeneme.Controllers
                 db.SaveChanges();
             }
 
-            // Prevent duplicate pending/approved refunds for same payment
             bool hasActiveRefund = db.refunds.Any(r => r.payment_id == payment.id && r.status != "rejected");
             if (!hasActiveRefund)
             {
@@ -459,12 +499,10 @@ namespace EventDeneme.Controllers
             return RedirectToAction("Details", new { id = ticketId });
         }
 
-        // Demo Data Seeder Helper
         private void SeedSeats(long performanceId, long venueId)
         {
             try
             {
-                // 1. Ensure Seats exist for the Venue
                 var existingSeats = db.seats.Where(s => s.venue_id == venueId).ToList();
                 if (!existingSeats.Any())
                 {
@@ -488,14 +526,13 @@ namespace EventDeneme.Controllers
                     existingSeats = db.seats.Where(s => s.venue_id == venueId).ToList();
                 }
 
-                // 2. Ensure Price Tiers exist
                 if (!db.price_tiers.Any(pt => pt.performance_id == performanceId))
                 {
                     var tier = new price_tiers
                     {
                         performance_id = performanceId,
                         name = "Standard",
-                        price = 150, // Default price
+                        price = 150, 
                         currency = "TRY",
                         seatmap_section = "Main Hall"
                     };
@@ -503,7 +540,6 @@ namespace EventDeneme.Controllers
                     db.SaveChanges();
                 }
 
-                // 3. Create Performance Seats (Available)
                 foreach (var seat in existingSeats)
                 {
                     var perfSeat = new performance_seats
@@ -519,9 +555,7 @@ namespace EventDeneme.Controllers
             }
             catch (Exception)
             {
-                // Silent fail if seeding has issues
             }
         }
     }
 }
-

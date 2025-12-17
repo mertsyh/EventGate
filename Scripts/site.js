@@ -1,4 +1,4 @@
-﻿document.querySelector('.SearchArea1 i').addEventListener('click', function () {
+document.querySelector('.SearchArea1 i').addEventListener('click', function () {
     const parent = this.parentElement;
     parent.classList.toggle('active');
 });
@@ -10,4 +10,6 @@ document.getElementById('nextEvent').addEventListener('click', () => {
 document.getElementById('prevEvent').addEventListener('click', () => {
     container.scrollLeft -= 300;
 });
+
+
 
