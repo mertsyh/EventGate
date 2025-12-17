@@ -355,6 +355,7 @@
     <Content Include="Views\Organizer\ManagePrices.cshtml" />
     <Content Include="Views\Organizer\EditEvent.cshtml" />
     <Content Include="Views\Ticket\Details.cshtml" />
+    <Content Include="Views\Event\Search.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
