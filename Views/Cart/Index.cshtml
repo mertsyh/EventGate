@@ -9,11 +9,11 @@
 
     @if (Model.Items == null || !Model.Items.Any())
     {
-        <div style="text-align: center; padding: 60px 20px;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 60px 20px; min-height: 60vh;">
             <i class="fa-solid fa-cart-shopping" style="font-size: 64px; color: #ccc; margin-bottom: 20px;"></i>
             <h2 style="color: #666; margin-bottom: 10px;">Your cart is empty</h2>
             <p style="color: #999; margin-bottom: 30px;">Add some tickets to your cart to get started.</p>
-            <a href="@Url.Action("Index", "Event")" class="btn btn-primary" style="background-color: #e7004c; color: white; padding: 12px 30px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold;">Browse Events</a>
+            <a href="@Url.Action("Index", "Event")" class="btn btn-primary" style="background-color: #dd2222; color: white; padding: 12px 30px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold;">Browse Events</a>
         </div>
     }
     else
