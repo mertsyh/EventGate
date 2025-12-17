@@ -173,7 +173,12 @@ namespace EventDeneme.Controllers
                 description = Description,
                 language = Language,
                 age_limit = AgeLimit,
-                poster_url = PosterUrl,
+                poster_url = string.IsNullOrWhiteSpace(PosterUrl)
+    ? null
+    : (PosterUrl.StartsWith("~/")
+        ? PosterUrl
+        : "~/images/" + PosterUrl.Trim()),
+
                 status = "pending",
                 created_at = DateTime.Now,
                 updated_at = DateTime.Now
@@ -264,7 +269,12 @@ namespace EventDeneme.Controllers
             evt.description = Description;
             evt.language = Language;
             evt.age_limit = AgeLimit;
-            evt.poster_url = PosterUrl;
+            evt.poster_url = string.IsNullOrWhiteSpace(PosterUrl)
+      ? null
+      : (PosterUrl.StartsWith("~/")
+          ? PosterUrl
+          : "~/images/" + PosterUrl.Trim());
+
             evt.updated_at = DateTime.Now;
 
             db.SaveChanges();

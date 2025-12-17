@@ -4,82 +4,245 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container" style="padding: 40px 20px; max-width: 1200px; @(Model.Items == null || !Model.Items.Any() ? "display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh;" : "")">
-    @if (Model.Items != null && Model.Items.Any())
-    {
-        <h1 style="margin-bottom: 30px;">Shopping Cart</h1>
+
+<style>
+    .cart-container {
+        padding: 40px 20px;
+        max-width: 95%;
+        min-height: 70vh;
     }
+
+    .empty-cart {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 60vh;
+        margin:0px;
+    }
+
+        .empty-cart i {
+            font-size: 64px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+
+        .empty-cart h2 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .empty-cart p {
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+    .browse-btn {
+        background-color: #dd2222;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .cart-layout {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .cart-items {
+        flex: 1;
+        min-width: 300px;
+    }
+
+    .cart-item {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 20px;
+    }
+
+        .cart-item img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+    .image-placeholder {
+        width: 120px;
+        height: 120px;
+        background: #f3f4f6;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .image-placeholder i {
+            font-size: 32px;
+            color: #ccc;
+        }
+
+    .cart-item-details h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+        color: #111;
+    }
+
+    .cart-item-details p {
+        margin: 5px 0;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .cart-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .quantity-input {
+        width: 60px;
+        padding: 6px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        text-align: center;
+    }
+
+    .item-subtotal {
+        left: 20px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #d22;
+    }
+
+    .remove-item-btn {
+        margin-top: 10px;
+        background: none;
+        border: none;
+        color: #dc2626;
+        cursor: pointer;
+        font-size: 14px;
+        padding: 0;
+    }
+
+    .summary {
+        width: 350px;
+        flex-shrink: 0;
+    }
+
+    .summary-box {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 24px;
+        position: sticky;
+        top: 20px;
+    }
+
+        .summary-box h2 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            color: #111;
+        }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .summary-total {
+        font-size: 24px;
+        font-weight: bold;
+        color: #d22;
+    }
+
+    .checkout-btn {
+        width: 100%;
+        background-color: #d22;
+        color: white;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        transition:1s ease;
+    }
+    .checkout-btn:hover{
+     background-color:#666;
+     border-radius:20px;
+    }
+
+    .continue-link {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+    }
+</style>
+
+<div class="container cart-container">
 
     @if (Model.Items == null || !Model.Items.Any())
     {
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 20px;">
-            <i class="fa-solid fa-cart-shopping" style="font-size: 64px; color: #ccc; margin-bottom: 20px;"></i>
-            <h2 style="color: #666; margin-bottom: 10px;">Your cart is empty</h2>
-            <p style="color: #999; margin-bottom: 30px;">Add some tickets to your cart to get started.</p>
-            <a href="@Url.Action("Index", "Event")" class="btn btn-primary" style="background-color: #dd2222; color: white; padding: 12px 30px; border-radius: 25px; text-decoration: none; display: inline-block; font-weight: bold;">Browse Events</a>
+        <div class="empty-cart">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <h2>Your cart is empty</h2>
+            <p>Add some tickets to your cart to get started.</p>
+            <a href="@Url.Action("Index", "Event")" class="browse-btn">Browse Events</a>
         </div>
     }
     else
     {
-        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
-            <!-- Cart Items -->
-            <div style="flex: 1; min-width: 300px;">
+        <h1>Shopping Cart</h1>
+
+        <div class="cart-layout">
+            <div class="cart-items">
                 @foreach (var item in Model.Items)
                 {
-                    <div class="cart-item" style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; gap: 20px;">
+                    <div class="cart-item">
                         @if (!string.IsNullOrEmpty(item.EventImageUrl))
                         {
-                            <img src="@Url.Content(item.EventImageUrl)" alt="@item.EventTitle" style="width: 120px; height: 120px; object-fit: cover; border-radius: 8px;" />
+                            <img src="@Url.Content(item.EventImageUrl)" alt="@item.EventTitle" />
                         }
                         else
                         {
-                            <div style="width: 120px; height: 120px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fa-solid fa-image" style="font-size: 32px; color: #ccc;"></i>
+                            <div class="image-placeholder">
+                                <i class="fa-solid fa-image"></i>
                             </div>
                         }
-                        
-                        <div style="flex: 1;">
-                            <h3 style="margin: 0 0 10px 0; font-size: 18px; color: #111;">@item.EventTitle</h3>
+
+                        <div class="cart-item-details">
+                            <h3>@item.EventTitle</h3>
+
                             @if (item.EventDate.HasValue)
                             {
-                                <p style="margin: 5px 0; color: #666; font-size: 14px;">
-                                    <i class="fa-solid fa-calendar"></i> @item.EventDate.Value.ToString("MMMM dd, yyyy hh:mm tt")
-                                </p>
+                                <p><i class="fa-solid fa-calendar"></i> @item.EventDate.Value.ToString("MMMM dd, yyyy hh:mm tt")</p>
                             }
+
                             @if (!string.IsNullOrEmpty(item.VenueName))
                             {
-                                <p style="margin: 5px 0; color: #666; font-size: 14px;">
-                                    <i class="fa-solid fa-map-marker-alt"></i> @item.VenueName@(!string.IsNullOrEmpty(item.CityName) ? ", " + item.CityName : "")
-                                </p>
+                                <p><i class="fa-solid fa-map-marker-alt"></i> @item.VenueName@(!string.IsNullOrEmpty(item.CityName) ? ", " + item.CityName : "")</p>
                             }
-                            @if (!string.IsNullOrEmpty(item.Section))
-                            {
-                                <p style="margin: 5px 0; color: #666; font-size: 14px;">
-                                    <i class="fa-solid fa-chair"></i> Section: @item.Section, Row: @item.Row, Seat: @item.SeatNumber
-                                </p>
-                            }
-                            
-                            <div style="display: flex; align-items: center; gap: 15px; margin-top: 15px;">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <label style="font-size: 14px; color: #666;">Quantity:</label>
-                                    <input type="number" 
-                                           class="quantity-input" 
-                                           data-cart-item-id="@item.CartItemId"
-                                           value="@item.Quantity" 
-                                           min="1" 
-                                           style="width: 60px; padding: 6px; border: 1px solid #d1d5db; border-radius: 6px; text-align: center;" />
-                                </div>
-                                <div style="margin-left: auto;">
-                                    <span class="item-subtotal" data-cart-item-id="@item.CartItemId" style="font-size: 18px; font-weight: bold; color: #e7004c;">
-                                        @item.Subtotal.ToString("N2") ₺
-                                    </span>
-                                </div>
+
+                            <div class="cart-row">
+                                <input type="number" class="quantity-input" data-cart-item-id="@item.CartItemId" value="@item.Quantity" min="1" />
+                                <span class="item-subtotal" data-cart-item-id="@item.CartItemId">@item.Subtotal.ToString("N2") ₺</span>
                             </div>
-                            
-                            <button type="button" 
-                                    class="remove-item-btn" 
-                                    data-cart-item-id="@item.CartItemId"
-                                    style="margin-top: 10px; background: none; border: none; color: #dc2626; cursor: pointer; font-size: 14px; padding: 0;">
+
+                            <button class="remove-item-btn" data-cart-item-id="@item.CartItemId">
                                 <i class="fa-solid fa-trash"></i> Remove
                             </button>
                         </div>
@@ -87,31 +250,26 @@
                 }
             </div>
 
-            <!-- Order Summary -->
-            <div style="width: 350px; flex-shrink: 0;">
-                <div style="background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; position: sticky; top: 20px;">
-                    <h2 style="margin: 0 0 20px 0; font-size: 20px; color: #111;">Order Summary</h2>
-                    
-                    <div style="border-bottom: 1px solid #e5e7eb; padding-bottom: 15px; margin-bottom: 15px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <span style="color: #666;">Items (@Model.TotalItems)</span>
-                            <span style="color: #111; font-weight: 500;">@Model.TotalAmount.ToString("N2") ₺</span>
-                        </div>
+            <div class="summary">
+                <div class="summary-box">
+                    <h2>Order Summary</h2>
+
+                    <div class="summary-row">
+                        <span>Items (@Model.TotalItems)</span>
+                        <span>@Model.TotalAmount.ToString("N2") ₺</span>
                     </div>
-                    
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <span style="font-size: 18px; font-weight: bold; color: #111;">Total</span>
-                        <span id="cart-total" style="font-size: 24px; font-weight: bold; color: #e7004c;">@Model.TotalAmount.ToString("N2") ₺</span>
+
+                    <div class="summary-row">
+                        <strong>Total</strong>
+                        <span class="summary-total" id="cart-total">@Model.TotalAmount.ToString("N2") ₺</span>
                     </div>
-                    
-                    <form action="@Url.Action("Checkout", "Cart")" method="post" style="margin-top: 20px;">
+
+                    <form action="@Url.Action("Checkout", "Cart")" method="post">
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-primary" style="width: 100%; background-color: #e7004c; color: white; padding: 14px; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer;">
-                            Proceed to Checkout
-                        </button>
+                        <button type="submit" class="checkout-btn">Proceed to Checkout</button>
                     </form>
-                    
-                    <a href="@Url.Action("Index", "Event")" style="display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px;">
+
+                    <a href="@Url.Action("Index", "Event")" class="continue-link">
                         <i class="fa-solid fa-arrow-left"></i> Continue Shopping
                     </a>
                 </div>
@@ -127,12 +285,12 @@
         $('.quantity-input').on('change', function() {
             var cartItemId = $(this).data('cart-item-id');
             var quantity = parseInt($(this).val());
-            
+
             if (quantity < 1) {
                 $(this).val(1);
                 quantity = 1;
             }
-            
+
             $.ajax({
                 url: '@Url.Action("UpdateQuantity", "Cart")',
                 type: 'POST',
@@ -157,16 +315,16 @@
                 }
             });
         });
-        
+
         // Remove item
         $('.remove-item-btn').on('click', function() {
             if (!confirm('Are you sure you want to remove this item from your cart?')) {
                 return;
             }
-            
+
             var cartItemId = $(this).data('cart-item-id');
             var $item = $(this).closest('.cart-item');
-            
+
             $.ajax({
                 url: '@Url.Action("RemoveFromCart", "Cart")',
                 type: 'POST',

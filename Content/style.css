@@ -187,6 +187,7 @@ header i {
     cursor: pointer;
     font-size: 22px;
     transition: 1s ease;
+    margin-right:20px;
 }
 
 .SearchArea1.active i {
