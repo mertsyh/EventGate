@@ -1,3 +1,4 @@
+@using EventDeneme.Models
 @{
     ViewBag.Title = "Payment Successful";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,18 +13,18 @@
         <p style="font-size: 1.1em; color: #666;">Your tickets have been sent to your email address.</p>
     </div>
 
-    @if (ViewBag.Tickets != null && ViewBag.Tickets.Count > 0)
+    @if (ViewBag.Tickets != null && ((List<UserTicketViewModel>)ViewBag.Tickets).Count > 0)
     {
         <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
             <h3 style="margin-top: 0; color: #111; margin-bottom: 20px;">Your Tickets</h3>
             <div style="display: flex; flex-direction: column; gap: 12px;">
-                @foreach (var ticket in (List<dynamic>)ViewBag.Tickets)
+                @foreach (var ticket in (List<UserTicketViewModel>)ViewBag.Tickets)
                 {
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: #f9fafb; border-radius: 8px;">
                         <div>
-                            <div style="font-weight: 600; color: #111;">Ticket Code: <span style="font-family: monospace; background: white; padding: 4px 8px; border-radius: 4px;">@ticket.ticket_code</span></div>
+                            <div style="font-weight: 600; color: #111;">Ticket Code: <span style="font-family: monospace; background: white; padding: 4px 8px; border-radius: 4px;">@ticket.TicketCode</span></div>
                         </div>
-                        <a href="@Url.Action("Details", "Ticket", new { id = ticket.id, email = ViewBag.OrderEmail })" 
+                        <a href="@Url.Action("Details", "Ticket", new { id = ticket.TicketId, email = ViewBag.OrderEmail })" 
                            style="background: #e7004c; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500;">
                             View Details
                         </a>
@@ -44,6 +45,3 @@
         }
     </div>
 </div>
-
-
-

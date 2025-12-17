@@ -347,8 +347,8 @@ namespace EventDeneme.Controllers
                     var tickets = db.tickets
                         .Where(t => t.order_items.order_id == order.id)
                         .ToList() 
-                        .Select(t => new { t.id, t.ticket_code })
-                        .ToList<dynamic>();
+                        .Select(t => new EventDeneme.Models.UserTicketViewModel { TicketId = t.id, TicketCode = t.ticket_code })
+                        .ToList();
                     
                     ViewBag.Tickets = tickets;
                     if (ticketId != null)
