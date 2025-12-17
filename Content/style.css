@@ -216,21 +216,21 @@ header i {
 }
 
 .search-area {
-    max-width: 950px;
+    max-width: 1000px;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 5px;
-    margin: 100px auto 40px auto;
-    border-radius: 40px;
-    min-height: 50px;
-    background: rgba(255, 255, 255, 0.42);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(13.4px);
-    -webkit-backdrop-filter: blur(13.4px);
-    border: 1px solid rgba(255, 255, 255, 0.73);
-    flex-wrap: nowrap; 
-    overflow-x: auto;
+    gap: 10px;
+    margin: 60px auto 40px auto;
+    border-radius: 50px;
+    min-height: 60px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    flex-wrap: wrap; 
 }
 
 .search-title {
@@ -245,11 +245,18 @@ header i {
     background: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 40px;
-    padding: 8px 10px;
+    padding: 8px 16px;
     gap: 10px;
-    min-width: 90px;
+    flex: 1;
+    min-width: 150px;
+    max-width: 250px;
     transition: 0.3s;
-  
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.search-box:focus-within {
+    border-color: #d22;
+    box-shadow: 0 0 0 3px rgba(210, 34, 34, 0.1);
 }
 
 
@@ -275,20 +282,23 @@ header i {
         }
 
 .search-btn {
-    background: transparent;
+    background: #d22;
     border: 1px solid #d22;
     border-radius: 40px;
-    padding: 8px 22px;
-    color: #d22;
+    padding: 10px 30px;
+    color: white;
     font-weight: 600;
     cursor: pointer;
     transition: 0.3s;
+    box-shadow: 0 4px 12px rgba(210, 34, 34, 0.2);
 }
 
-    .search-btn:hover {
-        background: #d22;
-        color: white;
-    }
+.search-btn:hover {
+    background: #b32424;
+    border-color: #b32424;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(210, 34, 34, 0.3);
+}
 
 .hero {
     text-align: center;
@@ -799,11 +809,22 @@ footer {
     }
 
     .search-area {
-        gap: 10px;
-        padding: 10px;
+        gap: 12px;
+        padding: 20px;
         flex-direction: column;
-        max-width: 300px;
+        max-width: 90%;
+        border-radius: 24px;
+        margin-top: 40px;
+    }
 
+    .search-box {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .search-btn {
+        width: 100%;
+        padding: 12px;
     }
 
     .nav-right {
