@@ -10,28 +10,10 @@
 <div class="rightcontent">
     @if (Model != null && Model.Any())
     {
-        foreach (var e in Model)
-        {
-            <div class="event-card">
-                <img src="@Url.Content(e.ImageUrl)" alt="@e.Title" />
-
-                <div class="event-info">
-                    <h3>@e.Title</h3>
-                    <p>• @e.Venue</p>
-
-                    <div class="price-row">
-                        <span class="price">₺@e.Price+</span>
-                        <a href="@Url.Action("Details","Event", new { id = e.EventId })"
-                           class="btn-book">
-                            Book Now!
-                        </a>
-                    </div>
-                </div>
-            </div>
-        }
+        @Html.Partial("_EventCards", Model)
     }
     else
     {
-        <p>No events found.</p>
+        <p style="padding: 20px;">No events found matching your search criteria.</p>
     }
 </div>

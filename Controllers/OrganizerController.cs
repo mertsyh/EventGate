@@ -70,6 +70,57 @@ namespace EventDeneme.Controllers
                 .OrderByDescending(e => e.created_at)
                 .ToList();
             
+            // Organizer'ın tüm etkinliklerinin ID'lerini al
+            var eventIds = events.Select(e => e.id).ToList();
+            
+            if (eventIds.Any())
+            {
+                // Bu etkinliklere ait tüm performansların ID'lerini al
+                var performanceIds = db.performances
+                    .Where(p => eventIds.Contains(p.event_id))
+                    .Select(p => p.id)
+                    .ToList();
+                
+                if (performanceIds.Any())
+                {
+                    // Bu performanslara ait tüm order_items'ları al
+                    var orderItemIds = db.order_items
+                        .Where(oi => performanceIds.Contains(oi.performance_id))
+                        .Select(oi => oi.id)
+                        .ToList();
+                    
+                    // Ticket sayısını hesapla (her order_item bir ticket'a karşılık gelir)
+                    int totalTicketsSold = db.tickets
+                        .Where(t => orderItemIds.Contains(t.order_item_id))
+                        .Count();
+                    
+                    // Toplam geliri hesapla
+                    // Organizer'ın etkinliklerine ait performansların order_items'larından order'ları bul
+                    var orderIds = db.order_items
+                        .Where(oi => performanceIds.Contains(oi.performance_id))
+                        .Select(oi => oi.order_id)
+                        .Distinct()
+                        .ToList();
+                    
+                    decimal totalRevenue = db.orders
+                        .Where(o => orderIds.Contains(o.id) && o.status == "completed")
+                        .Sum(o => (decimal?)o.total_amount) ?? 0;
+                    
+                    ViewBag.TotalTicketsSold = totalTicketsSold;
+                    ViewBag.TotalRevenue = totalRevenue;
+                }
+                else
+                {
+                    ViewBag.TotalTicketsSold = 0;
+                    ViewBag.TotalRevenue = 0;
+                }
+            }
+            else
+            {
+                ViewBag.TotalTicketsSold = 0;
+                ViewBag.TotalRevenue = 0;
+            }
+            
             return View(events);
         }
 
@@ -80,18 +131,6 @@ namespace EventDeneme.Controllers
              long orgId = Convert.ToInt64(Session["OrganizerID"]);
              var apps = db.organizer_applications.Where(a => a.organizer_id == orgId).ToList();
              return View(apps);
-        }
-
-        // GET: Organizer/Documents (organizer-documents.html)
-        public ActionResult Documents()
-        {
-             if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
-             long orgId = Convert.ToInt64(Session["OrganizerID"]);
-             var docs = (from d in db.organizer_documents
-                         join a in db.organizer_applications on d.application_id equals a.id
-                         where a.organizer_id == orgId
-                         select d).ToList();
-             return View(docs);
         }
 
         // GET: Organizer/CreateEvent – submit event request for admin approval

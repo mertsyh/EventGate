@@ -21,6 +21,13 @@
         <li><i class="fa-solid fa-music"></i><a href="~/Event/Music">Music</a></li>
         <li><i class="fa-solid fa-masks-theater"></i><a href="~/Event/Theater">Theater</a></li>
 
+        <li>
+            <a href="@Url.Action("Index", "Cart")" style="position: relative;">
+                <i class="fa-solid fa-shopping-cart"></i>
+                <span id="cart-count" style="position: absolute; top: -8px; right: -8px; background: #e7004c; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;">0</span>
+            </a>
+        </li>
+
         <li class="user-menu">
             @if (Session["UserID"] != null)
             {
@@ -89,6 +96,35 @@
         }
     });
 
+    // Load cart count on page load
+    function loadCartCount() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '@Url.Action("GetCartCount", "Cart")', true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        var cartCountEl = document.getElementById('cart-count');
+                        if (cartCountEl) {
+                            cartCountEl.textContent = data.itemCount || 0;
+                            if (data.itemCount > 0) {
+                                cartCountEl.style.display = 'flex';
+                            } else {
+                                cartCountEl.style.display = 'none';
+                            }
+                        }
+                    } catch (e) {
+                        console.error('Error parsing cart count response:', e);
+                    }
+                }
+            }
+        };
+        xhr.send();
+    }
+
+    // Load cart count when page loads
+    loadCartCount();
 });
 
 </script>

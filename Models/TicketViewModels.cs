@@ -31,8 +31,14 @@ namespace EventDeneme.Models
         public decimal TotalAmount { get; set; }
         public string EventTitle { get; set; } // Display purpose
         public int SeatCount { get; set; } // Display purpose
+        public string EventImageUrl { get; set; }
+        public DateTime? EventDate { get; set; }
+        public string VenueName { get; set; }
+        public string CityName { get; set; }
+        public string CategoryName { get; set; }
 
         [Required(ErrorMessage = "Full Name is required")]
+        [FullName(ErrorMessage = "Full name must contain at least 2 words with letters only")]
         [Display(Name = "Full Name")]
         public string FullName { get; set; }
 
@@ -42,18 +48,22 @@ namespace EventDeneme.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Phone is required")]
+        [PhoneNumber(ErrorMessage = "Invalid phone number format")]
         [Display(Name = "Phone")]
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Card Number is required")]
+        [CardNumber(ErrorMessage = "Invalid card number")]
         [Display(Name = "Card Number")]
         public string CardNumber { get; set; }
 
         [Required(ErrorMessage = "Expiry Date is required")]
+        [ExpiryDate(ErrorMessage = "Invalid expiry date")]
         [Display(Name = "Expiry Date (MM/YY)")]
         public string ExpiryDate { get; set; }
 
         [Required(ErrorMessage = "CVV is required")]
+        [CVV(ErrorMessage = "Invalid CVV")]
         [Display(Name = "CVV")]
         public string CVV { get; set; }
     }

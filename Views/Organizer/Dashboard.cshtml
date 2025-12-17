@@ -10,7 +10,6 @@
         <div style="display:flex; gap:10px;">
             <a href="@Url.Action("CreateEvent", "Organizer")" class="btn btn-primary">Create Event Request</a>
             <a href="@Url.Action("Applications", "Organizer")" class="btn btn-secondary">My Applications</a>
-            <a href="@Url.Action("Documents", "Organizer")" class="btn btn-secondary">My Documents</a>
             <a href="@Url.Action("Logout", "Organizer")" class="btn btn-danger">Logout</a>
         </div>
     </div>
@@ -21,11 +20,11 @@
             <p>Active Events</p>
         </div>
         <div class="stat-card" style="background: #f8f9fa; padding: 20px; border-radius: 8px; flex: 1; text-align: center; border: 1px solid #ddd;">
-            <h3>0</h3>
+            <h3>@(ViewBag.TotalTicketsSold ?? 0)</h3>
             <p>Total Tickets Sold</p>
         </div>
         <div class="stat-card" style="background: #f8f9fa; padding: 20px; border-radius: 8px; flex: 1; text-align: center; border: 1px solid #ddd;">
-            <h3>0.00 ₺</h3>
+            <h3>@(((decimal)(ViewBag.TotalRevenue ?? 0)).ToString("N2")) ₺</h3>
             <p>Total Revenue</p>
         </div>
     </div>

@@ -48,7 +48,12 @@
             <h4>Selected Items</h4>
             <div id="selected-list">No seats selected yet.</div>
             <h3 style="margin-top: 10px;">Total: <span id="total-price">0.00</span> ₺</h3>
-            <button type="submit" id="btn-checkout" class="btn btn-primary" style="background-color: #e7004c; color: white; border: none; padding: 10px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 10px;" disabled>Proceed to Checkout</button>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button type="button" id="btn-add-to-cart" class="btn btn-secondary" style="background-color: #6b7280; color: white; border: none; padding: 10px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; flex: 1;" disabled>
+                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                </button>
+                <button type="submit" id="btn-checkout" class="btn btn-primary" style="background-color: #e7004c; color: white; border: none; padding: 10px 30px; border-radius: 25px; font-weight: bold; cursor: pointer; flex: 1;" disabled>Proceed to Checkout</button>
+            </div>
         </div>
     }
 </div>
@@ -80,19 +85,83 @@
         updateSummary();
     }
 
-    function updateSummary() {
-        document.getElementById('selectedSeats').value = selectedSeatIds.join(',');
-        // TL formatting: replace . with , if needed or use simple toFixed
-        document.getElementById('total-price').innerText = currentTotal.toFixed(2);
-        
-        var listDiv = document.getElementById('selected-list');
-        if (selectedSeatIds.length > 0) {
-            listDiv.innerText = selectedSeatIds.length + " seat(s) selected.";
-            document.getElementById('btn-checkout').disabled = false;
-        } else {
-            listDiv.innerText = "No seats selected yet.";
-            document.getElementById('btn-checkout').disabled = true;
+        function updateSummary() {
+            document.getElementById('selectedSeats').value = selectedSeatIds.join(',');
+            // TL formatting: replace . with , if needed or use simple toFixed
+            document.getElementById('total-price').innerText = currentTotal.toFixed(2);
+            
+            var listDiv = document.getElementById('selected-list');
+            if (selectedSeatIds.length > 0) {
+                listDiv.innerText = selectedSeatIds.length + " seat(s) selected.";
+                document.getElementById('btn-checkout').disabled = false;
+                document.getElementById('btn-add-to-cart').disabled = false;
+            } else {
+                listDiv.innerText = "No seats selected yet.";
+                document.getElementById('btn-checkout').disabled = true;
+                document.getElementById('btn-add-to-cart').disabled = true;
+            }
         }
-    }
+
+        // Add to Cart functionality
+        document.getElementById('btn-add-to-cart').addEventListener('click', function() {
+            if (selectedSeatIds.length === 0) {
+                alert('Please select at least one seat.');
+                return;
+            }
+
+            var button = this;
+            button.disabled = true;
+            button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Adding...';
+
+            var promises = selectedSeatIds.map(function(seatId) {
+                return fetch('@Url.Action("AddToCart", "Cart")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'performanceSeatId=' + seatId + '&quantity=1'
+                })
+                .then(function(response) {
+                    return response.json();
+                });
+            });
+
+            Promise.all(promises)
+                .then(function(results) {
+                    var allSuccess = results.every(function(r) { return r.success; });
+                    if (allSuccess) {
+                        alert('Items added to cart successfully!');
+                        // Reset selection
+                        selectedSeatIds = [];
+                        currentTotal = 0;
+                        updateSummary();
+                        // Update cart count in header
+                        fetch('@Url.Action("GetCartCount", "Cart")')
+                            .then(function(response) { return response.json(); })
+                            .then(function(data) {
+                                var cartCountEl = document.getElementById('cart-count');
+                                if (cartCountEl) {
+                                    cartCountEl.textContent = data.itemCount || 0;
+                                    if (data.itemCount > 0) {
+                                        cartCountEl.style.display = 'flex';
+                                    } else {
+                                        cartCountEl.style.display = 'none';
+                                    }
+                                }
+                            });
+                    } else {
+                        var errors = results.filter(function(r) { return !r.success; }).map(function(r) { return r.message; });
+                        alert('Some items could not be added:\n' + errors.join('\n'));
+                    }
+                })
+                .catch(function(error) {
+                    alert('Error adding items to cart. Please try again.');
+                    console.error(error);
+                })
+                .finally(function() {
+                    button.disabled = false;
+                    button.innerHTML = '<i class="fa-solid fa-cart-plus"></i> Add to Cart';
+                });
+        });
 </script>
 

@@ -140,14 +140,20 @@ namespace EventDeneme.Controllers
             }
 
             var perfInfo = db.performances.Find(performanceId);
+            var eventInfo = perfInfo.events;
 
             var model = new CheckoutViewModel
             {
                 PerformanceId = performanceId,
                 SelectedSeatIds = selectedSeats,
                 TotalAmount = totalAmount,
-                EventTitle = perfInfo.events.title,
-                SeatCount = seatIds.Count
+                EventTitle = eventInfo.title,
+                SeatCount = seatIds.Count,
+                EventImageUrl = eventInfo.poster_url,
+                EventDate = perfInfo.start_datetime,
+                VenueName = perfInfo.venues != null ? perfInfo.venues.name : "",
+                CityName = perfInfo.venues != null && perfInfo.venues.cities != null ? perfInfo.venues.cities.name : "",
+                CategoryName = eventInfo.categories != null ? eventInfo.categories.display_name : ""
             };
 
             return View(model);

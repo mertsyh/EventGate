@@ -13,19 +13,19 @@
     <div class="search-area">
         <div class="search-box">
             <i class="fa-solid fa-location-dot"></i>
-            <select name="CityId">
-                @foreach (var city in ViewBag.Cities)
+            <select id="homeCityId" name="CityId">
+                <option value="">All Cities</option>
+                @foreach (var city in ViewBag.cities)
                 {
                     <option value="@city.id">@city.name</option>
                 }
             </select>
-
-
         </div>
 
         <div class="search-box">
             <i class="fa-solid fa-ticket"></i>
-            <select name="categoryId">
+            <select id="homeCategoryId" name="categoryId">
+                <option value="">All Categories</option>
                 @foreach (var category in ViewBag.categories)
                 {
                     <option value="@category.id">@category.display_name</option>
@@ -35,10 +35,10 @@
 
         <div class="search-box">
             <i class="fa-solid fa-map-pin"></i>
-            <select name="VenuesId">
+            <select id="homeVenueId" name="VenuesId">
+                <option value="">All Venues</option>
                 @foreach (var Venues in ViewBag.venues)
                 {
-
                     <option value="@Venues.id">@Venues.name</option>
                 }
             </select>
@@ -46,10 +46,10 @@
 
         <div class="search-box">
             <i class="fa-solid fa-clock"></i>
-            <input type="date">
+            <input type="date" id="homeDate" name="date">
         </div>
 
-        <button class="search-btn">Search</button>
+        <button class="search-btn" id="homeSearchBtn">Search</button>
     </div>
 </section>
 
@@ -206,3 +206,42 @@
         <div class="campaign-item">🔥 15% Off VIP Seats</div>
     </div>
 </section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#homeSearchBtn').on('click', function () {
+            performSearch();
+        });
+
+        // Enter tuşu ile arama
+        $('#homeCityId, #homeCategoryId, #homeVenueId, #homeDate').on('keypress', function (e) {
+            if (e.which === 13) {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            var cityId = $('#homeCityId').val() || '';
+            var categoryId = $('#homeCategoryId').val() || '';
+            var venueId = $('#homeVenueId').val() || '';
+            var date = $('#homeDate').val() || '';
+
+            // Parametreleri URL'e ekle
+            var url = '@Url.Action("Search", "Event")';
+            var params = [];
+
+            if (cityId) params.push('cityId=' + encodeURIComponent(cityId));
+            if (categoryId) params.push('categoryId=' + encodeURIComponent(categoryId));
+            if (venueId) params.push('venueId=' + encodeURIComponent(venueId));
+            if (date) params.push('date=' + encodeURIComponent(date));
+
+            if (params.length > 0) {
+                url += '?' + params.join('&');
+            }
+
+            // Search sayfasına yönlendir
+            window.location.href = url;
+        }
+    });
+</script>

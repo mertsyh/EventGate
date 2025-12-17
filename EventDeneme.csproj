@@ -152,6 +152,7 @@
     <Compile Include="Controllers\OrganizerController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\registercontroller.cs" />
     <Compile Include="Controllers\VenueController.cs" />
     <Compile Include="Global.asax.cs">
@@ -272,6 +273,8 @@
     </Compile>
     <Compile Include="Models\TicketDetailsViewModel.cs" />
     <Compile Include="Models\TicketViewModels.cs" />
+    <Compile Include="Models\CustomValidations.cs" />
+    <Compile Include="Models\CartViewModels.cs" />
     <Compile Include="Models\tickets.cs">
       <DependentUpon>pr2.tt</DependentUpon>
     </Compile>
