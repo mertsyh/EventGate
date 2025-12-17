@@ -15,7 +15,7 @@
         <h1>@Model.Title</h1>
 
         <p>
-            @Model.Date• @Model.Venue
+            @Model.Date - @Model.Venue
         </p>
 
         @if (!isPast)
@@ -58,7 +58,7 @@
         <i class="fa-solid fa-ticket"></i>
         <div>
             <h3>Starting Price</h3>
-            <p>?@Model.Price</p>
+            <p>â‚º@Model.Price</p>
         </div>
     </div>
 </section>
@@ -68,12 +68,7 @@
     <p>@Model.Description</p>
 </section>
 
-
-
-
 <style>
-    /* HERO */
-
     .event-hero {
         position: relative;
         width: 100%;
@@ -140,8 +135,6 @@
         cursor: not-allowed;
     }
 
-    /* PAST EVENT WARNING */
-
     .past-event-warning {
         background: #ffe5e5;
         color: #c01f1f;
@@ -161,8 +154,6 @@
         .past-event-warning i {
             font-size: 22px;
         }
-
-    /* INFO BOXES */
 
     .event-info {
         display: flex;
@@ -185,8 +176,6 @@
     }
     .info-box:hover{
         transform:translateY(-10px);
-        
-
     }
 
         .info-box i {
@@ -205,8 +194,6 @@
             color: #555;
         }
 
-    /* DESCRIPTION */
-
     .event-description {
         max-width: 900px;
         margin: 50px auto;
@@ -224,5 +211,3 @@
             line-height: 1.6;
         }
 </style>
-
-

@@ -48,7 +48,7 @@ namespace ProjeAdi.Controllers
             DateTime nextWeek = now.AddDays(7);
 
             var lastWeekEvents = events
-                .Where(e => e.StartDate.HasValue &&
+                .Where(e => e.StartDate != null &&
                             e.StartDate.Value >= now &&
                             e.StartDate.Value <= nextWeek)
                 .OrderBy(e => e.StartDate) 
@@ -92,7 +92,7 @@ namespace ProjeAdi.Controllers
                 if (p.status == "cancelled") return false;
                 
                 
-                if (p.end_datetime.HasValue)
+                if (p.end_datetime != null)
                 {
                     return p.end_datetime.Value > now;
                 }

@@ -65,7 +65,7 @@ namespace EventDeneme.Controllers
                 if (performance == null) continue;
 
                 var eventInfo = performance.events;
-                var seat = item.seat_id.HasValue ? db.seats.FirstOrDefault(s => s.id == item.seat_id.Value) : null;
+                var seat = item.seat_id != null ? db.seats.FirstOrDefault(s => s.id == item.seat_id.Value) : null;
                 var priceTier = db.price_tiers.FirstOrDefault(pt => pt.id == item.price_tier_id);
                 
                 
@@ -301,7 +301,7 @@ namespace EventDeneme.Controllers
             var seatIds = new List<string>();
             foreach (var item in cartItems.Where(ci => ci.performance_id == performanceId))
             {
-                if (item.seat_id.HasValue)
+                if (item.seat_id != null)
                 {
                     var perfSeat = db.performance_seats
                         .FirstOrDefault(ps => ps.performance_id == performanceId && 

@@ -85,7 +85,7 @@
                                         <strong>Date:</strong> @ticket.Date.ToString("dd MMMM yyyy HH:mm") <br />
                                         <strong>Venue:</strong> @ticket.Venue <br />
                                         <strong>Seat:</strong> @ticket.SeatLabel <br />
-                                        <strong>Price:</strong> @ticket.Price.ToString("C2") <br />
+                                        <strong>Price:</strong> @ticket.Price.ToString("N2") â‚º <br />
                                         <strong>Holder:</strong> @ticket.HolderName
                                     </p>
                                 </div>
@@ -133,7 +133,7 @@
                         {
                             <tr>
                                 <td>@r.RefundId</td>
-                                <td>@r.Amount.ToString("C2")</td>
+                                <td>@r.Amount.ToString("N2") â‚º</td>
                                 <td>@r.Status</td>
                                 <td>@(r.RequestedAt.HasValue ? r.RequestedAt.Value.ToString("dd MMM yyyy HH:mm") : "-")</td>
                                 <td>@(r.ProcessedAt.HasValue ? r.ProcessedAt.Value.ToString("dd MMM yyyy HH:mm") : "-")</td>
@@ -184,18 +184,14 @@
         history.pushState(null, '', '/Profile/ChangePassword');
     });
 
-    
     refundsBtn.addEventListener('click', () => {
         window.location.href = '/Profile/Refunds';
     });
 
-    /* ?? MY TICKETS – SERVER TARAFINDAN VERÝ YÜKLENSÝN DÝYE TAM SAYFA GEÇÝÞ */
     myTicketsBtn.addEventListener('click', () => {
         window.location.href = '/Profile/MyTickets';
     });
 
-    /* ?? BACK / FORWARD SUPPORT */
-    
     (function initTabFromUrl() {
         const path = window.location.pathname;
         hideAll();
@@ -214,4 +210,3 @@
         }
     })();
 </script>
-

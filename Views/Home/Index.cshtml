@@ -7,8 +7,8 @@
 @model List<EventDeneme.Models.EventCardViewModel>
 
 <section class="hero">
-    <h1>Get Your Favorite Artist’s Ticket Now!</h1>
-    <p>Don’t miss upcoming concerts – the best shows are right here ??</p>
+    <h1>Get Your Favorite Artist's Ticket Now!</h1>
+    <p>Don't miss upcoming concerts - the best shows are right here ğŸš€</p>
 
     <div class="search-area">
         <div class="search-box">
@@ -53,8 +53,6 @@
     </div>
 </section>
 
-
-
 <section id="maincontainer">
     <div class="carousel" mask style="--items:@Model.Count">
 
@@ -72,7 +70,7 @@
                     <p>@e.Venue</p>
 
                     <a href="@Url.Action("Details", "Event", new { id = e.EventId })">
-                        Buy Ticket • ?@(e.Price ?? 0)+
+                        Buy Ticket - â‚º@(e.Price ?? 0)+
                     </a>
                 </div>
             </article>
@@ -82,8 +80,6 @@
 
     </div>
 </section>
-
-
 
 <section class="events-section">
     <h2>Time is Running Out!</h2>
@@ -99,7 +95,7 @@
                 <div class="event-info">
 
                     @{
-                        bool hasDate = e.StartDate.HasValue;
+                        bool hasDate = e.StartDate != null;
                         bool isPast = hasDate && e.StartDate.Value < DateTime.Now;
                         string timeLeft = "";
                         if (hasDate && !isPast)
@@ -118,9 +114,9 @@
 
                     <h3>@e.Title</h3>
 
-                    <p>• @e.Venue</p>
+                    <p>ğŸ“ @e.Venue</p>
                     <div class="price-row">
-                        <span class="price">?@e.Price+</span>
+                        <span class="price">â‚º@e.Price+</span>
                         @if (!isPast)
                         {
                             <a href="@Url.Action("Details", "Event", new { id = e.EventId })">Book Now</a>
@@ -136,10 +132,6 @@
 
     </div>
 
-
-
-
-    </div>
     <div class="events-controls">
         <button id="prevEvent">
             <i class="fa-solid fa-chevron-left"></i>
@@ -150,12 +142,11 @@
     </div>
 </section>
 
-
 <section class="steps-section">
     <div class="steps-container">
 
         <div class="steps-text">
-            <h2>?? Buy Your Ticket in 4 Easy Steps!</h2>
+            <h2>ğŸš€ Buy Your Ticket in 4 Easy Steps!</h2>
             <p>Joining the fun with EventGate is just a few steps away.</p>
             <button class="steps-btn">Buy Ticket <i class="fa-solid fa-arrow-right"></i></button>
         </div>
@@ -197,13 +188,12 @@
     </div>
 </section>
 
-
 <section class="campaigns">
-    <h2>?? Current Promotions</h2>
+    <h2>ğŸ”¥ Current Promotions</h2>
     <div class="campaign-list">
-        <div class="campaign-item">??? Buy 3 Tickets, Get 1 Free!</div>
-        <div class="campaign-item">?? 20% Student Discount</div>
-        <div class="campaign-item">?? 15% Off VIP Seats</div>
+        <div class="campaign-item">ğŸ‰ Buy 3 Tickets, Get 1 Free!</div>
+        <div class="campaign-item">ğŸ“ 20% Student Discount</div>
+        <div class="campaign-item">ğŸ’ 15% Off VIP Seats</div>
     </div>
 </section>
 
@@ -214,7 +204,6 @@
             performSearch();
         });
 
-        
         $('#homeCityId, #homeCategoryId, #homeVenueId, #homeDate').on('keypress', function (e) {
             if (e.which === 13) {
                 performSearch();
@@ -227,7 +216,6 @@
             var venueId = $('#homeVenueId').val() || '';
             var date = $('#homeDate').val() || '';
 
-            
             var url = '@Url.Action("Search", "Event")';
             var params = [];
 
@@ -240,10 +228,7 @@
                 url += '?' + params.join('&');
             }
 
-            
             window.location.href = url;
         }
     });
 </script>
-
-

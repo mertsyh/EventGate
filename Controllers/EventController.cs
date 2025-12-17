@@ -118,7 +118,7 @@ namespace EventDeneme.Controllers
                     organizerId = Convert.ToInt64(Session["OrganizerID"]);
                 }
 
-                bool isOwner = organizerId.HasValue && eventRaw.organizer_id == organizerId.Value;
+                bool isOwner = organizerId != null && eventRaw.organizer_id == organizerId.Value;
 
                 if (!isAdmin && !isOwner)
                 {
@@ -164,19 +164,19 @@ namespace EventDeneme.Controllers
             
             
             var eventsQuery = db.events
-                .Where(e => e.status != "deleted" && (!categoryId.HasValue || e.category_id == categoryId))
+                .Where(e => e.status != "deleted" && (categoryId == null || e.category_id == categoryId))
                 .ToList()
                 .Where(e => HasUpcomingPerformances(e.performances, now))
                 .ToList();
 
             
-            if (cityId.HasValue)
+            if (cityId != null)
                 eventsQuery = eventsQuery
                     .Where(e => e.performances.Any(p => p.venues.city_id == cityId))
                     .ToList();
 
             
-            if (venueId.HasValue)
+            if (venueId != null)
                 eventsQuery = eventsQuery
                     .Where(e => e.performances.Any(p => p.venue_id == venueId))
                     .ToList();
@@ -214,7 +214,7 @@ namespace EventDeneme.Controllers
                     var perf = e.performances
       .Where(p =>
           p.status != "cancelled" &&
-          (p.end_datetime.HasValue ? p.end_datetime.Value > now : p.start_datetime > now) &&
+          (p.end_datetime != null ? p.end_datetime.Value > now : p.start_datetime > now) &&
           (dateFilter != "week" || (p.start_datetime >= now && p.start_datetime <= now.AddDays(7))) &&
           (dateFilter != "month" || (p.start_datetime >= now && p.start_datetime <= now.AddMonths(1))) &&
           (dateFilter != "today" || p.start_datetime.Date == now.Date)
@@ -251,7 +251,7 @@ namespace EventDeneme.Controllers
                 if (p.status == "cancelled") return false;
                 
                 
-                if (p.end_datetime.HasValue)
+                if (p.end_datetime != null)
                 {
                     return p.end_datetime.Value > now;
                 }
@@ -329,13 +329,13 @@ namespace EventDeneme.Controllers
             if (!string.IsNullOrWhiteSpace(q))
                 query = query.Where(e => e.title.Contains(q));
 
-            if (categoryId.HasValue)
+            if (categoryId != null)
                 query = query.Where(e => e.category_id == categoryId);
 
-            if (cityId.HasValue)
+            if (cityId != null)
                 query = query.Where(e => e.performances.Any(p => p.venues.city_id == cityId));
 
-            if (venueId.HasValue)
+            if (venueId != null)
                 query = query.Where(e => e.performances.Any(p => p.venue_id == venueId));
 
             if (!string.IsNullOrEmpty(date) &&

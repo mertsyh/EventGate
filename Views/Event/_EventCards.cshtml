@@ -11,10 +11,10 @@
             <div class="event-info">
                 <h3>@item.Title</h3>
                 <p>
-                    @(item.StartDate.HasValue ? item.StartDate.Value.ToString("MMM dd") : "TBA") • 
+                    @(item.StartDate.HasValue ? item.StartDate.Value.ToString("MMM dd") : "TBA") - 
                     @(item.Venue ?? item.City ?? "TBA")
                 </p>
-                <span class="price">@(item.Price.HasValue ? item.Price.Value.ToString("C2") : "")</span>
+                <span class="price">@(item.Price.HasValue ? item.Price.Value.ToString("N2") + " â‚º" : "")</span>
                 @{
                     bool isPast = item.StartDate.HasValue && item.StartDate.Value < DateTime.Now;
                 }
@@ -30,5 +30,3 @@
         </div>
     }
 }
-
-
