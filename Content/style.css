@@ -322,13 +322,12 @@ header i {
     --carousel-duration: 35s;
     --carousel-width: min(85vw, 1200px);
     --carousel-item-width: 280px;
-    --carousel-item-height: 380px;
+    --carousel-item-height: 500px;
     --carousel-item-gap: 2rem;
     --clr-cta: #d22;
-    margin-bottom: 50px;
     position: relative;
     width: var(--carousel-width);
-    height: 400px;
+    height: 600px;
     overflow: hidden;
     mask-image: linear-gradient(to right, transparent, black 10% 90%, transparent);
 }
@@ -344,7 +343,7 @@ header i {
         margin-top: 5px;
         left: calc(100% + var(--carousel-item-gap));
         width: var(--carousel-item-width);
-        height: var(--carousel-item-height);
+        height:400px;
         display: flex;
         flex-direction: column;
         border-radius: 16px;
@@ -384,17 +383,18 @@ header i {
 }
 
     .ticket-content a {
-        margin-top: auto; 
+        bottom:8px;
         text-align: center;
         text-decoration: none;
         border: 1px solid var(--clr-cta);
         color: var(--clr-cta);
         border-radius: 25px;
-        padding: 8px 20px;
+        padding: 8px ;
         font-weight: 600;
         transition: 0.3s;
         align-self: center;
         box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        position:absolute;
     }
 
 

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -98,8 +98,10 @@ namespace EventDeneme.Controllers
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             // Admin should see all events (approved, pending, rejected)
             var allEvents = db.events
-                .OrderByDescending(e => e.created_at)
-                .ToList();
+      .Where(e => e.status != "deleted")
+      .OrderByDescending(e => e.created_at)
+      .ToList();
+
             return View(allEvents);
         }
 
@@ -135,7 +137,8 @@ namespace EventDeneme.Controllers
                 description = Description,
                 language = Language,
                 age_limit = AgeLimit,
-                poster_url = PosterUrl,
+                poster_url = string.IsNullOrWhiteSpace(PosterUrl)  ? null : "~/images/" + PosterUrl.Trim(),
+
                 status = "approved",
                 created_at = DateTime.Now,
                 updated_at = DateTime.Now
@@ -167,13 +170,20 @@ namespace EventDeneme.Controllers
 
             evt.title = model.title;
             evt.description = model.description;
-            evt.poster_url = model.poster_url;
+            evt.poster_url = string.IsNullOrWhiteSpace(model.poster_url)
+     ? null
+     : (model.poster_url.StartsWith("~/")
+         ? model.poster_url
+         : "~/images/" + model.poster_url.Trim());
+
 
             db.SaveChanges();
             TempData["Success"] = "Event updated successfully.";
             return RedirectToAction("Events");
         }
-
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+     
         // 4. Venues Management (admin-venues.html)
         public ActionResult Venues()
         {
@@ -326,15 +336,15 @@ namespace EventDeneme.Controllers
                 var evt = db.events.Find(mod.event_id);
                 if (evt != null)
                 {
-                    evt.status = "approved";
+                    evt.status = "active";
                     evt.updated_at = DateTime.Now;
 
-                    // mark related performances as approved as well
                     var perfs = db.performances.Where(p => p.event_id == evt.id).ToList();
                     foreach (var perf in perfs)
                     {
-                        perf.status = "approved";
+                        perf.status = "active";
                     }
+
                 }
                 db.SaveChanges();
                 TempData["Success"] = "Event request approved.";

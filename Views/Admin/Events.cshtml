@@ -1,4 +1,4 @@
-@model List<EventDeneme.Models.events>
+﻿@model List<EventDeneme.Models.events>
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewBag.Title = "Manage Events";
@@ -51,6 +51,7 @@
                     {
                         @Html.AntiForgeryToken()
                         <button type="submit" style="background:none; border:none; color:#d22; cursor:pointer; text-decoration:underline; padding:0;">Delete</button>
+
                     }
                 </td>
             </tr>

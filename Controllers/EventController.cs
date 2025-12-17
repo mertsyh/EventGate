@@ -20,8 +20,10 @@ namespace EventDeneme.Controllers
             DateTime now = DateTime.Now;
 
             var events = db.events
-                .Where(e => e.status != "deleted")
-                .ToList()
+      .Where(e => e.status != "deleted" &&
+                  e.performances.Any(p => p.start_datetime >= now && p.status != "cancelled"))
+
+                  .ToList()
                 .Select(e => new EventCardViewModel
                 {
                     EventId = e.id,
@@ -204,19 +206,34 @@ namespace EventDeneme.Controllers
 
             // Result — Entity to ViewModel
             var result = eventsQuery
-                .Select(e => new EventCardViewModel
+                .Select(e =>
                 {
-                    EventId = e.id,
-                    Title = e.title,
-                    StartDate = GetNextOrFirstPerformanceDate(e.performances, now),
-                    Venue = e.performances.FirstOrDefault()?.venues.name,
-                    City = e.performances.FirstOrDefault()?.venues.cities.name,
-                    Price = e.performances.SelectMany(p => p.price_tiers).OrderBy(t => t.price).FirstOrDefault()?.price,
-                    ImageUrl = e.poster_url 
+                    var perf = e.performances
+      .Where(p =>
+          p.start_datetime >= now &&
+          p.status != "cancelled" &&
+          (dateFilter != "week" || p.start_datetime <= now.AddDays(7)) &&
+          (dateFilter != "month" || p.start_datetime <= now.AddMonths(1)) &&
+          (dateFilter != "today" || p.start_datetime.Date == now.Date)
+      )
+      .OrderBy(p => p.start_datetime)
+      .FirstOrDefault();
+
+
+                    return new EventCardViewModel
+                    {
+                        EventId = e.id,
+                        Title = e.title,
+                        StartDate = perf?.start_datetime,
+                        Venue = perf?.venues.name,
+                        City = perf?.venues.cities.name,
+                        Price = perf?.price_tiers.OrderBy(t => t.price).FirstOrDefault()?.price,
+                        ImageUrl = e.poster_url
+                    };
                 })
                 .ToList();
-
             return PartialView("_EventCards", result);
+
         }
 
         // Helper: choose next upcoming performance date if exists, otherwise first performance
