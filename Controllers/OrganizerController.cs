@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using EventDeneme.Models;
 
@@ -31,6 +32,9 @@ namespace EventDeneme.Controllers
         public ActionResult Login()
         {
             if (IsOrganizerLoggedIn()) return RedirectToAction("Dashboard");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+            Response.Cache.SetNoStore();
             return View();
         }
 
@@ -70,6 +74,7 @@ namespace EventDeneme.Controllers
                 .OrderByDescending(e => e.created_at)
                 .ToList();
             
+            ViewBag.Categories = db.categories.ToList();
             
             var eventIds = events.Select(e => e.id).ToList();
             
@@ -234,6 +239,16 @@ namespace EventDeneme.Controllers
 
             ViewBag.Categories = db.categories.ToList();
             ViewBag.Venues = db.venues.ToList();
+            var performances = db.performances.Where(p => p.event_id == id).ToList();
+            var priceTiers = new System.Collections.Generic.Dictionary<long, System.Collections.Generic.List<price_tiers>>();
+            foreach (var perf in performances)
+            {
+                var tiers = db.price_tiers.Where(t => t.performance_id == perf.id).ToList();
+                priceTiers[perf.id] = tiers;
+            }
+            ViewBag.Performances = performances;
+            ViewBag.PriceTiers = priceTiers;
+            ViewBag.Categories = db.categories.ToList();
             return View(evt);
         }
 
@@ -260,6 +275,8 @@ namespace EventDeneme.Controllers
                 ViewBag.Error = "Title is required.";
                 ViewBag.Categories = db.categories.ToList();
                 ViewBag.Venues = db.venues.ToList();
+                var performances = db.performances.Where(p => p.event_id == id).ToList();
+                ViewBag.Performances = performances;
                 return View(evt);
             }
 
@@ -279,6 +296,26 @@ namespace EventDeneme.Controllers
 
             TempData["Success"] = "Event updated successfully.";
             return RedirectToAction("Dashboard");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdatePriceTier(long tierId, decimal price)
+        {
+            if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
+
+            var tier = db.price_tiers.Find(tierId);
+            if (tier == null) return HttpNotFound();
+
+            var perf = db.performances.Find(tier.performance_id);
+            if (perf == null) return HttpNotFound();
+            if (!IsOwnerOfEvent(perf.event_id)) return new HttpUnauthorizedResult();
+
+            tier.price = price;
+            db.SaveChanges();
+
+            TempData["Success"] = "Price updated successfully.";
+            return RedirectToAction("EditEvent", new { id = perf.event_id });
         }
 
         

@@ -2,41 +2,94 @@
 @{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewBag.Title = "Edit Event";
+    var performances = ViewBag.Performances as List<EventDeneme.Models.performances>;
+    var priceTiers = ViewBag.PriceTiers as Dictionary<long, List<EventDeneme.Models.price_tiers>>;
 }
 
 <h2>Edit Event</h2>
 
-@if (TempData["Success"] != null)
+<div class="admin-body">
+    @using (Html.BeginForm("EditEvent", "Admin", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.id)
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.title)
+            @Html.TextBoxFor(m => m.title, new { @class = "form-control" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.description)
+            @Html.TextAreaFor(m => m.description, new { @class = "form-control", rows = 5 })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.poster_url, "Poster URL")
+            @Html.TextBoxFor(m => m.poster_url, new { @class = "form-control" })
+        </div>
+
+        <button type="submit" style="background: #ea2a33; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-weight: 500; font-size: 14px; cursor: pointer; margin-top: 8px;">Save</button>
+        <a href="@Url.Action("Events", "Admin")" style="background: #6b7280; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 14px; margin-left: 8px;">Back</a>
+    }
+</div>
+
+@if (performances != null && performances.Any())
 {
-    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-        @TempData["Success"]
+    <div style="margin-top: 40px; padding-top: 40px; border-top: 2px solid #e5e7eb;">
+        <h3 style="margin-bottom: 24px;">Performances & Prices</h3>
+        
+        @foreach (var perf in performances)
+        {
+            <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
+                <h4 style="margin: 0 0 12px 0; color: #111;">Performance: @perf.start_datetime.ToString("dd MMM yyyy HH:mm")</h4>
+                <p style="margin: 0 0 8px 0; color: #666;"><strong>Venue:</strong> @(perf.venues?.name ?? "N/A")</p>
+                <p style="margin: 0 0 16px 0; color: #666;"><strong>Status:</strong> @perf.status</p>
+                
+                @if (priceTiers != null && priceTiers.ContainsKey(perf.id) && priceTiers[perf.id].Any())
+                {
+                    <h5 style="margin: 16px 0 12px 0; color: #111;">Price Tiers:</h5>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 12px;">
+                        <thead>
+                            <tr style="background: #f3f4f6;">
+                                <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111;">Name</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111;">Section</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111;">Capacity</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111;">Price</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111;">Currency</th>
+                                <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tier in priceTiers[perf.id])
+                            {
+                                <tr>
+                                    <td style="padding: 12px; border: 1px solid #e5e7eb; color: #111;">@tier.name</td>
+                                    <td style="padding: 12px; border: 1px solid #e5e7eb; color: #666;">@(tier.seatmap_section ?? "N/A")</td>
+                                    <td style="padding: 12px; border: 1px solid #e5e7eb; color: #666;">@(tier.capacity?.ToString() ?? "Unlimited")</td>
+                                    <td style="padding: 12px; border: 1px solid #e5e7eb;">
+                                        @using (Html.BeginForm("UpdatePriceTier", "Admin", FormMethod.Post, new { style = "display: inline-flex; align-items: center; gap: 8px;" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.Hidden("tierId", tier.id)
+                                            <input type="number" name="price" value="@tier.price" step="0.01" min="0" style="width: 120px; padding: 0.55rem 0.8rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.9rem; box-sizing: border-box; min-height: 40px;" required />
+                                            <button type="submit" style="background: #ea2a33; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">Update</button>
+                                        }
+                                    </td>
+                                    <td style="padding: 12px; border: 1px solid #e5e7eb; color: #666;">@tier.currency</td>
+                                    <td style="padding: 12px; border: 1px solid #e5e7eb;">
+                                        <span style="color: #6c757d; font-size: 14px;">-</span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p style="color: #6c757d; margin-top: 12px;">No price tiers defined for this performance.</p>
+                }
+            </div>
+        }
     </div>
 }
-
-@using (Html.BeginForm("EditEvent", "Admin", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.HiddenFor(m => m.id)
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.title)
-        @Html.TextBoxFor(m => m.title, new { @class = "form-control" })
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.description)
-        @Html.TextAreaFor(m => m.description, new { @class = "form-control", rows = 5 })
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.poster_url, "Poster URL")
-        @Html.TextBoxFor(m => m.poster_url, new { @class = "form-control" })
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a href="@Url.Action("Events", "Admin")" class="btn btn-secondary">Back</a>
-}
-
-
-
-

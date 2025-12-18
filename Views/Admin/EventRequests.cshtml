@@ -4,59 +4,61 @@
     ViewBag.Title = "Event Requests";
 }
 
-<h2>Pending Event Requests</h2>
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-        @TempData["Success"]
-    </div>
-}
+<h2 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 700; color: #111;">Pending Event Requests</h2>
 
 @if (Model.Any())
 {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Event ID</th>
-                <th>Submitted By</th>
-                <th>Status</th>
-                <th>Reviewed At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.id</td>
-                    <td>@item.event_id</td>
-                    <td>@item.submitted_by</td>
-                    <td>@item.status</td>
-                    <td>@(item.reviewed_at.HasValue ? item.reviewed_at.Value.ToString("dd MMM yyyy HH:mm") : "Pending")</td>
-                    <td>
-                        @using (Html.BeginForm("ApproveEventRequest", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <button type="submit" style="background:none; border:none; color:green; cursor:pointer; text-decoration:underline; padding:0; margin-right:5px;">Approve</button>
-                        }
-                        @using (Html.BeginForm("RejectEventRequest", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to reject this event?');" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <button type="submit" style="background:none; border:none; color:#d22; cursor:pointer; text-decoration:underline; padding:0;">Reject</button>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden;">
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">ID</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Event ID</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Submitted By</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Status</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Reviewed At</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr style="border-bottom: 1px solid #e5e7eb; transition: background 0.2s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='white'">
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@item.id</td>
+                            <td style="padding: 16px; color: #111; font-size: 14px;">@item.event_id</td>
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@item.submitted_by</td>
+                            <td style="padding: 16px;">
+                                <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; background: #fef3c7; color: #92400e;">
+                                    @item.status
+                                </span>
+                            </td>
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@(item.reviewed_at?.ToString("dd MMM yyyy HH:mm") ?? "Pending")</td>
+                            <td style="padding: 16px;">
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <a href="@Url.Action("EventRequestDetails", "Admin", new { id = item.id })" style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500;">View Details</a>
+                                    @using (Html.BeginForm("ApproveEventRequest", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display: inline;" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" style="background: #10b981; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Approve</button>
+                                    }
+                                    @using (Html.BeginForm("RejectEventRequest", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display: inline;", onsubmit = "return confirm('Are you sure you want to reject this event?');" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" style="background: #ef4444; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Reject</button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }
 else
 {
-    <p>No pending event requests.</p>
+    <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #e5e7eb; text-align: center;">
+        <p style="color: #6b7280; margin: 0;">No pending event requests.</p>
+    </div>
 }
-
-
-
-

@@ -5,93 +5,92 @@
     var perf = ViewBag.Performance as EventDeneme.Models.performances;
 }
 
-<div class="container" style="padding: 40px 20px;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h2>Manage Prices - @perf.events.title (@perf.start_datetime)</h2>
-        <a href="@Url.Action("ManagePerformances", "Organizer", new { eventId = perf.event_id })" class="btn btn-secondary">Back to Performances</a>
-    </div>
-
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
-    }
-
-    <h3>Add Price Tier</h3>
-    @using (Html.BeginForm("AddPriceTier", "Organizer", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        @Html.Hidden("performanceId", perf.id)
-
-        <div class="form-group">
-            <label>Name</label>
-            <input type="text" name="name" placeholder="Standard" />
-        </div>
-
-        <div class="form-group">
-            <label>Seat Section</label>
-            <input type="text" name="seatmapSection" placeholder="General" />
-        </div>
-
-        <div class="form-group">
-            <label>Capacity</label>
-            <input type="number" name="capacity" min="1" />
-        </div>
-
-        <div class="form-group">
-            <label>Price</label>
-            <input type="number" name="price" step="0.01" min="0" required />
-        </div>
-
-        <div class="form-group">
-            <label>Currency</label>
-            <input type="text" name="currency" placeholder="TRY" />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Add</button>
-    }
-
-    <h3 style="margin-top:30px;">Existing Tiers</h3>
-    @if (!Model.Any())
-    {
-        <p>No price tiers defined yet.</p>
-    }
-    else
-    {
-        <table class="table" style="margin-top:10px;">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Section</th>
-                    <th>Capacity</th>
-                    <th>Price</th>
-                    <th>Currency</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var t in Model)
-                {
-                    <tr>
-                        <td>@t.name</td>
-                        <td>@t.seatmap_section</td>
-                        <td>@(t.capacity.HasValue ? t.capacity.ToString() : "-")</td>
-                        <td>@t.price</td>
-                        <td>@t.currency</td>
-                        <td>
-                            @using (Html.BeginForm("DeletePriceTier", "Organizer", FormMethod.Post, new { onsubmit = "return confirm('Delete this price tier?');" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                @Html.Hidden("id", t.id)
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: #111;">Manage Prices - @perf.events.title</h2>
+    <a href="@Url.Action("ManagePerformances", "Organizer", new { eventId = perf.event_id })" style="background: #6b7280; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 14px;">Back to Performances</a>
 </div>
 
+<div style="background: white; padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 24px;">
+    <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #111;">Add Price Tier</h3>
+    <div class="admin-body">
+        @using (Html.BeginForm("AddPriceTier", "Organizer", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("performanceId", perf.id)
 
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="name" placeholder="Standard" />
+            </div>
 
+            <div class="form-group">
+                <label>Seat Section</label>
+                <input type="text" name="seatmapSection" placeholder="General" />
+            </div>
 
+            <div class="form-group">
+                <label>Capacity</label>
+                <input type="number" name="capacity" min="1" />
+            </div>
+
+            <div class="form-group">
+                <label>Price*</label>
+                <input type="number" name="price" step="0.01" min="0" required />
+            </div>
+
+            <div class="form-group">
+                <label>Currency</label>
+                <input type="text" name="currency" placeholder="TRY" />
+            </div>
+
+            <button type="submit" style="background: #ea2a33; color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: 500; font-size: 14px; cursor: pointer; margin-top: 8px;">Add</button>
+        }
+    </div>
+</div>
+
+<h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #111;">Existing Tiers</h3>
+@if (Model.Any())
+{
+    <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden;">
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Name</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Section</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Capacity</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Price</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Currency</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model)
+                    {
+                        <tr style="border-bottom: 1px solid #e5e7eb; transition: background 0.2s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='white'">
+                            <td style="padding: 16px; color: #111; font-weight: 500; font-size: 14px;">@t.name</td>
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@(t.seatmap_section ?? "N/A")</td>
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@(t.capacity?.ToString() ?? "Unlimited")</td>
+                            <td style="padding: 16px; color: #111; font-weight: 600; font-size: 14px;">@t.price.ToString("N2") ₺</td>
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@t.currency</td>
+                            <td style="padding: 16px;">
+                                @using (Html.BeginForm("DeletePriceTier", "Organizer", FormMethod.Post, new { style = "display: inline;", onsubmit = "return confirm('Delete this price tier?');" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.Hidden("id", t.id)
+                                    <button type="submit" style="background: #ef4444; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Delete</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #e5e7eb; text-align: center;">
+        <p style="color: #6b7280; margin: 0;">No price tiers defined yet.</p>
+    </div>
+}

@@ -1,0 +1,122 @@
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Event Request Details";
+    var evt = ViewBag.Event as EventDeneme.Models.events;
+    var mod = ViewBag.Moderation as EventDeneme.Models.moderation_events;
+    var performances = ViewBag.Performances as List<EventDeneme.Models.performances>;
+    var priceTiers = ViewBag.PriceTiers as Dictionary<long, List<EventDeneme.Models.price_tiers>>;
+    var category = ViewBag.Category as EventDeneme.Models.categories;
+    var organizer = ViewBag.Organizer as EventDeneme.Models.organizers;
+}
+
+<h2>Event Request Details</h2>
+
+<div style="margin-bottom: 20px;">
+    <a href="@Url.Action("EventRequests", "Admin")" class="btn btn-secondary">Back to Event Requests</a>
+</div>
+
+<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+    <h3>Event Information</h3>
+    <table style="width: 100%;">
+        <tr>
+            <td style="padding: 8px; font-weight: bold; width: 200px;">Title:</td>
+            <td style="padding: 8px;">@evt.title</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; font-weight: bold;">Description:</td>
+            <td style="padding: 8px;">@(evt.description ?? "N/A")</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; font-weight: bold;">Category:</td>
+            <td style="padding: 8px;">@(category?.display_name ?? "N/A")</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; font-weight: bold;">Organizer:</td>
+            <td style="padding: 8px;">@(organizer?.brand_name ?? "N/A")</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; font-weight: bold;">Language:</td>
+            <td style="padding: 8px;">@(evt.language ?? "N/A")</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; font-weight: bold;">Age Limit:</td>
+            <td style="padding: 8px;">@(evt.age_limit ?? "N/A")</td>
+        </tr>
+        <tr>
+            <td style="padding: 8px; font-weight: bold;">Status:</td>
+            <td style="padding: 8px;">@evt.status</td>
+        </tr>
+        @if (!string.IsNullOrEmpty(evt.poster_url))
+        {
+            <tr>
+                <td style="padding: 8px; font-weight: bold;">Poster:</td>
+                <td style="padding: 8px;">
+                    <img src="@Url.Content(evt.poster_url)" alt="@evt.title" style="max-width: 300px; max-height: 300px;" />
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+@if (performances != null && performances.Any())
+{
+    <h3>Performances & Prices</h3>
+    @foreach (var perf in performances)
+    {
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <h4>Performance: @perf.start_datetime.ToString("dd MMM yyyy HH:mm")</h4>
+            <p><strong>Venue:</strong> @(perf.venues?.name ?? "N/A")</p>
+            <p><strong>Status:</strong> @perf.status</p>
+            
+            @if (priceTiers != null && priceTiers.ContainsKey(perf.id) && priceTiers[perf.id].Any())
+            {
+                <h5 style="margin-top: 15px;">Price Tiers:</h5>
+                <table style="width: 100%; margin-top: 10px; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #e9ecef;">
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Name</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Section</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Capacity</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Price</th>
+                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Currency</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tier in priceTiers[perf.id])
+                        {
+                            <tr>
+                                <td style="padding: 10px; border: 1px solid #dee2e6;">@tier.name</td>
+                                <td style="padding: 10px; border: 1px solid #dee2e6;">@(tier.seatmap_section ?? "N/A")</td>
+                                <td style="padding: 10px; border: 1px solid #dee2e6;">@(tier.capacity?.ToString() ?? "Unlimited")</td>
+                                <td style="padding: 10px; border: 1px solid #dee2e6;">@tier.price.ToString("N2")</td>
+                                <td style="padding: 10px; border: 1px solid #dee2e6;">@tier.currency</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p style="margin-top: 10px; color: #6c757d;">No price tiers defined for this performance.</p>
+            }
+        </div>
+    }
+}
+else
+{
+    <p>No performances defined for this event.</p>
+}
+
+<div style="margin-top: 30px; display: flex; gap: 10px;">
+    @using (Html.BeginForm("ApproveEventRequest", "Admin", new { id = mod.id }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-primary" style="background: #10b981; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Approve Event</button>
+    }
+    @using (Html.BeginForm("RejectEventRequest", "Admin", new { id = mod.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to reject this event?');" }))
+    {
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger" style="background: #ef4444; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Reject Event</button>
+    }
+</div>
+

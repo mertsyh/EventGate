@@ -3,21 +3,10 @@
     ViewBag.Title = "Create Venue";
 }
 
-<h2>Create Venue</h2>
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-        @TempData["Success"]
-    </div>
-}
-
-@if (ViewBag.Error != null)
-{
-    <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-        @ViewBag.Error
-    </div>
-}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: #111;">Create Venue</h2>
+    <a href="@Url.Action("Venues", "Admin")" style="background: #6b7280; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 14px;">Back</a>
+</div>
 
 @using (Html.BeginForm("CreateVenue", "Admin", FormMethod.Post))
 {
@@ -45,17 +34,12 @@
         </div>
 
         <div class="form-group">
-            <label>
-                <input type="checkbox" name="hasSeating" value="true" />
-                Has seating
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                <input type="checkbox" name="hasSeating" value="true" style="width: 18px; height: 18px; cursor: pointer;" />
+                <span>Has seating</span>
             </label>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="margin-top:10px;">Create Venue</button>
-        <a href="@Url.Action("Venues", "Admin")" class="btn btn-secondary" style="margin-left:10px;">Back</a>
+        <button type="submit" style="background: #ea2a33; color: white; padding: 12px 24px; border: none; border-radius: 8px; font-weight: 500; font-size: 14px; cursor: pointer; margin-top: 8px;">Create Venue</button>
     </div>
 }
-
-
-
-

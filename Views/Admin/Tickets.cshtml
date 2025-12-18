@@ -4,31 +4,48 @@
     ViewBag.Title = "Manage Tickets";
 }
 
-<h2>Sold Tickets</h2>
+<h2 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 700; color: #111;">Sold Tickets</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Ticket Code</th>
-            <th>Holder</th>
-            <th>Email</th>
-            <th>Status</th>
-            <th>Issued At</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.ticket_code</td>
-                <td>@item.holder_name</td>
-                <td>@item.delivered_to_email</td>
-                <td>@item.status</td>
-                <td>@item.issued_at</td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-
-
+@if (Model.Any())
+{
+    <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden;">
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Ticket Code</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Holder</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Email</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Status</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Issued At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr style="border-bottom: 1px solid #e5e7eb; transition: background 0.2s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='white'">
+                            <td style="padding: 16px; color: #111; font-weight: 600; font-size: 14px; font-family: monospace;">@item.ticket_code</td>
+                            <td style="padding: 16px; color: #111; font-size: 14px;">@item.holder_name</td>
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@item.delivered_to_email</td>
+                            <td style="padding: 16px;">
+                                <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500;
+                                    @(item.status == "active" ? "background: #d1fae5; color: #065f46;" : 
+                                      item.status == "refunded" ? "background: #fee2e2; color: #991b1b;" : 
+                                      "background: #f3f4f6; color: #6b7280;")">
+                                    @item.status
+                                </span>
+                            </td>
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@(item.issued_at?.ToString("dd MMM yyyy HH:mm") ?? "N/A")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #e5e7eb; text-align: center;">
+        <p style="color: #6b7280; margin: 0;">No tickets found.</p>
+    </div>
+}

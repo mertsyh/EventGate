@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using EventDeneme.Models;
 
@@ -31,6 +32,9 @@ namespace EventDeneme.Controllers
         public ActionResult Login()
         {
             if (IsAdminLoggedIn()) return RedirectToAction("Dashboard");
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+            Response.Cache.SetNoStore();
             return View();
         }
 
@@ -157,6 +161,15 @@ namespace EventDeneme.Controllers
             if (!IsAdminLoggedIn()) return RedirectToAction("Login");
             var evt = db.events.Find(id);
             if (evt == null) return HttpNotFound();
+            var performances = db.performances.Where(p => p.event_id == id).ToList();
+            var priceTiers = new System.Collections.Generic.Dictionary<long, System.Collections.Generic.List<price_tiers>>();
+            foreach (var perf in performances)
+            {
+                var tiers = db.price_tiers.Where(t => t.performance_id == perf.id).ToList();
+                priceTiers[perf.id] = tiers;
+            }
+            ViewBag.Performances = performances;
+            ViewBag.PriceTiers = priceTiers;
             return View(evt);
         }
 
@@ -180,6 +193,22 @@ namespace EventDeneme.Controllers
             db.SaveChanges();
             TempData["Success"] = "Event updated successfully.";
             return RedirectToAction("Events");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdatePriceTier(long tierId, decimal price)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+
+            var tier = db.price_tiers.Find(tierId);
+            if (tier == null) return HttpNotFound();
+
+            tier.price = price;
+            db.SaveChanges();
+
+            TempData["Success"] = "Price updated successfully.";
+            return RedirectToAction("EditEvent", new { id = tier.performances.event_id });
         }
         
         public ActionResult Venues()
@@ -317,6 +346,29 @@ namespace EventDeneme.Controllers
                 .OrderByDescending(m => m.id)
                 .ToList();
             return View(pending);
+        }
+
+        public ActionResult EventRequestDetails(long id)
+        {
+            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            var mod = db.moderation_events.Find(id);
+            if (mod == null) return HttpNotFound();
+            var evt = db.events.Find(mod.event_id);
+            if (evt == null) return HttpNotFound();
+            var performances = db.performances.Where(p => p.event_id == evt.id).ToList();
+            var priceTiers = new System.Collections.Generic.Dictionary<long, System.Collections.Generic.List<price_tiers>>();
+            foreach (var perf in performances)
+            {
+                var tiers = db.price_tiers.Where(t => t.performance_id == perf.id).ToList();
+                priceTiers[perf.id] = tiers;
+            }
+            ViewBag.Event = evt;
+            ViewBag.Moderation = mod;
+            ViewBag.Performances = performances;
+            ViewBag.PriceTiers = priceTiers;
+            ViewBag.Category = db.categories.Find(evt.category_id);
+            ViewBag.Organizer = db.organizers.Find(evt.organizer_id);
+            return View();
         }
 
         [HttpPost]

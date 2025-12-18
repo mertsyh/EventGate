@@ -106,11 +106,15 @@
     <Content Include="images\adamlar.jpeg" />
     <Content Include="images\athena.jpeg" />
     <Content Include="images\duman.jpg" />
+    <Content Include="images\gf.jpg" />
     <Content Include="images\gripin.jpg" />
+    <Content Include="images\ic.jpg" />
+    <Content Include="images\Interstellar.jpg" />
     <Content Include="images\mabel.jpg" />
     <Content Include="images\manga.jpg" />
     <Content Include="images\mvo.jpg" />
     <Content Include="images\sertab.jpg" />
+    <Content Include="images\tk.jpg" />
     <Content Include="images\yyk.jpg" />
     <Content Include="Models\pr2.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -150,6 +154,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\ArtistController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrganizerController.cs" />
@@ -365,6 +370,7 @@
     <Content Include="Views\Event\Search.cshtml" />
     <Content Include="Views\Cart\Index.cshtml" />
     <Content Include="Views\Ticket\DetailsEmail.cshtml" />
+    <Content Include="Views\Admin\EventRequestDetails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

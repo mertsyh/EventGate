@@ -4,63 +4,68 @@
     ViewBag.Title = "Refund Requests";
 }
 
-<h2>Refund Requests</h2>
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-        @TempData["Success"]
-    </div>
-}
+<h2 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 700; color: #111;">Refund Requests</h2>
 
 @if (Model.Any())
 {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Processed At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.id</td>
-                    <td>@item.amount.ToString("C2")</td>
-                    <td>@item.status</td>
-                    <td>@(item.processed_at.HasValue ? item.processed_at.Value.ToString("dd MMM yyyy HH:mm") : "Pending")</td>
-                    <td>
-                        @if (item.status == "pending")
-                        {
-                            using (Html.BeginForm("ApproveRefund", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                <button type="submit" style="background:none; border:none; color:green; cursor:pointer; text-decoration:underline; padding:0; margin-right:5px;">Approve</button>
-                            }
-                            using (Html.BeginForm("RejectRefund", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to reject this refund?');" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                <button type="submit" style="background:none; border:none; color:#d22; cursor:pointer; text-decoration:underline; padding:0;">Reject</button>
-                            }
-                        }
-                        else
-                        {
-                            <span style="color:#666;">@item.status</span>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden;">
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">ID</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Amount</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Status</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Processed At</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr style="border-bottom: 1px solid #e5e7eb; transition: background 0.2s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='white'">
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@item.id</td>
+                            <td style="padding: 16px; color: #111; font-weight: 600; font-size: 14px;">@item.amount.ToString("N2") ₺</td>
+                            <td style="padding: 16px;">
+                                <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500;
+                                    @(item.status == "approved" ? "background: #d1fae5; color: #065f46;" : 
+                                      item.status == "rejected" ? "background: #fee2e2; color: #991b1b;" : 
+                                      "background: #fef3c7; color: #92400e;")">
+                                    @item.status
+                                </span>
+                            </td>
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@(item.processed_at?.ToString("dd MMM yyyy HH:mm") ?? "Pending")</td>
+                            <td style="padding: 16px;">
+                                @if (item.status == "pending")
+                                {
+                                    <div style="display: flex; gap: 8px;">
+                                        @using (Html.BeginForm("ApproveRefund", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display: inline;" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" style="background: #10b981; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Approve</button>
+                                        }
+                                        @using (Html.BeginForm("RejectRefund", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display: inline;", onsubmit = "return confirm('Are you sure you want to reject this refund?');" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" style="background: #ef4444; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Reject</button>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span style="color: #6b7280; font-size: 13px;">Processed</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }
 else
 {
-    <p>No refund requests pending.</p>
+    <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #e5e7eb; text-align: center;">
+        <p style="color: #6b7280; margin: 0;">No refund requests found.</p>
+    </div>
 }
-
-
-

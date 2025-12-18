@@ -4,46 +4,43 @@
     ViewBag.Title = "Manage Users";
 }
 
-<h2>Manage Users</h2>
+<h2 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 700; color: #111;">Manage Users</h2>
 
-@if (TempData["Success"] != null)
+@if (Model.Any())
 {
-    <div class="alert alert-success" style="background-color: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
-        @TempData["Success"]
+    <div style="background: white; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden;">
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f9fafb; border-bottom: 2px solid #e5e7eb;">
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">ID</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Name</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Email</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Phone</th>
+                        <th style="padding: 16px; text-align: left; font-weight: 600; color: #111; font-size: 14px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr style="border-bottom: 1px solid #e5e7eb; transition: background 0.2s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='white'">
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@item.id</td>
+                            <td style="padding: 16px; color: #111; font-weight: 500; font-size: 14px;">@item.name @item.surname</td>
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@item.email</td>
+                            <td style="padding: 16px; color: #6b7280; font-size: 14px;">@(item.phone ?? "N/A")</td>
+                            <td style="padding: 16px;">
+                                <a href="@Url.Action("EditUser", "Admin", new { id = item.id })" style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500;">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 }
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.id</td>
-                <td>@item.name @item.surname</td>
-                <td>@item.email</td>
-                <td>@item.phone</td>
-                <td>
-                    @Html.ActionLink("Edit", "EditUser", "Admin", new { id = item.id }, null)
-                    <span> | </span>
-                    @using (Html.BeginForm("BanUser", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display:inline;", onsubmit = "return confirm('Are you sure you want to ban this user?');" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <button type="submit" style="background:none; border:none; color:#d22; cursor:pointer; text-decoration:underline; padding:0;">Ban</button>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-
-
+else
+{
+    <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #e5e7eb; text-align: center;">
+        <p style="color: #6b7280; margin: 0;">No users found.</p>
+    </div>
+}
