@@ -52,21 +52,25 @@
                                         <a href="@Url.Action("OrganizerDetails", "Admin", new { id = item.id })" style="background: #3b82f6; color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500;">View</a>
                                         @if (status == "pending")
                                         {
-                                            @using (Html.BeginForm("ApproveOrganizer", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display: inline;" }))
+                                            var rejectFormAttrs = new { @class = "confirm-form", style = "display: inline;", data_message = "Are you sure you want to reject this organizer?" };
+                                            using (Html.BeginForm("ApproveOrganizer", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display: inline;" }))
                                             {
                                                 @Html.AntiForgeryToken()
                                                 <button type="submit" style="background: #10b981; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Approve</button>
                                             }
-                                            @using (Html.BeginForm("RejectOrganizer", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display: inline;", onsubmit = "return confirm('Are you sure you want to reject this organizer?');" }))
+                                            using (Html.BeginForm("RejectOrganizer", "Admin", new { id = item.id }, FormMethod.Post, rejectFormAttrs))
                                             {
                                                 @Html.AntiForgeryToken()
                                                 <button type="submit" style="background: #ef4444; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Reject</button>
                                             }
                                         }
-                                        @using (Html.BeginForm("DeleteOrganizer", "Admin", new { id = item.id }, FormMethod.Post, new { style = "display: inline;", onsubmit = "return confirm('Are you sure you want to delete this organizer? This will disable their users and events.');" }))
-                                        {
-                                            @Html.AntiForgeryToken()
-                                            <button type="submit" style="background: #6b7280; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Delete</button>
+                                        @{
+                                            var deleteFormAttrs = new { @class = "confirm-form", style = "display: inline;", data_message = "Are you sure you want to delete this organizer? This will disable their users and events." };
+                                            using (Html.BeginForm("DeleteOrganizer", "Admin", new { id = item.id }, FormMethod.Post, deleteFormAttrs))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" style="background: #6b7280; color: white; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">Delete</button>
+                                            }
                                         }
                                     </div>
                                 </td>
@@ -84,3 +88,24 @@ else
         <p style="color: #6b7280; margin: 0;">No organizers found.</p>
     </div>
 }
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var forms = document.querySelectorAll('.confirm-form');
+        forms.forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var message = form.getAttribute('data-message');
+                var formElement = this;
+                window.showConfirm(
+                    message,
+                    function() {
+                        formElement.submit();
+                    },
+                    function() {
+                    }
+                );
+            });
+        });
+    });
+</script>

@@ -37,7 +37,10 @@
 @if (performances != null && performances.Any())
 {
     <div style="margin-top: 40px; padding-top: 40px; border-top: 2px solid #e5e7eb;">
-        <h3 style="margin-bottom: 24px;">Performances & Prices</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h3 style="margin: 0;">Performances & Prices</h3>
+            <span style="color: #6b7280; font-size: 14px;">Total: @performances.Count performance(s)</span>
+        </div>
         
         @foreach (var perf in performances)
         {
@@ -91,5 +94,13 @@
                 }
             </div>
         }
+    </div>
+}
+else
+{
+    <div style="margin-top: 40px; padding-top: 40px; border-top: 2px solid #e5e7eb;">
+        <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 16px; color: #92400e;">
+            <p style="margin: 0; font-size: 14px;"><strong>No performances found.</strong> The organizer needs to add performances to this event.</p>
+        </div>
     </div>
 }
