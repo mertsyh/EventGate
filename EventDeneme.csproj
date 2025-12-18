@@ -119,7 +119,6 @@
       <DependentUpon>pr2.edmx</DependentUpon>
       <LastGenOutput>pr2.cs</LastGenOutput>
     </Content>
-    <Content Include="Scripts\site.js" />
     <Content Include="Views\Profile\MyTickets.cshtml" />
     <Content Include="Views\Profile\Refunds.cshtml" />
     <Content Include="Web.config" />
@@ -373,6 +372,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="bin\" />
+    <Folder Include="Scripts\" />
     <Folder Include="Views\TicketDetailsViewModel\" />
   </ItemGroup>
   <ItemGroup>

@@ -231,4 +231,16 @@
             window.location.href = url;
         }
     });
+ 
+    const container = document.querySelector('.events-container');
+    document.getElementById('nextEvent').addEventListener('click', () => {
+        container.scrollLeft += 300;
+    });
+    document.getElementById('prevEvent').addEventListener('click', () => {
+        container.scrollLeft -= 300;
+    });
+
+
+
+
 </script>
