@@ -358,7 +358,10 @@ namespace EventDeneme.Controllers
             if (mod == null) return HttpNotFound();
             var evt = db.events.Find(mod.event_id);
             if (evt == null) return HttpNotFound();
-            var performances = db.performances.Where(p => p.event_id == evt.id).ToList();
+            var performances = db.performances
+                .Where(p => p.event_id == evt.id)
+                .OrderBy(p => p.start_datetime)
+                .ToList();
             var priceTiers = new System.Collections.Generic.Dictionary<long, System.Collections.Generic.List<price_tiers>>();
             foreach (var perf in performances)
             {

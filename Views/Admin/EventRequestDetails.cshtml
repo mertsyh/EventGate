@@ -9,114 +9,135 @@
     var organizer = ViewBag.Organizer as EventDeneme.Models.organizers;
 }
 
-<h2>Event Request Details</h2>
-
-<div style="margin-bottom: 20px;">
-    <a href="@Url.Action("EventRequests", "Admin")" class="btn btn-secondary">Back to Event Requests</a>
-</div>
-
-<div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-    <h3>Event Information</h3>
-    <table style="width: 100%;">
-        <tr>
-            <td style="padding: 8px; font-weight: bold; width: 200px;">Title:</td>
-            <td style="padding: 8px;">@evt.title</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; font-weight: bold;">Description:</td>
-            <td style="padding: 8px;">@(evt.description ?? "N/A")</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; font-weight: bold;">Category:</td>
-            <td style="padding: 8px;">@(category?.display_name ?? "N/A")</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; font-weight: bold;">Organizer:</td>
-            <td style="padding: 8px;">@(organizer?.brand_name ?? "N/A")</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; font-weight: bold;">Language:</td>
-            <td style="padding: 8px;">@(evt.language ?? "N/A")</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; font-weight: bold;">Age Limit:</td>
-            <td style="padding: 8px;">@(evt.age_limit ?? "N/A")</td>
-        </tr>
-        <tr>
-            <td style="padding: 8px; font-weight: bold;">Status:</td>
-            <td style="padding: 8px;">@evt.status</td>
-        </tr>
-        @if (!string.IsNullOrEmpty(evt.poster_url))
-        {
-            <tr>
-                <td style="padding: 8px; font-weight: bold;">Poster:</td>
-                <td style="padding: 8px;">
-                    <img src="@Url.Content(evt.poster_url)" alt="@evt.title" style="max-width: 300px; max-height: 300px;" />
-                </td>
-            </tr>
-        }
-    </table>
-</div>
-
-@if (performances != null && performances.Any())
+@if (evt == null || mod == null)
 {
-    <h3>Performances & Prices</h3>
-    @foreach (var perf in performances)
-    {
-        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h4>Performance: @perf.start_datetime.ToString("dd MMM yyyy HH:mm")</h4>
-            <p><strong>Venue:</strong> @(perf.venues?.name ?? "N/A")</p>
-            <p><strong>Status:</strong> @perf.status</p>
-            
-            @if (priceTiers != null && priceTiers.ContainsKey(perf.id) && priceTiers[perf.id].Any())
-            {
-                <h5 style="margin-top: 15px;">Price Tiers:</h5>
-                <table style="width: 100%; margin-top: 10px; border-collapse: collapse;">
-                    <thead>
-                        <tr style="background: #e9ecef;">
-                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Name</th>
-                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Section</th>
-                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Capacity</th>
-                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Price</th>
-                            <th style="padding: 10px; text-align: left; border: 1px solid #dee2e6;">Currency</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var tier in priceTiers[perf.id])
-                        {
-                            <tr>
-                                <td style="padding: 10px; border: 1px solid #dee2e6;">@tier.name</td>
-                                <td style="padding: 10px; border: 1px solid #dee2e6;">@(tier.seatmap_section ?? "N/A")</td>
-                                <td style="padding: 10px; border: 1px solid #dee2e6;">@(tier.capacity?.ToString() ?? "Unlimited")</td>
-                                <td style="padding: 10px; border: 1px solid #dee2e6;">@tier.price.ToString("N2")</td>
-                                <td style="padding: 10px; border: 1px solid #dee2e6;">@tier.currency</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-            else
-            {
-                <p style="margin-top: 10px; color: #6c757d;">No price tiers defined for this performance.</p>
-            }
-        </div>
-    }
+    <div style="background: white; padding: 40px; border-radius: 12px; border: 1px solid #e5e7eb; text-align: center;">
+        <p style="color: #ef4444; margin: 0;">Event or moderation record not found.</p>
+        <a href="@Url.Action("EventRequests", "Admin")" style="display: inline-block; margin-top: 20px; background: #3b82f6; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;">Back to Event Requests</a>
+    </div>
 }
 else
 {
-    <p>No performances defined for this event.</p>
-}
+    <h2 style="margin: 0 0 24px 0; font-size: 24px; font-weight: 700; color: #111;">Event Request Details</h2>
 
-<div style="margin-top: 30px; display: flex; gap: 10px;">
-    @using (Html.BeginForm("ApproveEventRequest", "Admin", new { id = mod.id }, FormMethod.Post))
+    <div style="margin-bottom: 20px;">
+        <a href="@Url.Action("EventRequests", "Admin")" style="background: #6b7280; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 500;">Back to Event Requests</a>
+    </div>
+
+    <div style="background: white; padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 24px;">
+        <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #111;">Event Information</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td style="padding: 12px; font-weight: 600; width: 200px; color: #111; border-bottom: 1px solid #e5e7eb;">Title:</td>
+                <td style="padding: 12px; color: #6b7280; border-bottom: 1px solid #e5e7eb;">@evt.title</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; font-weight: 600; color: #111; border-bottom: 1px solid #e5e7eb;">Description:</td>
+                <td style="padding: 12px; color: #6b7280; border-bottom: 1px solid #e5e7eb;">@(evt.description ?? "N/A")</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; font-weight: 600; color: #111; border-bottom: 1px solid #e5e7eb;">Category:</td>
+                <td style="padding: 12px; color: #6b7280; border-bottom: 1px solid #e5e7eb;">@(category?.display_name ?? "N/A")</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; font-weight: 600; color: #111; border-bottom: 1px solid #e5e7eb;">Organizer:</td>
+                <td style="padding: 12px; color: #6b7280; border-bottom: 1px solid #e5e7eb;">@(organizer?.brand_name ?? "N/A")</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; font-weight: 600; color: #111; border-bottom: 1px solid #e5e7eb;">Language:</td>
+                <td style="padding: 12px; color: #6b7280; border-bottom: 1px solid #e5e7eb;">@(evt.language ?? "N/A")</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; font-weight: 600; color: #111; border-bottom: 1px solid #e5e7eb;">Age Limit:</td>
+                <td style="padding: 12px; color: #6b7280; border-bottom: 1px solid #e5e7eb;">@(evt.age_limit ?? "N/A")</td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; font-weight: 600; color: #111; border-bottom: 1px solid #e5e7eb;">Status:</td>
+                <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+                    <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; background: #fef3c7; color: #92400e;">@evt.status</span>
+                </td>
+            </tr>
+            @if (!string.IsNullOrEmpty(evt.poster_url))
+            {
+                <tr>
+                    <td style="padding: 12px; font-weight: 600; color: #111; border-bottom: 1px solid #e5e7eb;">Poster:</td>
+                    <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">
+                        <img src="@Url.Content(evt.poster_url)" alt="@evt.title" style="max-width: 300px; max-height: 300px; border-radius: 8px;" />
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    @if (performances != null && performances.Any())
     {
-        @Html.AntiForgeryToken()
-        <button type="submit" class="btn btn-primary" style="background: #10b981; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Approve Event</button>
+        <div style="background: white; padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 24px;">
+            <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: #111;">Performances & Prices</h3>
+            @foreach (var perf in performances)
+            {
+                <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #e5e7eb;">
+                    <h4 style="margin: 0 0 12px 0; font-size: 16px; font-weight: 600; color: #111;">Performance: @perf.start_datetime.ToString("dd MMM yyyy HH:mm")</h4>
+                    <p style="margin: 8px 0; color: #6b7280;"><strong style="color: #111;">Venue:</strong> @(perf.venues?.name ?? "N/A")</p>
+                    <p style="margin: 8px 0; color: #6b7280;">
+                        <strong style="color: #111;">Status:</strong> 
+                        <span style="display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; background: #fef3c7; color: #92400e;">@perf.status</span>
+                    </p>
+            
+                    @if (priceTiers != null && priceTiers.ContainsKey(perf.id) && priceTiers[perf.id].Any())
+                    {
+                        <h5 style="margin-top: 15px; margin-bottom: 10px; font-size: 14px; font-weight: 600; color: #111;">Price Tiers:</h5>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; margin-top: 10px; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: #f9fafb;">
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111; font-size: 13px;">Name</th>
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111; font-size: 13px;">Section</th>
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111; font-size: 13px;">Capacity</th>
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111; font-size: 13px;">Price</th>
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 600; color: #111; font-size: 13px;">Currency</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var tier in priceTiers[perf.id])
+                                    {
+                                        <tr>
+                                            <td style="padding: 12px; border: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;">@tier.name</td>
+                                            <td style="padding: 12px; border: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;">@(tier.seatmap_section ?? "N/A")</td>
+                                            <td style="padding: 12px; border: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;">@(tier.capacity?.ToString() ?? "Unlimited")</td>
+                                            <td style="padding: 12px; border: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;">@tier.price.ToString("N2")</td>
+                                            <td style="padding: 12px; border: 1px solid #e5e7eb; color: #6b7280; font-size: 14px;">@tier.currency</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p style="margin-top: 10px; color: #6b7280; font-size: 14px;">No price tiers defined for this performance.</p>
+                    }
+                </div>
+            }
+        </div>
     }
-    @using (Html.BeginForm("RejectEventRequest", "Admin", new { id = mod.id }, FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to reject this event?');" }))
+    else
     {
-        @Html.AntiForgeryToken()
-        <button type="submit" class="btn btn-danger" style="background: #ef4444; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Reject Event</button>
+        <div style="background: white; padding: 24px; border-radius: 12px; border: 1px solid #e5e7eb; margin-bottom: 24px;">
+            <p style="color: #6b7280; margin: 0; font-size: 14px;">No performances defined for this event.</p>
+        </div>
     }
-</div>
+
+    <div style="margin-top: 30px; display: flex; gap: 12px; flex-wrap: wrap;">
+        @using (Html.BeginForm("ApproveEventRequest", "Admin", new { id = mod.id }, FormMethod.Post, new { style = "display: inline;" }))
+        {
+            @Html.AntiForgeryToken()
+            <button type="submit" style="background: #10b981; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">Approve Event</button>
+        }
+        @using (Html.BeginForm("RejectEventRequest", "Admin", new { id = mod.id }, FormMethod.Post, new { id = "rejectForm", style = "display: inline;" }))
+        {
+            @Html.AntiForgeryToken()
+            <button type="button" onclick="window.showConfirm('Are you sure you want to reject this event?', function() { document.getElementById('rejectForm').submit(); });" style="background: #ef4444; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">Reject Event</button>
+        }
+    </div>
+}
 
