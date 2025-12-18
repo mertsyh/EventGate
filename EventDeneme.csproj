@@ -119,6 +119,7 @@
       <DependentUpon>pr2.edmx</DependentUpon>
       <LastGenOutput>pr2.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\site.js" />
     <Content Include="Views\Profile\MyTickets.cshtml" />
     <Content Include="Views\Profile\Refunds.cshtml" />
     <Content Include="Web.config" />
@@ -242,6 +243,7 @@
     </Compile>
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
+    <Compile Include="Models\TicketSummaryViewModel.cs" />
     <Compile Include="Models\UserProfileViewModel.cs" />
     <Compile Include="Models\ChangePasswordViewModel.cs" />
     <Compile Include="Models\ForgotPasswordViewModel.cs" />
@@ -372,7 +374,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="bin\" />
-    <Folder Include="Scripts\" />
     <Folder Include="Views\TicketDetailsViewModel\" />
   </ItemGroup>
   <ItemGroup>
