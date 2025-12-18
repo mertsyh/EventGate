@@ -47,14 +47,31 @@ namespace ProjeAdi.Controllers
                 .ToList();
             DateTime nextWeek = now.AddDays(7);
 
-            var lastWeekEvents = events
+            var thisWeekConcerts = db.events
+                .Where(e => e.status != "deleted" && e.category_id == 1)
+                .ToList()
+                .Where(e => HasUpcomingPerformances(e.performances, now))
+                .Select(e => new EventCardViewModel
+                {
+                    EventId = e.id,
+                    Title = e.title,
+                    StartDate = GetNextOrFirstPerformanceDate(e.performances, now),
+                    Venue = e.performances.FirstOrDefault()?.venues.name,
+                    City = e.performances.FirstOrDefault()?.venues.cities.name,
+                    Price = e.performances
+                                .SelectMany(p => p.price_tiers)
+                                .OrderBy(t => t.price)
+                                .FirstOrDefault()?.price,
+                    ImageUrl = e.poster_url
+                })
                 .Where(e => e.StartDate != null &&
                             e.StartDate.Value >= now &&
                             e.StartDate.Value <= nextWeek)
-                .OrderBy(e => e.StartDate) 
+                .OrderBy(e => e.StartDate)
                 .ToList();
 
-            ViewBag.LastWeekEvents = lastWeekEvents;
+            ViewBag.ThisWeekConcerts = thisWeekConcerts;
+
 
             return View(events);
         }

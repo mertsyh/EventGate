@@ -104,10 +104,13 @@
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="images\adamlar.jpeg" />
+    <Content Include="images\athena.jpeg" />
     <Content Include="images\duman.jpg" />
     <Content Include="images\gripin.jpg" />
+    <Content Include="images\mabel.jpg" />
     <Content Include="images\manga.jpg" />
     <Content Include="images\mvo.jpg" />
+    <Content Include="images\sertab.jpg" />
     <Content Include="images\yyk.jpg" />
     <Content Include="Models\pr2.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

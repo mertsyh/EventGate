@@ -87,7 +87,7 @@
 
     <div class="events-container">
 
-        @foreach (var e in (List<EventCardViewModel>)ViewBag.LastWeekEvents)
+        @foreach (var e in (List<EventCardViewModel>)ViewBag.thisWeekConcerts)
         {
             <div class="event-card">
                 <img src="@Url.Content(e.ImageUrl)" alt="@e.Title">
