@@ -224,7 +224,7 @@ header i {
     margin: 60px auto 40px auto;
     border-radius: 50px;
     min-height: 60px;
-    padding: 10px 20px;
+    padding: 2px 10px;
     background: rgba(255, 255, 255, 0.6);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
@@ -810,7 +810,7 @@ footer {
 
     .search-area {
         gap: 12px;
-        padding: 20px;
+        padding: 10px;
         flex-direction: column;
         max-width: 90%;
         border-radius: 24px;
