@@ -104,7 +104,9 @@
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="images\adamlar.jpeg" />
+    <Content Include="images\anthrax.jpg" />
     <Content Include="images\athena.jpeg" />
+    <Content Include="images\cem.jpg" />
     <Content Include="images\duman.jpg" />
     <Content Include="images\gf.jpg" />
     <Content Include="images\gripin.jpg" />

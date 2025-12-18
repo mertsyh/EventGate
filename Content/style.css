@@ -330,7 +330,7 @@ header i {
 
 .carousel {
     --items: 6;
-    --carousel-duration: 35s;
+    --carousel-duration: 80s;
     --carousel-width: min(85vw, 1200px);
     --carousel-item-width: 280px;
     --carousel-item-height: 500px;
