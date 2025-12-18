@@ -370,6 +370,9 @@ namespace EventDeneme.Controllers
             if (!IsOrganizerLoggedIn()) return RedirectToAction("Login");
             if (!IsOwnerOfEvent(eventId)) return new HttpUnauthorizedResult();
 
+            var evt = db.events.Find(eventId);
+            if (evt == null) return HttpNotFound();
+
             var perf = new performances
             {
                 event_id = eventId,
@@ -380,7 +383,30 @@ namespace EventDeneme.Controllers
             db.performances.Add(perf);
             db.SaveChanges();
 
-            TempData["Success"] = "Performance added successfully.";
+            // Eğer etkinlik zaten onaylanmışsa, yeni performans için moderation kaydı oluştur
+            if (evt.status == "active")
+            {
+                long submittedBy = Convert.ToInt64(Session["OrganizerUserID"]);
+                
+                // Bu etkinlik için zaten pending bir moderation kaydı var mı kontrol et
+                var existingModeration = db.moderation_events
+                    .FirstOrDefault(m => m.event_id == eventId && m.status == "pending");
+                
+                if (existingModeration == null)
+                {
+                    // Yeni moderation kaydı oluştur
+                    var moderation = new moderation_events
+                    {
+                        event_id = eventId,
+                        submitted_by = submittedBy,
+                        status = "pending"
+                    };
+                    db.moderation_events.Add(moderation);
+                    db.SaveChanges();
+                }
+            }
+
+            TempData["Success"] = "Performance added successfully. It will be reviewed by admin.";
             return RedirectToAction("ManagePerformances", new { eventId });
         }
 

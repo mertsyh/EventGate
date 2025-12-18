@@ -388,18 +388,33 @@ namespace EventDeneme.Controllers
                 var evt = db.events.Find(mod.event_id);
                 if (evt != null)
                 {
-                    evt.status = "active";
-                    evt.updated_at = DateTime.Now;
-
-                    var perfs = db.performances.Where(p => p.event_id == evt.id).ToList();
-                    foreach (var perf in perfs)
+                    // Eğer etkinlik zaten active ise, sadece pending performansları onayla
+                    // Eğer etkinlik pending ise, tüm performansları onayla ve etkinliği active yap
+                    if (evt.status == "active")
                     {
-                        perf.status = "active";
+                        // Sadece pending performansları onayla
+                        var pendingPerfs = db.performances.Where(p => p.event_id == evt.id && p.status == "pending").ToList();
+                        foreach (var perf in pendingPerfs)
+                        {
+                            perf.status = "active";
+                        }
+                        TempData["Success"] = "New performance(s) approved.";
                     }
+                    else
+                    {
+                        // İlk onaylama: tüm performansları onayla ve etkinliği active yap
+                        evt.status = "active";
+                        evt.updated_at = DateTime.Now;
 
+                        var perfs = db.performances.Where(p => p.event_id == evt.id).ToList();
+                        foreach (var perf in perfs)
+                        {
+                            perf.status = "active";
+                        }
+                        TempData["Success"] = "Event request approved.";
+                    }
                 }
                 db.SaveChanges();
-                TempData["Success"] = "Event request approved.";
             }
             return RedirectToAction("EventRequests");
         }
