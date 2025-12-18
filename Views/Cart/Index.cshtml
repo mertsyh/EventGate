@@ -318,13 +318,21 @@
 
         
         $('.remove-item-btn').on('click', function() {
-            if (!confirm('Are you sure you want to remove this item from your cart?')) {
-                return;
-            }
-
             var cartItemId = $(this).data('cart-item-id');
             var $item = $(this).closest('.cart-item');
+            var self = this;
 
+            window.showConfirm(
+                'Are you sure you want to remove this item from your cart?',
+                function() {
+                    removeItem(cartItemId, $item);
+                },
+                function() {
+                }
+            );
+        });
+
+        function removeItem(cartItemId, $item) {
             $.ajax({
                 url: '@Url.Action("RemoveFromCart", "Cart")',
                 type: 'POST',
@@ -342,6 +350,7 @@
                         });
                         
                         $('#cart-count').text(response.itemCount || 0);
+                        window.showAlert('Item removed from cart successfully.', 'success');
                     } else {
                         window.showAlert(response.message, 'error');
                     }
@@ -350,6 +359,6 @@
                     window.showAlert('Error removing item. Please try again.', 'error');
                 }
             });
-        });
+        }
     });
 </script>

@@ -52,19 +52,22 @@
             </div>
         </div>
 
-        <div class="ticket-actions">
-            @using (Html.BeginForm("RequestRefund", "Ticket", FormMethod.Post, new { onsubmit = "return confirm('Do you really want to request a refund for this ticket?');" }))
-            {
-                @Html.AntiForgeryToken()
-                @Html.Hidden("ticketId", Model.TicketId)
-                <button type="submit" class="btn-refund">
-                    Request Refund
-                </button>
-            }
-            <a href="@Url.Action("MyTickets", "Profile")" class="btn-secondary-link">
-                Back to My Tickets
-            </a>
-        </div>
+        @if (Session["UserID"] != null)
+        {
+            <div class="ticket-actions">
+                @using (Html.BeginForm("RequestRefund", "Ticket", FormMethod.Post, new { onsubmit = "return confirm('Do you really want to request a refund for this ticket?');" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("ticketId", Model.TicketId)
+                    <button type="submit" class="btn-refund">
+                        Request Refund
+                    </button>
+                }
+                <a href="@Url.Action("MyTickets", "Profile")" class="btn-secondary-link">
+                    Back to My Tickets
+                </a>
+            </div>
+        }
     </div>
 </div>
 

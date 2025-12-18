@@ -138,6 +138,106 @@
                 font-size: 13px;
             }
         }
+
+        .confirm-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .confirm-modal {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: calc(100% - 40px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .confirm-modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .confirm-modal-title i {
+            color: #f59e0b;
+            font-size: 20px;
+        }
+
+        .confirm-modal-message {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .confirm-modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .confirm-modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .confirm-modal-btn-cancel {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .confirm-modal-btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+        .confirm-modal-btn-confirm {
+            background: #ea2a33;
+            color: white;
+        }
+
+        .confirm-modal-btn-confirm:hover {
+            background: #d11a23;
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 
     @RenderSection("Styles", required: false)
@@ -208,6 +308,51 @@
             {
                 <text>window.showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(ViewBag.Error.ToString()))', 'error');</text>
             }
+
+            window.showConfirm = function(message, onConfirm, onCancel) {
+                const overlay = document.createElement('div');
+                overlay.className = 'confirm-modal-overlay';
+                overlay.innerHTML = `
+                    <div class="confirm-modal">
+                        <div class="confirm-modal-title">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Confirm Action</span>
+                        </div>
+                        <div class="confirm-modal-message">${message}</div>
+                        <div class="confirm-modal-buttons">
+                            <button class="confirm-modal-btn confirm-modal-btn-cancel">Cancel</button>
+                            <button class="confirm-modal-btn confirm-modal-btn-confirm">Confirm</button>
+                        </div>
+                    </div>
+                `;
+
+                const cancelBtn = overlay.querySelector('.confirm-modal-btn-cancel');
+                const confirmBtn = overlay.querySelector('.confirm-modal-btn-confirm');
+
+                const close = function() {
+                    overlay.style.animation = 'fadeIn 0.2s ease-out reverse';
+                    setTimeout(() => overlay.remove(), 200);
+                };
+
+                cancelBtn.onclick = function() {
+                    close();
+                    if (onCancel) onCancel();
+                };
+
+                confirmBtn.onclick = function() {
+                    close();
+                    if (onConfirm) onConfirm();
+                };
+
+                overlay.onclick = function(e) {
+                    if (e.target === overlay) {
+                        close();
+                        if (onCancel) onCancel();
+                    }
+                };
+
+                document.body.appendChild(overlay);
+            };
         })();
     </script>
 
