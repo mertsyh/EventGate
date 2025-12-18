@@ -166,7 +166,7 @@
     .event-card {
         display: flex; 
         flex-direction: row;
-        height: 120px; 
+        max-height: 220px; 
         width: 100%;
     }
 
