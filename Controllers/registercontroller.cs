@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using EventDeneme.Models;
 
@@ -15,6 +16,17 @@ namespace EventDeneme.Controllers
      
         public ActionResult Signin()
         {
+            // Eğer kullanıcı zaten giriş yapmışsa ana sayfaya yönlendir
+            if (Session["UserID"] != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            
+            // Cache control - giriş yapmış kullanıcılar login sayfasına geri dönemesin
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+            Response.Cache.SetNoStore();
+            
             return View();
         }
 
@@ -36,6 +48,9 @@ namespace EventDeneme.Controllers
             Session["UserID"] = user.id;
             Session["UserName"] = user.name;
             Session["UserEmail"] = user.email;
+
+            // Başarılı login sonrası login sayfasını geçmişten kaldırmak için flag
+            TempData["JustLoggedIn"] = true;
 
             return RedirectToAction("Index", "Home");
         }

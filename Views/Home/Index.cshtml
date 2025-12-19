@@ -204,6 +204,22 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
+        // Eğer login sayfasından gelindiyse ve kullanıcı giriş yapmışsa, login sayfasını geçmişten kaldır
+        (function() {
+            var justLoggedIn = @(TempData["JustLoggedIn"] != null ? "true" : "false");
+            var referrer = document.referrer.toLowerCase();
+            var isFromLogin = referrer.includes('/register/signin');
+            var isLoggedIn = @(Session["UserID"] != null ? "true" : "false");
+            
+            if ((justLoggedIn || (isFromLogin && isLoggedIn)) && window.history && window.history.replaceState) {
+                // Login sayfasını geçmişten kaldır - ana sayfayı ekle
+                // Bu sayede geri butonu ile login sayfasına dönülemez
+                // Önce bir state ekle, sonra replaceState ile login sayfasını kaldır
+                window.history.pushState({ page: 'home' }, '', window.location.href);
+                window.history.replaceState({ page: 'home' }, '', window.location.href);
+            }
+        })();
+
         $('#homeSearchBtn').on('click', function () {
             performSearch();
         });

@@ -73,6 +73,29 @@
             index = (index + 1) % slides.length;
             slides[index].classList.add('active');
         }, 4000);
+
+        // Geri butonu ile login sayfasına gelinmesini engelle
+        (function() {
+            // Geri butonuna basıldığında login sayfasına gelinmesini engelle
+            window.addEventListener('popstate', function(event) {
+                // Eğer geri butonu ile login sayfasına gelinmeye çalışılıyorsa, ana sayfaya yönlendir
+                var currentPath = window.location.pathname.toLowerCase();
+                if (currentPath.includes('/register/signin')) {
+                    window.location.href = '@Url.Action("Index", "Home")';
+                }
+            });
+
+            // Sayfa yüklendiğinde eğer geri butonu ile gelindiyse kontrol et
+            if (window.performance && window.performance.navigation) {
+                // Eğer sayfa geri butonu ile yüklendiyse (type 2 = TYPE_BACK_FORWARD)
+                if (window.performance.navigation.type === 2) {
+                    var currentPath = window.location.pathname.toLowerCase();
+                    if (currentPath.includes('/register/signin')) {
+                        window.location.href = '@Url.Action("Index", "Home")';
+                    }
+                }
+            }
+        })();
     </script>
 
 </body>
