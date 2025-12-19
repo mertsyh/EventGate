@@ -409,7 +409,8 @@
 @RenderSection("Scripts", required: false)
 <script>
     (function() {
-        function showAlert(message, type) {
+        // Global alert helper for Admin layout
+        window.showAlert = function(message, type) {
             type = type || 'success';
             const container = document.getElementById('globalAlertContainer');
             if (!container) return;
@@ -434,27 +435,72 @@
 
             container.appendChild(alert);
 
-            
             setTimeout(() => {
                 if (alert.parentElement) {
                     alert.style.animation = 'slideDown 0.3s ease-out reverse';
                     setTimeout(() => alert.remove(), 300);
                 }
             }, 5000);
-        }
+        };
 
-        
+        // Global confirm modal for Admin layout
+        window.showConfirm = function(message, onConfirm, onCancel) {
+            const overlay = document.createElement('div');
+            overlay.className = 'confirm-modal-overlay';
+            overlay.innerHTML = `
+                <div class="confirm-modal">
+                    <div class="confirm-modal-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Confirm Action</span>
+                    </div>
+                    <div class="confirm-modal-message">${message}</div>
+                    <div class="confirm-modal-buttons">
+                        <button class="confirm-modal-btn confirm-modal-btn-cancel">Cancel</button>
+                        <button class="confirm-modal-btn confirm-modal-btn-confirm">Confirm</button>
+                    </div>
+                </div>
+            `;
+
+            const cancelBtn = overlay.querySelector('.confirm-modal-btn-cancel');
+            const confirmBtn = overlay.querySelector('.confirm-modal-btn-confirm');
+
+            const close = function() {
+                overlay.style.animation = 'fadeIn 0.2s ease-out reverse';
+                setTimeout(() => overlay.remove(), 200);
+            };
+
+            cancelBtn.onclick = function() {
+                close();
+                if (onCancel) onCancel();
+            };
+
+            confirmBtn.onclick = function() {
+                close();
+                if (onConfirm) onConfirm();
+            };
+
+            overlay.onclick = function(e) {
+                if (e.target === overlay) {
+                    close();
+                    if (onCancel) onCancel();
+                }
+            };
+
+            document.body.appendChild(overlay);
+        };
+
+        // Show alerts based on TempData / ViewBag
         @if (TempData["Success"] != null)
         {
-            <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Success"].ToString()))', 'success');</text>
+            <text>window.showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Success"].ToString()))', 'success');</text>
         }
         @if (TempData["Error"] != null)
         {
-            <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Error"].ToString()))', 'error');</text>
+            <text>window.showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(TempData["Error"].ToString()))', 'error');</text>
         }
         @if (ViewBag.Error != null)
         {
-            <text>showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(ViewBag.Error.ToString()))', 'error');</text>
+            <text>window.showAlert('@Html.Raw(HttpUtility.JavaScriptStringEncode(ViewBag.Error.ToString()))', 'error');</text>
         }
     })();
 </script>
