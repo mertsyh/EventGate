@@ -35,6 +35,10 @@
 
                 @using (Html.BeginForm("Signin", "Register", FormMethod.Post))
                 {
+                    if (ViewBag.ReturnUrl != null)
+                    {
+                        <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                    }
                     <label>Email*</label>
                     <input type="email" name="Email" placeholder="Enter your email" required>
 

@@ -14,11 +14,15 @@ namespace EventDeneme.Controllers
         private pr2Entities1 db= new pr2Entities1();
 
      
-        public ActionResult Signin()
+        public ActionResult Signin(string returnUrl)
         {
-            // Eğer kullanıcı zaten giriş yapmışsa ana sayfaya yönlendir
+            // Eğer kullanıcı zaten giriş yapmışsa ana sayfaya veya returnUrl'e yönlendir
             if (Session["UserID"] != null)
             {
+                if (!string.IsNullOrEmpty(returnUrl))
+                {
+                    return Redirect(returnUrl);
+                }
                 return RedirectToAction("Index", "Home");
             }
             
@@ -27,12 +31,13 @@ namespace EventDeneme.Controllers
             Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
             Response.Cache.SetNoStore();
             
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
     
         [HttpPost]
-        public ActionResult Signin(string Email, string Password)
+        public ActionResult Signin(string Email, string Password, string returnUrl)
         {
             string hashedPassword = HashPassword(Password);
 
@@ -42,6 +47,7 @@ namespace EventDeneme.Controllers
             if (user == null)
             {
                 ViewBag.Error = "Email or password is incorrect!";
+                ViewBag.ReturnUrl = returnUrl;
                 return View();
             }
 
@@ -49,8 +55,17 @@ namespace EventDeneme.Controllers
             Session["UserName"] = user.name;
             Session["UserEmail"] = user.email;
 
+            // Guest sepetini kullanıcı sepetine aktar
+            MergeGuestCartToUser(user.id);
+
             // Başarılı login sonrası login sayfasını geçmişten kaldırmak için flag
             TempData["JustLoggedIn"] = true;
+
+            // ReturnUrl varsa oraya, yoksa ana sayfaya yönlendir
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
 
             return RedirectToAction("Index", "Home");
         }
@@ -124,6 +139,71 @@ namespace EventDeneme.Controllers
                 byte[] bytes = Encoding.UTF8.GetBytes(password);
                 byte[] hash = sha.ComputeHash(bytes);
                 return Convert.ToBase64String(hash);
+            }
+        }
+
+        
+        private void MergeGuestCartToUser(long userId)
+        {
+            try
+            {
+                
+                var guestCart = db.carts
+                    .FirstOrDefault(c => c.user_id == null && c.status == "active");
+
+                if (guestCart == null)
+                {
+                    return;
+                }
+
+                
+                var userCart = db.carts
+                    .FirstOrDefault(c => c.user_id == userId && c.status == "active");
+
+                if (userCart == null)
+                {
+                    
+                    guestCart.user_id = userId;
+                    guestCart.updated_at = DateTime.Now;
+                    db.SaveChanges();
+                    return;
+                }
+
+                
+                var guestItems = db.cart_items
+                    .Where(ci => ci.cart_id == guestCart.id && ci.status == "active")
+                    .ToList();
+
+                foreach (var guestItem in guestItems)
+                {
+                    
+                    var existingItem = db.cart_items
+                        .FirstOrDefault(ci => ci.cart_id == userCart.id &&
+                                             ci.performance_id == guestItem.performance_id &&
+                                             ci.seat_id == guestItem.seat_id &&
+                                             ci.status == "active");
+
+                    if (existingItem != null)
+                    {
+                        
+                        existingItem.quantity += guestItem.quantity;
+                        guestItem.status = "merged";
+                    }
+                    else
+                    {
+                        
+                        guestItem.cart_id = userCart.id;
+                    }
+                }
+
+                
+                guestCart.status = "merged";
+                userCart.updated_at = DateTime.Now;
+                db.SaveChanges();
+            }
+            catch
+            {
+                
             }
         }
     }

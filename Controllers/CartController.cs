@@ -324,6 +324,134 @@ namespace EventDeneme.Controllers
                 selectedSeats = string.Join(",", seatIds) 
             });
         }
+
+        
+        [HttpPost]
+        public ActionResult ProceedAsGuest()
+        {
+            var cart = GetOrCreateCart();
+            var cartItems = db.cart_items
+                .Where(ci => ci.cart_id == cart.id && ci.status == "active")
+                .ToList();
+
+            if (!cartItems.Any())
+            {
+                TempData["Error"] = "Your cart is empty.";
+                return RedirectToAction("Index");
+            }
+
+            
+            var performanceGroups = cartItems.GroupBy(ci => ci.performance_id);
+            var firstGroup = performanceGroups.First();
+            var firstItem = firstGroup.First();
+            var performanceId = firstItem.performance_id;
+
+            
+            var seatIds = new List<string>();
+            foreach (var item in cartItems.Where(ci => ci.performance_id == performanceId))
+            {
+                if (item.seat_id != null)
+                {
+                    var perfSeat = db.performance_seats
+                        .FirstOrDefault(ps => ps.performance_id == performanceId && 
+                                             ps.seat_id == item.seat_id.Value);
+                    if (perfSeat != null)
+                    {
+                        seatIds.Add(perfSeat.id.ToString());
+                    }
+                }
+            }
+
+            if (!seatIds.Any())
+            {
+                TempData["Error"] = "No seats found in cart.";
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Checkout", "Ticket", new { 
+                performanceId = performanceId, 
+                selectedSeats = string.Join(",", seatIds) 
+            });
+        }
+
+        
+        [HttpPost]
+        public JsonResult MergeGuestCart()
+        {
+            try
+            {
+                long? userId = null;
+                if (Session["UserID"] != null)
+                {
+                    userId = Convert.ToInt64(Session["UserID"]);
+                }
+
+                if (!userId.HasValue)
+                {
+                    return Json(new { success = false, message = "User not logged in." });
+                }
+
+                
+                var guestCart = db.carts
+                    .FirstOrDefault(c => c.user_id == null && c.status == "active");
+
+                if (guestCart == null)
+                {
+                    return Json(new { success = true, message = "No guest cart to merge." });
+                }
+
+                
+                var userCart = db.carts
+                    .FirstOrDefault(c => c.user_id == userId.Value && c.status == "active");
+
+                if (userCart == null)
+                {
+                    
+                    guestCart.user_id = userId.Value;
+                    guestCart.updated_at = DateTime.Now;
+                    db.SaveChanges();
+                    return Json(new { success = true, message = "Cart merged successfully." });
+                }
+
+                
+                var guestItems = db.cart_items
+                    .Where(ci => ci.cart_id == guestCart.id && ci.status == "active")
+                    .ToList();
+
+                foreach (var guestItem in guestItems)
+                {
+                    
+                    var existingItem = db.cart_items
+                        .FirstOrDefault(ci => ci.cart_id == userCart.id &&
+                                             ci.performance_id == guestItem.performance_id &&
+                                             ci.seat_id == guestItem.seat_id &&
+                                             ci.status == "active");
+
+                    if (existingItem != null)
+                    {
+                        
+                        existingItem.quantity += guestItem.quantity;
+                        guestItem.status = "merged";
+                    }
+                    else
+                    {
+                        
+                        guestItem.cart_id = userCart.id;
+                    }
+                }
+
+                
+                guestCart.status = "merged";
+                userCart.updated_at = DateTime.Now;
+                db.SaveChanges();
+
+                return Json(new { success = true, message = "Cart merged successfully." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Error: " + ex.Message });
+            }
+        }
     }
 }
 
