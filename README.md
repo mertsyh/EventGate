@@ -1,32 +1,29 @@
-#  EventGate – Ticket Sales & Management System
+# EventGate – Ticket Sales & Management System
 
-EventGate, **.NET MVC** kullanılarak geliştirilmiş, etkinlikler için **bilet satış ve yönetim süreçlerini** kolaylaştırmayı amaçlayan **veri odaklı bir web uygulamasıdır**.
+EventGate is a **data-driven web application** developed using **ASP.NET MVC**, designed to streamline **event ticket sales and management processes**.
 
-## Proje Özeti
-Bu proje kapsamında;
-- Etkinlik ve bilet yönetimi
-- Kullanıcıdan form tabanlı veri toplama
-- Veritabanı ile tam entegre CRUD işlemleri  
-gerçekleştirilmiştir.
+## Project Overview
+This project includes:
+- Event and ticket management
+- Form-based data collection
+- Fully integrated CRUD operations with a database
 
-EventGate, **öğrenme ve uygulama odaklı** olarak .NET MVC mimarisini, SQL Server entegrasyonunu ve temel web geliştirme prensiplerini deneyimlemek amacıyla geliştirilmiştir.
+EventGate was developed as a **learning-oriented project** to gain hands-on experience with the ASP.NET MVC architecture, SQL Server integration, and fundamental web development principles.
 
 ---
 
-##  Kullanılan Teknolojiler
+## Technologies Used
 - **Backend:** ASP.NET MVC  
 - **Frontend:** HTML5, CSS  
 - **Database:** Microsoft SQL Server  
-- **ORM / Data Access:** Entity Framework (varsa ekle)  
+- **ORM / Data Access:** Entity Framework  
 - **Version Control:** Git & GitHub  
 
 ---
 
-##  Özellikler
--  Form tabanlı veri girişi  
--  Temel CRUD işlemleri (Create, Read, Update, Delete)  
--  SQL Server ile veritabanı entegrasyonu  
--  Basit ve kullanıcı dostu arayüz  
--  MVC mimarisi ile katmanlı yapı  
-
-
+## Features
+- Form-based data input  
+- Basic CRUD operations (Create, Read, Update, Delete)  
+- SQL Server database integration  
+- Simple and user-friendly interface  
+- Layered architecture based on the MVC pattern  
